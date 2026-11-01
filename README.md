@@ -1,217 +1,342 @@
 # Global Housing Intelligence
 
-House prices and rents for every economy, with 10-year projections tested against history, an interest-rate toggle, prices by dwelling type, and indexes for investors, buyers, renters and sellers.
+**Where house prices and rents go next, for every economy, with the error bars left in.**
 
-Sibling of [global-economic-intelligence](https://github.com/ankitmishra01/global-economic-intelligence). Same rules: statistical code produces every number, the browser renders them, and an LLM may explain supplied facts but never generates a projection.
+[**Live site → global-housing-intelligence.vercel.app**](https://global-housing-intelligence.vercel.app)
+
+![Status](https://img.shields.io/badge/status-production-2f6a57)
+![Economies](https://img.shields.io/badge/economies-217-18211e)
+![Horizon](https://img.shields.io/badge/projections-1%20to%2010%20years-b5502d)
+![Database](https://img.shields.io/badge/database-Turso%20(libSQL)-4ff8d2)
+![Framework](https://img.shields.io/badge/Next.js-16-000000)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+![Overview: world map of projected 10-year real house price change](docs/screenshots/overview.png)
+
+Global Housing Intelligence pulls official house price, rent, credit and interest-rate data from international institutions and national housing agencies into one database. It projects **house prices and rents 10 years ahead** and lets you **move interest rates to see what changes**. It scores every market for **investors, buyers, renters and sellers**.
+
+It is the sibling of [global-economic-intelligence](https://github.com/ankitmishra01/global-economic-intelligence) and follows the same rule. Statistical code produces every number and the browser renders it. An LLM may explain the numbers, but it never makes one up. A model that cannot beat a simple baseline on history is not shown as skilled. The page shows the baseline instead and says so.
+
+---
 
 ## Contents
 
-- [What it does](#what-it-does)
-- [Pages](#pages)
-- [Data sources and coverage](#data-sources-and-coverage)
-- [Projection engine](#projection-engine)
-- [Interest-rate toggle](#interest-rate-toggle)
+- [Who it is for](#who-it-is-for)
+- [A quick tour](#a-quick-tour)
+- [What is in the data](#what-is-in-the-data)
+- [How the 10-year projections work](#how-the-10-year-projections-work)
+- [The interest-rate toggle](#the-interest-rate-toggle)
 - [Persona indexes](#persona-indexes)
 - [Risk flags](#risk-flags)
-- [National agency adapters](#national-agency-adapters)
+- [Ask AI](#ask-ai)
+- [Public API](#public-api)
 - [Architecture](#architecture)
-- [Run locally](#run-locally)
-- [Environment variables](#environment-variables)
+- [Project structure](#project-structure)
+- [Run it yourself](#run-it-yourself)
 - [Automation](#automation)
 - [Testing](#testing)
+- [Adding a country's national data](#adding-a-countrys-national-data)
 - [Known limits](#known-limits)
+- [FAQ](#faq)
+- [Sources and attribution](#sources-and-attribution)
 
-## What it does
+---
 
-- Collects house price, rent, valuation, credit, rate and demographic data for all 217 World Bank economies.
-- Projects real and nominal house prices and rents 1 to 10 years ahead, with empirical 50% and 80% ranges.
-- Backtests every horizon against two baselines. If the model doesn't beat them on held-out years, the baseline is what gets shown, and the UI says so.
-- Lets the user move interest rates from −3 to +3 percentage points and redraws the buy and rent paths, the buy-vs-rent costs and the persona indexes.
-- Splits prices by dwelling type (condos/flats, houses, detached, semi-detached, townhouses) where a source publishes it.
-- Adds national agency data (CMHC, Statistics Canada, Bank of Canada, US Census/BLS/Freddie Mac, Zillow Research, HM Land Registry, ABS): local-currency prices and rents, vacancy rates, housing starts, mortgage rates and city rows.
+## Who it is for
 
-## Pages
-
-| Route | Purpose |
-|---|---|
-| `/` | Overview: world map of 10-year projected real price change, strongest and weakest outlooks, top markets by persona, risk register |
-| `/countries` | All 217 economies with a tier badge |
-| `/countries/[iso3]` | Price and rent fan charts, the rate toggle, dwelling types, buy-vs-rent calculator, persona cards, national data, drivers |
-| `/indexes` | League tables for the investor, buyer, renter and seller indexes |
-| `/compare?c=CAN,AUS,GBR` | Two to four countries side by side |
-| `/methodology` | Sources, the live backtest table, rate sensitivities, flag thresholds, index weights, limits |
-| `/ask` | Ask AI: explains stored facts, with a numeric guardrail |
-| `/api/v1/*` | Cached JSON for countries, projections and indexes |
-
-## Data sources and coverage
-
-| Source | Series | Coverage |
+| You are a… | The question it answers | Where to look |
 |---|---|---|
-| BIS selected residential property prices (`WS_SPP`) | Real and nominal house price index, quarterly | ~57 economies |
-| BIS detailed residential property prices (`WS_DPP`) | Prices by dwelling type | ~25 economies |
-| BIS total credit (`WS_TC`) and credit gaps | Household credit % of GDP, credit-to-GDP gap | ~43 |
-| BIS central bank policy rates (`WS_CBPOL`) | Monthly policy rate (euro members inherit the ECB rate from their joining year) | ~58 |
-| OECD Analytical House Prices | Rent index, price-to-income and price-to-rent vs long-run average, OECD price indexes | ~43 rent, ~25 valuation |
-| IMF World Economic Outlook (DataMapper) | Inflation and real GDP growth, history plus ~5-year forecasts | ~194 |
-| World Bank WDI | Population and urban growth, urban share, GDP per head, lending and real rates, private credit, CPI | 217 |
-| National agencies | See [National agency adapters](#national-agency-adapters) | CAN, USA, GBR, AUS |
+| **Investor** | Which markets look best to hold housing in over 10 years, after risk? | `/indexes?persona=investor`, country fan charts, risk flags |
+| **Buyer** | Is now a good time to buy, and what does a mortgage cost if rates move? | Country page: buy-vs-rent calculator and rate toggle |
+| **Renter** | Where are rents likely to rise fastest relative to incomes? | `/indexes?persona=renter`, rent fan charts |
+| **Seller** | Are prices stretched against history, and is the outlook weakening? | `/indexes?persona=seller`, valuation gaps |
+| **Analyst / policy** | How do markets compare, and how reliable are the projections? | `/compare`, `/methodology` (live backtests) |
 
-**Tiers.** Tier 1 means an official house price index exists: about 58 economies, about 43 of them with a rent index. Tier 2 is every other economy, about 159. Tier 2 pages show housing drivers only and state that no official price index is published. Nothing is invented for them.
+## A quick tour
 
-**Dwelling types** (countries with an annual series, as of the first run): condo/flat 22, house 20, townhouse/terraced 7, detached 6, semi-detached 1 (UK). The seed report (`sync/report.json`) prints the current counts.
+### Country pages: the rate toggle, buy and rent fan charts
 
-## Projection engine
+Drag the slider from −3 to +3 percentage points, or pick a preset (deep cuts, cuts, hold, hikes, shock). Every chart, the buy-vs-rent table and the four persona scores redraw instantly. Switch between real (after inflation) and nominal.
 
-Code: `lib/engine/projections.js`, run by `sync/train.js`.
+![Canada: interest-rate toggle with 10-year price and rent fan charts](docs/screenshots/country-canada.png)
 
-- **Targets.** Cumulative real log growth of: the house price index (`real_price`), the OECD rent index deflated by a CPI chained from IMF inflation (`real_rent`), and each country × dwelling-type price index (`type_price`).
-- **Model.** Pooled ridge regression fitted directly at horizons 1, 2, 3, 5, 7 and 10, with years in between interpolated. Features:
-  - 1-year and 3-year momentum
-  - price-to-income and price-to-rent gaps
-  - real policy rate and its 1-year change
-  - 3-year household credit change and the credit-to-GDP gap
-  - population growth and real GDP growth
-  - cross momentum
-  - dwelling-type indicators (type model only)
-  - Missing predictors are mean-imputed. Outcomes are never imputed.
-- **Baselines.** No real change, and the country's own historical real trend (mean of the last 8 to 20 years).
-- **Honesty rules.**
-  - Rolling-origin backtests from 1995. Training only uses samples whose target year was already observed at the test origin.
-  - The method is chosen on the early origins and scored on the later held-out origins.
-  - The model is kept only if it beats the best baseline on both halves.
-  - A trend baseline that loses to no-change on the held-out origins falls back to no-change.
-  - The current skill, error and coverage figures are rendered live on `/methodology` from the `backtests` table. They are not hardcoded here.
-- **Ranges.** Empirical residual quantiles per horizon (p10, p25, p75, p90), held non-decreasing so the fan never narrows with distance.
-- **Nominal paths.** Real path plus IMF WEO inflation, with the last WEO year held flat to year 10.
-- **Price-to-rent.** The nominal price path minus the nominal rent path, with errors combined as independent.
+### Condos, houses, detached, semi-detached, townhouses
 
-## Interest-rate toggle
+Where a source publishes prices by dwelling type, each type gets its own history and 10-year path. Each type comes from a pooled model trained and backtested on the type series.
 
-- **Estimating the sensitivity.** For each target and horizon, the trainer stores the pooled change in cumulative real growth per +1pp sustained rate move (the sum of the ridge coefficients on the real policy rate and its change), with a cluster-bootstrap standard error (`rate_sensitivity` table).
+![United Kingdom: projections by dwelling type](docs/screenshots/dwelling-types-uk.png)
+
+### Compare up to four countries under the same rate scenario
+
+![Compare view: Canada, United States, United Kingdom and Australia](docs/screenshots/compare.png)
+
+### Indexes for investors, buyers, renters and sellers
+
+![Buyer index league table](docs/screenshots/indexes.png)
+
+| Route | What you get |
+|---|---|
+| `/` | World map of projected 10-year real price change, strongest and weakest outlooks, persona leaders, risk register |
+| `/countries` | All 217 economies, filterable by region, tier, rent coverage and national data |
+| `/countries/[iso3]` | Rate toggle, buy and rent fan charts, dwelling types, buy-vs-rent calculator, persona scores, national agency data (Canada includes 9 cities), housing drivers |
+| `/indexes` | League tables for each persona, with every component's percentile |
+| `/compare?c=CAN,AUS,GBR` | Two to four countries side by side under one rate scenario |
+| `/methodology` | Sources, the **live** backtest table, rate sensitivities, flag thresholds, index weights, limits |
+| `/ask` | Ask AI, grounded in the database, with a numeric guardrail |
+| `/api/v1/*` | Cached public JSON |
+
+## What is in the data
+
+Everything lives in **Turso**. About 190,000 observations are refreshed monthly by a cloud job, and nothing depends on a local machine.
+
+| Source | What it gives | Coverage |
+|---|---|---|
+| **BIS** selected residential property prices (`WS_SPP`) | Real and nominal house price indexes, quarterly, many from the 1970s | ~57 economies |
+| **BIS** detailed property prices (`WS_DPP`) | Prices by dwelling type: houses, detached, townhouses, flats/condos | ~25 economies |
+| **BIS** total credit and credit gaps | Household credit as % of GDP, credit-to-GDP gap | ~43 |
+| **BIS** central bank policy rates | Monthly policy rates (euro members take the ECB rate from their joining year) | ~58 |
+| **OECD** Analytical House Prices | Rent index, price-to-income and price-to-rent vs long-run average | ~43 rent, ~25 valuation |
+| **IMF** World Economic Outlook | Inflation and real GDP growth, history plus ~5-year forecasts | ~194 |
+| **World Bank** WDI | Population and urban growth, urban share, income, lending and real rates, private credit, CPI | all 217 |
+| **CMHC / Statistics Canada** | Two-bedroom rents and vacancy for 9 metros, housing starts, New Housing Price Index | Canada |
+| **Bank of Canada** | 5-year conventional mortgage rate (posted), weekly | Canada |
+| **FRED** (Census, BLS, Freddie Mac) | Median sales price, CPI rent, 30-year mortgage rate, starts, rental vacancy | United States |
+| **Zillow Research** | Condo vs single-family typical values, typical market rent | United States |
+| **HM Land Registry** | Average price by detached / semi-detached / terraced / flat, UK and four nations | United Kingdom |
+| **Australian Bureau of Statistics** | Mean dwelling price, national and by state | Australia |
+
+**Coverage tiers**
+
+- **Tier 1, about 58 economies:** an official house price index exists, so prices are projected. About 43 of these also have a rent index, so rents are projected too.
+- **Tier 2, about 159 economies:** no official price index is published in these datasets. The page shows housing drivers and says plainly that prices are not projected. Nothing is invented.
+
+**Dwelling types**, from the latest seed: condo/flat 22 countries, house 20, townhouse/terraced 7, detached 6, semi-detached 1 (UK).
+
+## How the 10-year projections work
+
+Code: [`lib/engine/projections.js`](lib/engine/projections.js), run by [`sync/train.js`](sync/train.js).
+
+1. **What is projected.** The model forecasts cumulative *real* (after inflation) log growth of three series:
+   - the house price index
+   - the rent index, deflated by a CPI chained from IMF and World Bank inflation
+   - each country × dwelling-type price index
+
+   Nominal paths add IMF WEO inflation forecasts, held flat after the last WEO year.
+2. **The model.** A pooled ridge regression across countries, fitted directly at horizons 1, 2, 3, 5, 7 and 10 years; the years in between are interpolated. Its inputs:
+   - 1-year and 3-year momentum
+   - price-to-income and price-to-rent gaps against the long-run average
+   - the real policy rate and its 1-year change
+   - household credit growth and the credit-to-GDP gap
+   - population growth and real GDP growth
+   - cross momentum: rents for prices, prices for rents
+   - dwelling-type indicators, in the type model only
+3. **The baselines it must beat.** "No real change", and the country's own historical real trend.
+4. **Carry-forward.** At long horizons, a fourth candidate is the longest skilled shorter-horizon model held flat afterwards. Example: "the 7-year projection, then no further real change". It is backtested like everything else, so a path never snaps back to zero just because the 10-year fit is weak.
+5. **Honesty rules**
+   - **Rolling-origin backtests from 1995.** A model is only trained on outcomes that were already known at each test date.
+   - **Chosen early, scored late.** The method is chosen on the early half of test dates and scored on the later half, which it never saw.
+   - **A skill margin.** A model is kept only if it beats the best baseline on both halves *and* by at least 2% on the held-out half. Overlapping 10-year windows leave few independent test dates, so tiny wins are treated as noise.
+   - **No hardcoded scores.** Current skill, error and coverage are rendered live on [`/methodology`](https://global-housing-intelligence.vercel.app/methodology) from the `backtests` table.
+6. **Uncertainty.** The 50% and 80% bands come from empirical backtest errors at each horizon. They are held non-decreasing, so the fan never narrows with distance.
+
+## The interest-rate toggle
+
+- **Estimating the sensitivity.** For each target and horizon, the trainer stores how much cumulative real growth changes per +1 percentage point sustained rate move. That is the sum of the model coefficients on the real policy rate and its change. Each sensitivity has a cluster-bootstrap standard error, stored in the `rate_sensitivity` table.
 - **Applying it in the browser.**
-  - Adjusted path = base path + coefficient × Δ.
-  - The band widens by the standard error × |Δ| (1.28× at the 80% edges, 0.67× at the 50% edges).
+  - New path = base path + sensitivity × Δrate.
+  - The band widens with the sensitivity's uncertainty × |Δrate|.
 - **Sign rules.**
-  - Prices must fall when rates rise. A wrong-signed estimate at any horizon disables the toggle for that target, and the page says why.
-  - The rent sign is estimated freely, since higher rates can push households into renting.
-- **Buy vs rent.** The monthly mortgage payment at the chosen rate (principal and interest, user-set down payment and amortisation) is compared with projected rent.
-  - Default mortgage rates: Bank of Canada 5-year conventional (posted) for Canada, Freddie Mac 30-year fixed for the US.
-  - Elsewhere: the policy rate plus an assumed 2.0pp spread, labelled as such.
+  - Prices must fall when rates rise. If the estimate has the wrong sign at any horizon, the toggle is switched off for prices and the page explains why.
+  - The rent effect's sign is estimated freely, because higher rates can push would-be buyers into renting.
+- **Buy vs rent.** The calculator compares the monthly mortgage payment (principal and interest, with your down payment and amortisation) against projected rent, at the chosen rate.
+  - **Canada:** Bank of Canada 5-year posted rate.
+  - **United States:** Freddie Mac 30-year fixed.
+  - **Elsewhere:** the policy rate plus an assumed 2.0pp spread, labelled on the page.
 
 ## Persona indexes
 
-Code: `lib/engine/indexes.js`. It's shared by the trainer, which stores scores per run, and by the browser, which recomputes them under the toggle.
+Code: [`lib/engine/indexes.js`](lib/engine/indexes.js). The trainer stores each run's scores, and the browser recomputes them live under the rate toggle using the same code.
 
-- **Scoring.** Each index is a weighted average of percentile ranks across Tier 1 economies, oriented so that 100 is most favourable for that persona.
+- **Scoring.** Each index is a weighted average of percentile ranks across Tier 1 economies. 100 means most favourable for that persona.
 - **Missing data.** A score needs at least half its weight available.
 
-| Persona | Components (weight, direction) |
+| Persona | Components (weight · better when) |
 |---|---|
-| Investor | 10-year projected real price growth (0.35, higher), price-to-rent gap (0.25, lower), risk flag count (0.15, lower), household debt % GDP (0.10, lower), 15-year real price volatility (0.15, lower) |
-| Buyer | Price-to-income gap (0.30, lower), 3-year change in mortgage payment burden (0.25, lower), last-year real price growth (0.20, lower), 3-year projected real price growth (0.25, higher) |
-| Renter | 10-year projected real rent growth (0.40, lower), real rent growth minus real income growth over 5 years (0.30, lower), price-to-rent gap (0.30, higher) |
-| Seller | Valuation vs long-run average (0.35, higher), last-year real price growth (0.20, higher), 3-year projected real price growth (0.30, lower), 12-month policy rate change (0.15, higher) |
-
-Under the toggle, only the rate-sensitive components move: projected growth, mortgage burden and rate trend. The country is scored against the other economies at current rates.
+| **Investor** | 10-year projected real price growth (0.35 · higher), price-to-rent gap (0.25 · lower, i.e. better yield), risk flags (0.15 · fewer), household debt % GDP (0.10 · lower), 15-year price volatility (0.15 · lower) |
+| **Buyer** | Price-to-income gap (0.30 · lower), 3-year change in mortgage burden (0.25 · lower), last-year price growth (0.20 · lower, cooling), 3-year projected growth after buying (0.25 · higher) |
+| **Renter** | 10-year projected real rent growth (0.40 · lower), rent growth minus income growth over 5 years (0.30 · lower), price-to-rent gap (0.30 · higher, renting relatively cheap) |
+| **Seller** | Valuation vs long-run average (0.35 · higher), last-year price growth (0.20 · higher), 3-year projected growth (0.30 · lower, weak outlook favours selling now), 12-month policy rate change (0.15 · higher) |
 
 ## Risk flags
 
-Code: `lib/engine/flags.js`. A flag is raised when:
+Code: [`lib/engine/flags.js`](lib/engine/flags.js). A flag is raised when:
 - price-to-income or price-to-rent is more than 20% above its long-run average
-- real house prices are up more than 10% year on year (latest quarter)
-- the credit-to-GDP gap is above 10pp
+- real house prices are up more than 10% in a year (latest quarter)
+- the credit-to-GDP gap is above 10 percentage points
 - real rents outgrew real GDP per head three years running
 
-## National agency adapters
+## Ask AI
 
-`lib/sources/national/`:
+`/ask` answers questions about a country or the global picture.
+- **Grounding.** It builds a facts block from Turso only: projections, flags, scores, rates, backtest skill and sensitivities. It sends that block to Claude through the Vercel AI Gateway, with instructions to explain only those facts.
+- **Numeric guardrail.** Every number in the answer is checked against the facts. Anything unverified is listed and flagged in the UI.
+- **Model.** Set it with `AI_MODEL`; the default is `anthropic/claude-sonnet-5.5`.
+- **Status.** The Vercel AI Gateway free tier does not serve Claude models. Ask AI needs gateway credits, or a bring-your-own Anthropic key configured in the gateway. Until then it returns a clear "unavailable" message, and the rest of the site is unaffected.
 
-| File | Country | Agencies and series |
-|---|---|---|
-| `canada.js` | CAN | CMHC Rental Market Survey (two-bedroom rents and vacancy, 9 metros plus the CMA total), CMHC starts, StatCan New Housing Price Index, Bank of Canada 5-year mortgage rate |
-| `united-states.js` | USA | FRED: Census median sales price, BLS CPI rent, Freddie Mac 30-year rate, Census housing starts and rental vacancy |
-| `zillow.js` | USA | Zillow Research ZHVI condo vs single-family values, ZORI market rent (national) |
-| `united-kingdom.js` | GBR | HM Land Registry UK HPI: average price for the UK and the four nations, by detached / semi-detached / terraced / flat |
-| `australia.js` | AUS | ABS mean dwelling price, national and by state |
+## Public API
 
-**Adding a country:**
-1. Create `lib/sources/national/<country>.js` exporting `fetchX()`, which returns rows of the form `{ country, indicator, region, dwelling_type, period, frequency, value, source }`, plus an `X_INDICATORS` list for any new indicator keys.
-2. Add a range for each new indicator in `lib/validate.js`.
-3. Register the adapter in `NATIONAL_ADAPTERS` in `lib/sources/national/index.js`.
-4. Add a parser test on a small fixture in `tests/`.
+Cached JSON (1-hour CDN cache). Index values are relative to the projection origin year (= 100).
 
-A failing national adapter is logged and skipped. It never blocks the international refresh.
+```bash
+# All economies with tier and coverage flags
+curl https://global-housing-intelligence.vercel.app/api/v1/countries
+
+# One country's projections (all targets, or filter one)
+curl "https://global-housing-intelligence.vercel.app/api/v1/projections?c=CAN&target=real_price"
+
+# Persona league table
+curl "https://global-housing-intelligence.vercel.app/api/v1/indexes?persona=buyer"
+```
+
+```json
+{
+  "runId": "run_202611010126",
+  "modelVersion": "housing-ridge-1",
+  "dataVintage": "2025",
+  "country": "CAN",
+  "unit": "index, origin year = 100",
+  "rows": [
+    { "target": "real_price", "year": 2026, "horizon": 1,
+      "p10": 91.8, "p25": 95.2, "median": 97.6, "p75": 101.0, "p90": 104.3,
+      "method": "pooled ridge regression, direct multi-horizon" }
+  ]
+}
+```
+
+Targets: `real_price`, `nominal_price`, `real_rent`, `nominal_rent`, `price_to_rent`, and `real_price:<type>` for `house`, `detached`, `semi_detached`, `townhouse` and `condo`.
 
 ## Architecture
 
 ```text
-BIS · OECD · IMF · World Bank · national agencies
-                  │
-            sync/seed.js         normalise, validate ranges, coverage gates
-                  │
-          Turso (libSQL)  ◀────  sync/train.js   projections, backtests, rate
-                  │                              sensitivity, flags, indexes
-                  │  @libsql/client, server only
-                  ▼
-      Next.js App Router on Vercel (ISR, daily revalidation)
-                  │
-     pages · /api/v1/* JSON · /api/agent (Ask AI)
+ BIS · OECD · IMF · World Bank · CMHC/StatCan · BoC · FRED · Zillow · Land Registry · ABS
+                                   │
+                         sync/seed.js     fetch → normalise → validate ranges → coverage gates
+                                   │
+                          Turso (libSQL)  ◀── sync/train.js   projections · backtests · rate
+                                   │                          sensitivity · flags · indexes
+                                   │  @libsql/client (server only)
+                                   ▼
+                 Next.js 16 App Router on Vercel (ISR, revalidated daily)
+                                   │
+            pages · /api/v1/* JSON · /api/agent (Ask AI via Vercel AI Gateway)
 ```
 
-The database schema is in `db/schema.sql`. It's applied idempotently by `db/migrate.js`, which runs at the start of every seed and train. Every training run writes a versioned `projection_runs` row, and the pages read the latest one.
+- **Schema.** [`db/schema.sql`](db/schema.sql), applied idempotently by [`db/migrate.js`](db/migrate.js) before every seed, train and build.
+- **Versioned runs.** Every training run writes a `projection_runs` row, and the pages read the latest one.
+- **Measurement, modelling and narration stay separate.** Adapters measure, the engine models, the UI renders, and the LLM only narrates.
 
-## Run locally
+## Project structure
+
+```text
+db/                 schema.sql, migrate.js
+lib/
+  db.js             libSQL client + chunked upserts
+  registry.js       World Bank country registry, euro-area membership
+  validate.js       plausible ranges, dedupe, coverage gates
+  sources/          bis.js · oecd.js · imf.js · worldbank.js · util.js (CSV, zip, annualising)
+    national/       canada.js · united-states.js · zillow.js · united-kingdom.js · australia.js
+  engine/           panel.js · projections.js · flags.js · indexes.js · stats.js
+sync/               seed.js · train.js · probe.js
+src/
+  app/              pages and route handlers (/, countries, indexes, compare, methodology, ask, api)
+  components/       fan-chart, country-explorer (toggle), world-map, compare-view, index-table, ask-form
+  lib/              data.ts (Turso queries), toggle.ts (rate math), agent.ts (facts + guardrail)
+tests/              node:test suites, synthetic panel, small fixtures
+.github/workflows/  ci.yml · refresh.yml · probe.yml
+```
+
+## Run it yourself
+
+Requires Node 22+.
 
 ```bash
+git clone https://github.com/ankitmishra01/global-housing-intelligence
+cd global-housing-intelligence
 npm install
+
+# Point at your Turso database (or leave unset to use a local file: file:local.db)
+export TURSO_DATABASE_URL="libsql://<db>-<org>.turso.io"
+export TURSO_AUTH_TOKEN="<token>"          # turso db tokens create <db>
+
 node db/migrate.js
-node sync/seed.js        # or: node sync/seed.js --dry-run  (no writes, writes sync/report.json)
-node sync/train.js       # or: node sync/train.js --dry-run (prints the backtest table)
+node sync/seed.js            # ~40s: fetch every source, validate, write (add --dry-run to skip writes)
+node sync/train.js           # ~3s: train, backtest, write a new run (add --dry-run to print only)
 npm run dev
 ```
 
-With `TURSO_DATABASE_URL` unset, everything uses a local file database, `file:local.db`. Set the Turso variables to work against the hosted database.
-
-## Environment variables
-
 | Variable | Used by | Purpose |
 |---|---|---|
-| `TURSO_DATABASE_URL` | app, sync | libSQL URL (`libsql://…`). Defaults to `file:local.db` |
+| `TURSO_DATABASE_URL` | app, sync | libSQL URL. Defaults to `file:local.db` |
 | `TURSO_AUTH_TOKEN` | app, sync | Turso database token |
-| `AI_GATEWAY_API_KEY` | `/api/agent` | Vercel AI Gateway key for Ask AI (on Vercel, OIDC is used automatically) |
-
-GitHub Actions secrets: `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, and optionally `VERCEL_DEPLOY_HOOK_URL`. Repository variable: `PRODUCTION_URL`.
+| `AI_GATEWAY_API_KEY` | `/api/agent` | Vercel AI Gateway key (on Vercel, OIDC is used automatically) |
+| `AI_MODEL` | `/api/agent` | Gateway model id, default `anthropic/claude-sonnet-5.5` |
 
 ## Automation
 
-| Workflow | Schedule | What it does |
+| Workflow | When | What it does |
 |---|---|---|
-| `ci.yml` | push, PR | Tests, typecheck, then a build against an empty migrated file database |
-| `refresh.yml` | 06:17 UTC on the 3rd of each month, plus manual | Seed → train → write a new run to Turso → trigger the Vercel deploy hook; opens an issue on failure |
-| `probe.yml` | every 6 hours | Checks `/api/v1/countries` serves ≥150 economies and the latest run is under 40 days old; opens one issue on failure |
+| [`ci.yml`](.github/workflows/ci.yml) | every push and PR | Tests, typecheck, production build against an empty migrated database |
+| [`refresh.yml`](.github/workflows/refresh.yml) | 06:17 UTC on the 3rd of each month, or manually | Seed → train → new run in Turso → optional Vercel deploy hook; opens an issue on failure |
+| [`probe.yml`](.github/workflows/probe.yml) | every 6 hours | Checks the live API serves ≥150 economies and the latest run is under 40 days old |
+
+The refresh needs the repository secrets `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`. `VERCEL_DEPLOY_HOOK_URL` is optional.
 
 ## Testing
 
 ```bash
-npm test
+npm test     # node:test, 32 tests
 ```
 
 The tests cover:
-- every source parser, on small text fixtures in `tests/fixtures/`
+- every source parser, on small fixtures, including an in-memory zip for the StatCan reader
 - validation and coverage gates
-- the projection engine, on a synthetic panel with a known rate effect: rate coefficient sign and validity, band widening, and baseline fallback on a pure-noise rent series
-- interpolation and band monotonicity
-- the index scoring and toggle math
-- the risk flags
+- the engine on a synthetic panel with a known rate effect: coefficient sign, widening bands, and baseline fallback on pure noise
+- interpolation
+- index scoring and the toggle math
+- risk flags
 - `buildRun` end to end
-- the probe's run-date parsing
+
+## Adding a country's national data
+
+1. Create `lib/sources/national/<country>.js`. It exports `fetchX()`, which returns rows of the form `{ country, indicator, region, dwelling_type, period, frequency, value, source }`. If you add indicator keys, also export an `X_INDICATORS` list.
+2. Add a plausible range for each new indicator in [`lib/validate.js`](lib/validate.js).
+3. Register the adapter in [`lib/sources/national/index.js`](lib/sources/national/index.js).
+4. Add a parser test on a small fixture.
+
+A failing national adapter is logged and skipped. It never blocks the international refresh.
 
 ## Known limits
 
 - Official price indexes exist for about 58 economies and rent indexes for about 43. Tier 2 economies get drivers only.
-- Ten-year backtests rest on far fewer independent origins than one-year backtests, and overlapping windows make long-horizon skill noisy. Check `n_origins` on `/methodology`.
-- Rate sensitivity is pooled across countries. It is a model-implied association, not a causal estimate, and it is the same for every country.
-- Dwelling-type coverage is uneven. The type model is pooled across all type series and backtested separately.
-- Nominal paths hold the last IMF WEO inflation forecast flat to year 10.
+- Ten-year backtests rest on far fewer independent test dates than one-year backtests. Check `n_origins` on `/methodology`.
+- At present, rents show no model skill beyond the no-change baseline. Real rent paths are therefore flat, and nominal rents follow inflation. The site says so on every rent chart.
+- Rate sensitivity is pooled across countries. It is a model-implied association, not a causal estimate.
+- Dwelling-type coverage is uneven and depends on what each source publishes.
 - The buy-vs-rent calculator ignores taxes, fees, maintenance and the return on a down payment.
-- Projections are statistical estimates with published error rates, not financial advice.
+- **Projections are statistical estimates with published error rates, not financial advice.**
+
+## FAQ
+
+**Why do some 10-year paths look flat?** Because the backtests said a simpler answer was as good as the model. Showing a confident curve that history doesn't support would be worse than showing a flat line and saying why.
+
+**Why is my country Tier 2?** The BIS and OECD datasets don't publish an official house price index for it. A national adapter can add one; see [Adding a country's national data](#adding-a-countrys-national-data).
+
+**Does the rate toggle use a different model per country?** No. The sensitivity is pooled across all countries for statistical strength. Each country's starting point, inflation path and valuation differ, so outcomes still differ.
+
+**How fresh is the data?** The cloud refresh runs monthly. Each page shows the data vintage, and policy and mortgage rates show their month.
+
+## Sources and attribution
+
+Bank for International Settlements · OECD · International Monetary Fund · World Bank · Canada Mortgage and Housing Corporation and Statistics Canada (Open Government Licence, Canada) · Bank of Canada · US Census Bureau, Bureau of Labor Statistics and Freddie Mac via FRED (Federal Reserve Bank of St. Louis) · **Zillow Research** (ZHVI and ZORI) · HM Land Registry (Open Government Licence, contains HM Land Registry data © Crown copyright) · Australian Bureau of Statistics (CC BY 4.0).
+
+MIT licence. Built with Next.js, Turso, Recharts and d3-geo.
