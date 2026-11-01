@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ iso3: str
 }
 
 const DRIVERS = ["POP_GROWTH", "URBAN_GROWTH", "URBAN_SHARE", "GDP_PC_GROWTH", "GDP_PC_USD", "INFLATION", "LENDING_RATE", "REAL_RATE", "PRIVATE_CREDIT", "HH_CREDIT", "CREDIT_GAP", "PTI_AVG", "PTR_AVG"];
-const NATIONAL = ["AVG_PRICE", "MEDIAN_PRICE", "AVG_RENT", "AVG_RENT_2BR", "VACANCY_RATE", "HOUSING_STARTS", "NEW_HOUSING_PRICE", "MORTGAGE_RATE", "RENT_CPI", "TYPE_PRICE_LEVEL"];
+const NATIONAL = ["AVG_PRICE", "MEDIAN_PRICE", "AVG_RENT", "AVG_RENT_2BR", "VACANCY_RATE", "HOUSING_STARTS", "NEW_HOUSING_PRICE", "MORTGAGE_RATE", "RENT_CPI", "TYPE_PRICE_LEVEL", "SALES_COUNT", "MEDIAN_PSF", "DLD_PRICE_INDEX", "GROSS_YIELD", "CITY_PRICE", "MEDIAN_HH_INCOME"];
 
 const bands = (list: Projection[], target: string, live?: Record<string, Record<number, LiveShift>>): Band[] =>
   applyLive(list.filter((p) => p.target === target).map((p) => ({ horizon: p.horizon, year: p.year, p10: p.p10, p25: p.p25, median: p.median, p75: p.p75, p90: p.p90 })), live?.[target]);
@@ -53,7 +53,9 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
     observations.filter((o) => o.indicator === indicator && o.region === (opts.region ?? "") && o.dwelling_type === (opts.type ?? "") && o.frequency === (opts.freq ?? "A") && o.status === "actual").at(-1);
 
   const drivers = DRIVERS.map((k) => ({ k, o: latest(k) })).filter((d) => d.o);
-  const nationalRows = observations.filter((o) => NATIONAL.includes(o.indicator) && o.frequency === "A");
+  // Registry flows show their latest month (or quarter for the DLD index); everything else its latest year.
+  const FRESH = ["SALES_COUNT", "MEDIAN_PSF", "DLD_PRICE_INDEX"];
+  const nationalRows = observations.filter((o) => NATIONAL.includes(o.indicator) && (FRESH.includes(o.indicator) ? o.frequency !== "A" : o.frequency === "A"));
   const nationalLatest = [...new Map(nationalRows.map((o) => [`${o.indicator}|${o.region}|${o.dwelling_type}`, o])).values()];
   const cityRows = nationalLatest.filter((o) => o.region);
   const nationalTop = nationalLatest.filter((o) => !o.region);
@@ -143,10 +145,10 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
 
       {ctx?.details.affordability || ctx?.details.signals ? <AffordabilitySection ctx={ctx} disclaimer={run?.summary && (run.summary as unknown as { signalDisclaimer?: string }).signalDisclaimer} /> : null}
 
-      {nationalTop.length ? (
+      {nationalTop.length || cityRows.length ? (
         <section className="section">
           <div className="section-title"><div><p className="eyebrow">National agency data</p><h2>From the country&apos;s own housing agencies</h2></div><p>Latest annual readings in local currency, straight from the national source.</p></div>
-          <div className="table-wrap">
+          {nationalTop.length ? <div className="table-wrap">
             <table>
               <thead><tr><th>Measure</th><th>Type</th><th className="r">Latest</th><th>Year</th><th>Source</th></tr></thead>
               <tbody>{nationalTop.map((o) => (
@@ -154,7 +156,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
                   <td className="r">{o.value > 1000 ? money(o.value) : fmt(o.value, 2)}</td><td className="mono">{o.period}</td><td className="note">{o.source}</td></tr>
               ))}</tbody>
             </table>
-          </div>
+          </div> : null}
           {cityRows.length ? (
             <div className="table-wrap" style={{ marginTop: 16 }}>
               <table>
