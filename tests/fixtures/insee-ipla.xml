@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?><message:StructureSpecificData><message:DataSet>
+<Series IDBANK="010567012" NATURE="INDICE" CORRECTION="BRUT" TITLE_FR="Indice des prix des logements anciens - Paris - Appartements - Base 100 en moyenne annuelle 2015 - Série brute"><Obs TIME_PERIOD="2026-Q2" OBS_VALUE="134.3" OBS_STATUS="P"/><Obs TIME_PERIOD="2026-Q1" OBS_VALUE="133.9" OBS_STATUS="A"/></Series>
+<Series IDBANK="010567013" NATURE="INDICE" CORRECTION="CVS" TITLE_FR="Indice des prix des logements anciens - Paris - Appartements - Base 100 en moyenne annuelle 2015 - Série CVS"><Obs TIME_PERIOD="2026-Q2" OBS_VALUE="135.0"/></Series>
+<Series IDBANK="010567999" NATURE="INDICE" CORRECTION="BRUT" TITLE_FR="Indice des prix des logements anciens - France métropolitaine - Maisons - Base 100 en moyenne annuelle 2015 - Série brute"><Obs TIME_PERIOD="2026-Q2" OBS_VALUE="128.1"/></Series>
+<Series IDBANK="010567998" NATURE="INDICE" CORRECTION="BRUT" TITLE_FR="Indice des prix des logements anciens - France métropolitaine - Ensemble - Base 100 en moyenne annuelle 2015 - Série brute"><Obs TIME_PERIOD="2026-Q2" OBS_VALUE="130.0"/></Series>
+<Series IDBANK="010567016" NATURE="INDICE" CORRECTION="BRUT" TITLE_FR="Indice des prix des logements anciens - Île-de-France : Seine-et-Marne - Ensemble - Base 100 en moyenne annuelle 2015 - série brute"><Obs TIME_PERIOD="2026-Q2" OBS_VALUE="120.5"/></Series>
+</message:DataSet></message:StructureSpecificData>

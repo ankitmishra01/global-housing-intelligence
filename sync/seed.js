@@ -13,6 +13,8 @@ import { fetchWorldBank, WB_INDICATORS } from '../lib/sources/worldbank.js';
 import { fetchImf, IMF_INDICATORS } from '../lib/sources/imf.js';
 import { fetchStress, STRESS_INDICATORS } from '../lib/sources/stress.js';
 import { fetchNational, NATIONAL_ADAPTERS, NATIONAL_INDICATORS } from '../lib/sources/national/index.js';
+import { fetchMortgageRates, MORTGAGE_INDICATORS } from '../lib/sources/mortgage.js';
+import { fetchIncome, INCOME_INDICATORS } from '../lib/sources/income.js';
 import { validateRows, coverageReport, typeCoverage, COVERAGE_GATES } from '../lib/validate.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -39,6 +41,9 @@ async function main() {
     ...await step('IMF World Economic Outlook', () => fetchImf(validIso3)),
     ...await step('World Bank housing drivers', () => fetchWorldBank(validIso3)),
     ...await step('OECD unemployment and wages, BIS debt service', () => fetchStress(validIso3, byIso2)),
+    // Mortgage rates and household income are best-effort: a failed source is logged, never fatal.
+    ...await step('Mortgage rates (ECB MIR, Bank of England)', () => fetchMortgageRates(byIso2, { log: console.log })),
+    ...await step('Household income (Statistics Canada, OECD national accounts)', () => fetchIncome(validIso3, { log: console.log })),
   ];
   console.log('National housing agencies:');
   const national = await fetchNational();
@@ -58,6 +63,7 @@ async function main() {
 
   const report = {
     runAt: RUN_AT, dryRun: DRY_RUN, observations: rows.length, rejected: rejected.length, rejectedSample: rejected.slice(0, 25),
+    rejectedByReason: rejected.reduce((acc, r) => { const k = `${r.country} ${r.indicator}: ${r.reason}`; acc[k] = (acc[k] || 0) + 1; return acc; }, {}),
     tier1: countryRows.filter(c => c.tier === 1).length, withRent: countryRows.filter(c => c.has_rent).length, totalCountries: countryRows.length,
     nationalFailures: national.failures, gateFailures, dwellingTypes: typeCoverage(rows),
     coverage: Object.fromEntries(Object.entries(coverage).map(([k, v]) => [k, { countries: v.countries, rows: v.rows, latest: v.latest }])),
@@ -71,13 +77,16 @@ async function main() {
 
   const db = connect();
   await migrate(db);
-  const indicators = [...BIS_INDICATORS, ...OECD_INDICATORS, ...IMF_INDICATORS, ...WB_INDICATORS, ...STRESS_INDICATORS, ...NATIONAL_INDICATORS];
+  const indicators = [...BIS_INDICATORS, ...OECD_INDICATORS, ...IMF_INDICATORS, ...WB_INDICATORS, ...STRESS_INDICATORS, ...NATIONAL_INDICATORS, ...MORTGAGE_INDICATORS, ...INCOME_INDICATORS]
+    .filter((item, i, all) => all.findIndex(o => o.key === item.key) === i);
   await upsertRows(db, 'indicators', ['key', 'label', 'unit', 'source', 'frequency'], indicators);
   await upsertRows(db, 'countries', Object.keys(countryRows[0]), countryRows);
   const obs = rows.map(r => ({ ...r, region: r.region || '', dwelling_type: r.dwelling_type || '', status: r.status || 'actual', vintage: VINTAGE, fetched_at: RUN_AT }));
-  // Replace each refreshed series wholesale so revised or withdrawn points do not linger.
-  const series = [...new Set(obs.map(r => `${r.indicator}|${r.frequency}`))];
-  await db.batch(series.map(s => { const [indicator, frequency] = s.split('|'); return { sql: 'DELETE FROM observations WHERE indicator = ? AND frequency = ?', args: [indicator, frequency] }; }), 'write');
+  // Replace each refreshed series wholesale (per country) so revised or withdrawn points do not
+  // linger, while a source that failed this run keeps its previous rows for other countries.
+  const series = [...new Set(obs.map(r => `${r.country}|${r.indicator}|${r.frequency}`))];
+  const deletes = series.map(s => { const [country, indicator, frequency] = s.split('|'); return { sql: 'DELETE FROM observations WHERE country = ? AND indicator = ? AND frequency = ?', args: [country, indicator, frequency] }; });
+  for (let i = 0; i < deletes.length; i += 200) await db.batch(deletes.slice(i, i + 200), 'write');
   const t = Date.now();
   await upsertRows(db, 'observations', ['country', 'indicator', 'region', 'dwelling_type', 'period', 'frequency', 'value', 'status', 'source', 'vintage', 'fetched_at'], obs);
   console.log(`Wrote ${obs.length} observations in ${((Date.now() - t) / 1000).toFixed(1)}s`);

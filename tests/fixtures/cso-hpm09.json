@@ -1,0 +1,5 @@
+{"version":"2.0","class":"dataset","id":["STATISTIC","TLIST(M1)","C02803V03373"],"size":[2,2,3],
+"dimension":{"STATISTIC":{"category":{"index":["HPM09C01","HPM09C04"],"label":{"HPM09C01":"Residential Property Price Index","HPM09C04":"Percentage Change over 12 months"}}},
+"TLIST(M1)":{"category":{"index":["202607","202608"],"label":{"202607":"2026 July","202608":"2026 August"}}},
+"C02803V03373":{"category":{"index":["-","1","4"],"label":{"-":"National - all residential properties","1":"National - houses","4":"Dublin - apartments"}}}},
+"value":[190.1,195.2,180.3,190.9,196.0,181.0,5.1,5.2,4.9,5.0,5.3,4.8]}
