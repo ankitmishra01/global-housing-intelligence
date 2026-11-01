@@ -453,7 +453,7 @@ export async function accuracyChecks(db, { fetchFn = fetch } = {}) {
 }
 
 export async function runQuality({ db, live = false, write = true, now = new Date(), accuracy = !live } = {}) {
-  await migrate(db);
+  if (write) await migrate(db); // a dry run only reads, so it works while database writes are blocked
   const state = await loadState(db, { live });
   const checks = live ? liveChecks(state, now) : [...fullChecks(state, now), ...liveChecks(state, now)];
   if (accuracy) checks.push(...await accuracyChecks(db));
