@@ -1,0 +1,160 @@
+import type { Metadata } from "next";
+import { backtests, latestRun, sensitivities } from "@/lib/data";
+import { TYPE_LABELS, PERSONA_ORDER, fmt } from "@/lib/labels";
+
+export const revalidate = 86400;
+export const metadata: Metadata = { title: "Methodology" };
+
+const SOURCES: { name: string; series: string; provides: string; url: string }[] = [
+  { name: "BIS selected residential property prices", series: "WS_SPP", provides: "Nominal and real house price indexes, quarterly, about 60 economies, some from the 1970s. The core Tier 1 price series.", url: "https://data.bis.org/topics/RPP" },
+  { name: "BIS detailed residential property prices", series: "WS_DPP", provides: "Prices by dwelling type (houses, detached, townhouse, flats/condos), whole-country coverage only.", url: "https://data.bis.org/topics/RPP" },
+  { name: "BIS total credit statistics", series: "WS_TC", provides: "Household credit as % of GDP.", url: "https://data.bis.org/topics/TOTAL_CREDIT" },
+  { name: "BIS credit-to-GDP gaps", series: "WS_CREDIT_GAP", provides: "Deviation of private credit-to-GDP from its long-run trend.", url: "https://data.bis.org/topics/CREDIT_GAPS" },
+  { name: "BIS central bank policy rates", series: "WS_CBPOL", provides: "Monthly policy rates; euro area members use the ECB rate from the year they joined. The base for the rate toggle.", url: "https://data.bis.org/topics/CBPOL" },
+  { name: "OECD Analytical House Prices", series: "DSD_AN_HOUSE_PRICES", provides: "Rent price index, price-to-income and price-to-rent vs long-run average, real and nominal price indexes.", url: "https://data-explorer.oecd.org/" },
+  { name: "IMF World Economic Outlook (DataMapper)", series: "PCPIPCH, NGDP_RPCH", provides: "Inflation and real GDP growth, history plus about five years of forecasts. Inflation converts real paths to nominal.", url: "https://www.imf.org/external/datamapper" },
+  { name: "World Bank World Development Indicators", series: "WDI", provides: "Population and urban growth, income, lending and real rates, private credit for every economy (the Tier 2 baseline).", url: "https://data.worldbank.org/" },
+  { name: "CMHC Rental Market Survey (via Statistics Canada)", series: "34-10-0133, 34-10-0127", provides: "Average two-bedroom rents and vacancy rates for major Canadian metros.", url: "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013301" },
+  { name: "CMHC Starts and Completions Survey (via Statistics Canada)", series: "34-10-0135", provides: "Canadian housing starts.", url: "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013501" },
+  { name: "Statistics Canada New Housing Price Index", series: "18-10-0205", provides: "New home prices (house and land).", url: "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501" },
+  { name: "Bank of Canada Valet API", series: "V80691335", provides: "Posted 5-year conventional mortgage rate (posted rates run above typical negotiated rates).", url: "https://www.bankofcanada.ca/valet/docs" },
+  { name: "FRED (Federal Reserve Bank of St. Louis)", series: "MSPUS, CUSR0000SEHA, MORTGAGE30US, HOUST, RRVRUSQ156N", provides: "US median sales price (Census/HUD), CPI rent (BLS), 30-year fixed mortgage rate (Freddie Mac), housing starts and rental vacancy (Census).", url: "https://fred.stlouisfed.org/" },
+  { name: "Zillow Research", series: "ZHVI, ZORI", provides: "US typical home values for condos/co-ops and single-family homes, and typical market rents.", url: "https://www.zillow.com/research/data/" },
+  { name: "HM Land Registry UK House Price Index", series: "UK HPI", provides: "UK and nation-level average prices by type: detached, semi-detached, terraced, flats.", url: "https://landregistry.data.gov.uk/app/ukhpi" },
+  { name: "Australian Bureau of Statistics", series: "RES_DWELL_ST", provides: "Mean price of residential dwellings, national and by state.", url: "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/total-value-dwellings" },
+];
+
+const TARGET_NAMES: Record<string, string> = { real_price: "Real house prices", real_rent: "Real rents", type_price: "Prices by dwelling type" };
+
+export default async function Methodology() {
+  const [run, bt, sens] = await Promise.all([latestRun(), backtests(), sensitivities()]);
+  return (
+    <div className="page prose">
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Methodology</p>
+          <h1>How the numbers are made</h1>
+          <p className="lede">Statistical code produces every number, the page renders it, and the AI analyst only explains what is already stored. A model has to beat a simple baseline on years it never saw, or the baseline is shown instead.</p>
+        </div>
+        {run ? <p className="note mono">Run {run.id} · model {run.model_version} · data to {run.data_vintage}</p> : null}
+      </header>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Sources</p><h2>Where the data comes from</h2></div><p>All public, free APIs, refreshed monthly. International sources give comparability; national agencies add local-currency levels, cities and dwelling types.</p></div>
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Source</th><th>Series</th><th>What it provides</th></tr></thead>
+            <tbody>{SOURCES.map((s) => (
+              <tr key={s.name}><td><a href={s.url} rel="noopener noreferrer" target="_blank">{s.name}</a></td><td className="mono note">{s.series}</td><td>{s.provides}</td></tr>
+            ))}</tbody>
+          </table>
+        </div>
+        <p className="note">Tier 1 economies have an official house price index (BIS or OECD). Tier 2 economies have housing drivers only and are never given a price or rent projection.</p>
+      </section>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Model</p><h2>The 10-year projection engine</h2></div></div>
+        <div className="grid-2">
+          <div className="panel">
+            <h3 style={{ marginTop: 0 }}>What is projected</h3>
+            <p>Cumulative real (after-inflation) log growth of three kinds of series: each country&apos;s house price index, its rent index deflated by consumer prices, and each country × dwelling-type price series. Nominal paths add IMF WEO inflation forecasts, held flat after the last WEO year. The price-to-rent path is the ratio of the nominal price and rent paths.</p>
+            <h3>How</h3>
+            <p>A pooled ridge regression is fitted separately for each horizon (1, 2, 3, 5, 7 and 10 years ahead), predicting growth directly rather than chaining one-year forecasts. Years 4, 6, 8 and 9 are interpolated along the cumulative path. Missing predictors are mean-imputed inside each training window; outcomes are never imputed.</p>
+            <h3>Features</h3>
+            <ul>{(run?.summary.features ?? []).map((f) => <li key={f}>{f}</li>)}</ul>
+          </div>
+          <div className="panel">
+            <h3 style={{ marginTop: 0 }}>Baselines and the honesty rule</h3>
+            <p>Two baselines compete with the model: <strong>no real change</strong>, and the country&apos;s <strong>historical real trend</strong> (mean annual growth over up to 20 prior years).</p>
+            <p>Rolling-origin backtests run from 1995. At each test year the model is trained only on outcomes already observed by then. The method is chosen on the earlier half of the test years and its error is quoted on the later half it never saw.</p>
+            <ul>
+              <li>The model is kept only if it beats the better baseline on both halves.</li>
+              <li>Otherwise the better baseline is shown, labelled &quot;no model skill, showing baseline&quot;.</li>
+              <li>A trend baseline that loses to no-change on the held-out years falls back to no-change.</li>
+            </ul>
+            <h3>Uncertainty</h3>
+            <p>{run?.summary.uncertainty ?? "Empirical rolling-origin residual quantiles per horizon."}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Backtests</p><h2>How accurate it has been</h2></div><p>Errors are in cumulative log points × 100 (about percent). Skill is the error reduction against the no-change baseline. Coverage is how often the outcome fell inside the 80% band on held-out years.</p></div>
+        {bt.length ? (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Target</th><th className="r">Horizon</th><th>Method shipped</th><th className="r">MAE</th><th className="r">No-change MAE</th><th className="r">Skill</th><th className="r">80% coverage</th><th className="r">Origins</th><th>Status</th></tr></thead>
+              <tbody>{bt.map((b) => (
+                <tr key={`${b.target}${b.horizon}`}>
+                  <td>{TARGET_NAMES[b.target] ?? b.target}</td><td className="r">{b.horizon}y</td><td>{b.method}</td>
+                  <td className="r">{fmt(b.mae, 2)}</td><td className="r">{fmt(b.baseline_mae, 2)}</td>
+                  <td className={`r ${b.skill_pct > 0 ? "pos" : b.skill_pct < 0 ? "neg" : ""}`}>{fmt(b.skill_pct, 1)}%</td>
+                  <td className="r">{fmt(b.coverage80, 1)}%</td><td className="r">{b.n_origins}</td>
+                  <td><span className={`badge ${b.status.startsWith("out") ? "badge--t1" : "badge--warn"}`}>{b.status}</span></td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        ) : <p className="note">No backtests stored yet.</p>}
+        {bt.length ? <p className="note">{bt[0].basis}. Long horizons rest on fewer origins: read the Origins column before trusting a 10-year skill figure.</p> : null}
+      </section>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Rate toggle</p><h2>Interest-rate sensitivity</h2></div><p>Change in cumulative real growth (log points × 100) for a sustained +1 percentage point move in the policy rate, read off the pooled ridge fit. The ± figure is a cluster-bootstrap standard error over countries.</p></div>
+        {sens.length ? (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Target</th><th className="r">Horizon</th><th className="r">Effect per +1pp</th><th>Toggle</th><th>Note</th></tr></thead>
+              <tbody>{sens.filter((s) => [1, 3, 5, 10].includes(s.horizon)).map((s) => (
+                <tr key={`${s.target}${s.horizon}`}>
+                  <td>{TARGET_NAMES[s.target] ?? s.target}</td><td className="r">{s.horizon}y</td><td className="r">{fmt(s.coef, 2)} ± {fmt(s.se, 2)}</td>
+                  <td>{s.valid ? <span className="badge badge--t1">on</span> : <span className="badge badge--warn">off</span>}</td><td className="note">{s.note}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        ) : <p className="note">No sensitivities stored yet.</p>}
+        <p className="note">Prices must fall when rates rise. A wrong-signed price estimate switches the toggle off for that run rather than showing an implausible effect. Rents are estimated freely: higher rates can push households into renting.</p>
+      </section>
+
+      <section className="section" id="flags">
+        <div className="section-title"><div><p className="eyebrow">Risk flags</p><h2>Rule-based thresholds</h2></div></div>
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Flag</th><th>Rule</th><th className="r">Threshold</th></tr></thead>
+            <tbody>{Object.entries(run?.summary.flagRules ?? {}).map(([k, r]) => <tr key={k}><td className="mono">{k}</td><td>{r.label}</td><td className="r">{r.threshold}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="section" id="indexes">
+        <div className="section-title"><div><p className="eyebrow">Indexes</p><h2>Investor, buyer, renter, seller weights</h2></div><p>Each component is ranked as a percentile across Tier 1 economies, oriented so 100 is best for that person, then weighted. Less than half the weight available means no score.</p></div>
+        <div className="grid-2">
+          {PERSONA_ORDER.map((k) => {
+            const spec = run?.summary.personas[k];
+            return spec ? (
+              <div key={k} className="panel">
+                <h3 style={{ marginTop: 0 }}>{spec.label}</h3>
+                <p className="note">{spec.question}</p>
+                <table>
+                  <thead><tr><th>Component</th><th className="r">Weight</th><th>Better when</th></tr></thead>
+                  <tbody>{spec.components.map((c) => <tr key={c.key}><td>{c.label}</td><td className="r">{Math.round(c.weight * 100)}%</td><td>{c.direction > 0 ? "higher" : "lower"}</td></tr>)}</tbody>
+                </table>
+              </div>
+            ) : null;
+          })}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Dwelling types</p><h2>Condos, houses, detached, townhouses</h2></div></div>
+        <p>Type series come from the BIS detailed dataset ({Object.values(TYPE_LABELS).join(", ")}), HM Land Registry for the UK, and Zillow for US condos and single-family homes. Where both an index and a national level series exist, the longer history is used. Type paths have their own pooled model and backtest (&quot;Prices by dwelling type&quot; above). Coverage is uneven: condo and house splits exist for about 20 economies, and detached, townhouse and semi-detached for only a handful.</p>
+      </section>
+
+      <section className="section">
+        <div className="section-title"><div><p className="eyebrow">Limits</p><h2>What this cannot tell you</h2></div></div>
+        <ul>{(run?.summary.limits ?? []).map((l) => <li key={l}>{l}</li>)}</ul>
+      </section>
+    </div>
+  );
+}

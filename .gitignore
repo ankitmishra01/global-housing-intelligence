@@ -1,0 +1,11 @@
+.vercel
+.DS_Store
+node_modules/
+.next/
+*.tsbuildinfo
+.env*
+*.db
+*.db-*
+sync/report.json
+sync/cache/
+.gstack/

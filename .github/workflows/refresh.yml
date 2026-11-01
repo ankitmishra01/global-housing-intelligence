@@ -1,0 +1,62 @@
+name: Monthly data refresh
+
+# Fetches BIS, OECD, IMF, World Bank and national agency data, validates it, retrains
+# the 10-year projections and indexes, and writes a new run to Turso. Then asks Vercel
+# to rebuild so cached pages pick up the new run. Opens an issue on failure.
+
+on:
+  schedule:
+    - cron: '17 6 3 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Require database secrets
+        run: |
+          if [ -z "$TURSO_DATABASE_URL" ] || [ -z "$TURSO_AUTH_TOKEN" ]; then
+            echo "TURSO_DATABASE_URL and TURSO_AUTH_TOKEN secrets are required"; exit 1
+          fi
+      - name: Seed observations
+        run: node sync/seed.js
+      - name: Train projections, flags and indexes
+        run: node sync/train.js
+      - name: Upload seed report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed-report
+          path: sync/report.json
+          if-no-files-found: ignore
+      - name: Rebuild Vercel deployment
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -n "$HOOK" ]; then curl -fsS -X POST "$HOOK" > /dev/null && echo "Deploy hook triggered"; else echo "No deploy hook configured; pages refresh on their daily revalidation."; fi
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Monthly data refresh failed ($(date -u +%Y-%m-%d))" \
+            --body "The scheduled refresh failed, so house price and rent data, projections and indexes may be out of date. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

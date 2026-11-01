@@ -1,0 +1,46 @@
+{
+  "name": "global-housing-intelligence",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.js",
+    "db:migrate": "node db/migrate.js",
+    "seed": "node sync/seed.js",
+    "seed:dry": "node sync/seed.js --dry-run",
+    "train": "node sync/train.js"
+  },
+  "dependencies": {
+    "@libsql/client": "0.18.0",
+    "ai": "7.0.159",
+    "d3-geo": "3.1.1",
+    "i18n-iso-countries": "7.14.0",
+    "next": "16.4.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "recharts": "3.3.0",
+    "server-only": "0.0.1",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "3.1.1",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/topojson-client": "3.1.5",
+    "@vercel/config": "0.12.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.2",
+    "typescript": "5.9.3"
+  }
+}

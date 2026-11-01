@@ -1,0 +1,39 @@
+name: Production health probe
+
+# Every 6 hours: the countries API serves at least 150 economies and the latest
+# projection run is under 40 days old. Opens one issue on failure (skips if an open
+# probe issue already exists).
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Probe production
+        env:
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://global-housing-intelligence.vercel.app' }}
+        shell: bash
+        run: node sync/probe.js | tee probe.txt
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Production health probe failed"
+          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json number -q 'length')
+          if [ "${open:-0}" != "0" ]; then echo "An open probe issue already exists."; exit 0; fi
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" \
+            --body "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+
+          $(cat probe.txt 2>/dev/null)"
