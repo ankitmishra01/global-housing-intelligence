@@ -50,7 +50,7 @@ async function ingestGdelt(db, today, backfill, log) {
   return { fetched, missing: wanted.length - fetched };
 }
 
-export async function runLive({ db = connect(), now = new Date(), log = console.log, backfill = null } = {}) {
+export async function runLive({ db = connect(), now = new Date(), log = console.log, backfill = null, trigger = 'cli' } = {}) {
   const started = Date.now();
   const today = iso(now);
   await migrate(db);
@@ -206,6 +206,8 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
     activeEvents: active.map(e => ({ country: e.country, class: e.class, intensity: e.intensity, applies: !!e.evidence?.applies, onset: e.onset })),
     biggestShifts: biggest, logEntries: logs.length, personaScores: personaRows.length, mortgageSpread: summary.mortgageSpread,
   };
+  await db.execute({ sql: 'INSERT OR REPLACE INTO live_runs (run_at, trigger, ok, countries, events, log_entries, seconds, error) VALUES (?, ?, 1, ?, ?, ?, ?, NULL)',
+    args: [now.toISOString(), trigger, states.length, active.length, logs.length, result.seconds] });
   // Cheap live-layer quality checks after every daily run (never blocks the run).
   try {
     const q = await runQuality({ db, live: true, now });
@@ -217,7 +219,8 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
 if (import.meta.url === `file://${process.argv[1]}`) {
   const i = process.argv.indexOf('--backfill');
   const backfill = i > -1 ? Number(process.argv[i + 1]) || 90 : null;
-  runLive({ backfill }).then(r => {
+  const t = process.argv.indexOf('--trigger');
+  runLive({ backfill, trigger: t > -1 ? process.argv[t + 1] : 'cli' }).then(r => {
     console.log(`\nLive layer ${r.asOf} (run ${r.runId}) in ${r.seconds}s: ${r.countriesAdjusted} countries adjusted, ${r.activeEvents.length} active events`);
     for (const e of r.activeEvents) console.log(`  ${e.country.padEnd(4)} ${e.class.padEnd(18)} ${String(e.intensity).padStart(7)}  ${e.applies ? 'applies' : 'ongoing, no shift'}  since ${e.onset}`);
     console.log('Biggest 10-year real price shifts:');

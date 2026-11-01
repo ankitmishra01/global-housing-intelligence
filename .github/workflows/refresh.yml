@@ -40,6 +40,15 @@ jobs:
         run: node sync/seed.js
       - name: Train projections, flags and indexes
         run: node sync/train.js
+      - name: Re-run the live layer and refresh every page
+        # The live endpoint re-applies rate moves and events to the new run, records a live_runs
+        # row, clears the Turso read cache and revalidates every page (including /live).
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SITE: ${{ vars.PRODUCTION_URL || 'https://global-housing-intelligence.vercel.app' }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET not set; the daily cron will pick up the new run instead."; exit 0; fi
+          curl -sf --max-time 300 -H "Authorization: Bearer $CRON_SECRET" "$SITE/api/cron/live?trigger=refresh-workflow" | head -c 400
       - name: Upload seed report
         if: always()
         uses: actions/upload-artifact@v4

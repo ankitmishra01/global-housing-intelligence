@@ -282,3 +282,16 @@ CREATE TABLE IF NOT EXISTS seed_runs (
   national_failures TEXT NOT NULL,   -- JSON [{iso3, error}]
   gate_failures     TEXT NOT NULL    -- JSON [string]
 );
+
+-- One row per live-layer run, so the site can show when it last updated and checks can
+-- alert if the daily job stops.
+CREATE TABLE IF NOT EXISTS live_runs (
+  run_at      TEXT PRIMARY KEY,
+  trigger     TEXT NOT NULL,     -- vercel-cron, refresh-workflow, cli
+  ok          INTEGER NOT NULL,
+  countries   INTEGER,
+  events      INTEGER,
+  log_entries INTEGER,
+  seconds     INTEGER,
+  error       TEXT
+);

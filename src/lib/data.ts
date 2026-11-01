@@ -264,3 +264,7 @@ export const allBacktestPoints = cache(async (target: string, horizon: number) =
   const run = await latestRun();
   return run ? rows<BacktestPoint>("SELECT country, target, horizon, origin, predicted, actual, method FROM backtest_points WHERE run_id = ? AND target = ? AND horizon = ? ORDER BY country, origin", [run.id, target, horizon]) : [];
 });
+
+// Latest live-layer runs (when the live page last updated, and by what).
+export type LiveRun = { run_at: string; trigger: string; ok: number; countries: number | null; events: number | null; log_entries: number | null; seconds: number | null; error: string | null };
+export const liveRuns = cache(() => rows<LiveRun>("SELECT * FROM live_runs ORDER BY run_at DESC LIMIT 10"));

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { activeEvents, countries, eventLibrary, liveLog, liveStates, recentEvents } from "@/lib/data";
+import { activeEvents, countries, eventLibrary, liveLog, liveRuns, liveStates, recentEvents } from "@/lib/data";
 import { EVENT_LABELS, flagEmoji, fmt, pct } from "@/lib/labels";
 
 export const revalidate = 3600;
@@ -9,7 +9,9 @@ export const metadata: Metadata = { title: "Live adjustments" };
 const toPct = (logPts: number | null | undefined) => (logPts == null ? null : 100 * (Math.exp(logPts / 100) - 1));
 
 export default async function LivePage() {
-  const [list, states, active, recent, log, library] = await Promise.all([countries(), liveStates(), activeEvents(), recentEvents(), liveLog(), eventLibrary()]);
+  const [list, states, active, recent, log, library, runs] = await Promise.all([countries(), liveStates(), activeEvents(), recentEvents(), liveLog(), eventLibrary(), liveRuns()]);
+  const lastRun = runs.find((r) => r.ok);
+  const TRIGGERS: Record<string, string> = { "vercel-cron": "daily job", "refresh-workflow": "monthly data refresh", cli: "manual run" };
   const byIso = Object.fromEntries(list.map((c) => [c.iso3, c]));
   const asOf = states[0]?.as_of;
   const moved = [...states].filter((s) => s.shift10_price != null && Math.abs(s.shift10_price) >= 0.05).sort((a, b) => Math.abs(b.shift10_price!) - Math.abs(a.shift10_price!));
@@ -20,7 +22,7 @@ export default async function LivePage() {
     <div className="page">
       <header className="page-head">
         <div>
-          <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live layer {asOf ? `· updated ${asOf}` : ""}</p>
+          <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live layer {lastRun ? `· updated ${lastRun.run_at.slice(0, 16).replace("T", " ")} UTC by the ${TRIGGERS[lastRun.trigger] ?? lastRun.trigger}` : asOf ? `· updated ${asOf}` : ""}</p>
           <h1>What changed, and what it did to the outlook</h1>
           <p className="lede">Every day the live layer reads current central bank rates, global news events (GDELT), disaster alerts (GDACS) and exchange rates. Rate moves and detected events adjust the projections automatically, using effects measured from history.</p>
         </div>
