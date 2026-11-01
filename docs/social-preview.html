@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Global Housing Intelligence: social preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #f4f1ea; --sheet: #fcfbf7; --ink: #18211e; --muted: #66706b; --rule: #d9d4c8; --accent: #b5502d; --moss: #2f6a57; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 640px; background: var(--paper); color: var(--ink); overflow: hidden; }
+  body { font-family: Inter, system-ui, sans-serif; padding: 64px 72px; display: grid; grid-template-rows: auto 1fr auto; }
+  .top { display: flex; align-items: center; gap: 16px; }
+  .mark { width: 52px; height: 52px; background: var(--ink); color: var(--sheet); display: grid; place-items: center; font: 500 16px 'IBM Plex Mono', monospace; letter-spacing: .06em; }
+  .eyebrow { color: var(--accent); font: 500 15px 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .14em; }
+  h1 { font: 400 92px/1 Fraunces, Georgia, serif; letter-spacing: -.025em; margin-top: 44px; }
+  .sub { color: var(--muted); font-size: 30px; margin-top: 22px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--rule); border-top: 2px solid var(--ink); background: var(--sheet); }
+  .stats div { padding: 20px 22px; border-right: 1px solid var(--rule); }
+  .stats div:last-child { border-right: 0; }
+  .stats span { display: block; color: var(--muted); font: 500 12px 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
+  .stats strong { display: block; margin-top: 6px; font: 400 34px Fraunces, Georgia, serif; }
+  .stats strong i { font-style: normal; color: var(--accent); }
+  .fan { position: absolute; right: 72px; top: 64px; width: 330px; height: 200px; }
+</style>
+</head>
+<body>
+  <div class="top"><span class="mark">GHI</span><span class="eyebrow">Open data · backtested · updated daily</span></div>
+  <svg class="fan" viewBox="0 0 330 200" aria-hidden="true">
+    <path d="M0,150 L40,140 L80,145 L120,120 L160,100 L200,108 L200,108 L330,30 L330,190 Z" fill="#b5502d22"/>
+    <path d="M200,108 L330,60 L330,155 Z" fill="#b5502d44"/>
+    <polyline points="0,150 40,140 80,145 120,120 160,100 200,108" fill="none" stroke="#18211e" stroke-width="3"/>
+    <polyline points="200,108 330,104" fill="none" stroke="#b5502d" stroke-width="3" stroke-dasharray="8 5"/>
+    <line x1="200" y1="10" x2="200" y2="195" stroke="#9a9f99" stroke-dasharray="3 4"/>
+  </svg>
+  <div>
+    <h1>Global Housing<br>Intelligence</h1>
+    <p class="sub">Prices · rents · 10-year outlook for 217 economies</p>
+  </div>
+  <div class="stats">
+    <div><span>Economies</span><strong>217</strong></div>
+    <div><span>Projection horizon</span><strong>10 <i>years</i></strong></div>
+    <div><span>Rate toggle</span><strong>±3 <i>pp</i></strong></div>
+    <div><span>Personas</span><strong>4 <i>indexes</i></strong></div>
+  </div>
+</body>
+</html>

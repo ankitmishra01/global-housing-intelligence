@@ -1,0 +1,42 @@
+name: Data source request
+description: Suggest an official or openly licensed data source to add
+labels: [data-source]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Source name and URL
+      placeholder: Statistics Netherlands (CBS) house price index, https://...
+    validations:
+      required: true
+  - type: textarea
+    id: provides
+    attributes:
+      label: What it provides
+      description: Indicators, countries or cities, dwelling types, frequency and how far back it goes
+    validations:
+      required: true
+  - type: input
+    id: licence
+    attributes:
+      label: Licence or terms
+      description: For example CC BY 4.0, Open Government Licence, or a link to the terms of use
+    validations:
+      required: true
+  - type: dropdown
+    id: access
+    attributes:
+      label: How can it be accessed?
+      options:
+        - Open API, no key
+        - API with a free key
+        - Downloadable CSV/JSON/XLSX
+        - Web pages only
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: What gap it fills (a missing country, fresher data, rents, a city...)

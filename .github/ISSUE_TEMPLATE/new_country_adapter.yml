@@ -1,0 +1,42 @@
+name: New country adapter
+description: Propose (or volunteer to build) a national data adapter
+labels: [adapter]
+body:
+  - type: input
+    id: country
+    attributes:
+      label: Country (ISO3)
+      placeholder: FRA
+    validations:
+      required: true
+  - type: textarea
+    id: agencies
+    attributes:
+      label: Agencies and series
+      description: Which official agencies and series, with endpoint URLs
+    validations:
+      required: true
+  - type: input
+    id: licence
+    attributes:
+      label: Licence
+    validations:
+      required: true
+  - type: checkboxes
+    id: content
+    attributes:
+      label: What the adapter would add
+      options:
+        - label: Local-currency price levels
+        - label: Rents
+        - label: City or regional rows
+        - label: Dwelling types (house, detached, semi-detached, townhouse, condo)
+        - label: Sales volumes
+        - label: Mortgage rates
+        - label: Vacancy or construction
+  - type: checkboxes
+    id: build
+    attributes:
+      label: Building it yourself?
+      options:
+        - label: I'd like to build this adapter (see CONTRIBUTING.md, "Add a national adapter")

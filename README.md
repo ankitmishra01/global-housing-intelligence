@@ -4,12 +4,12 @@
 
 [**Live site → global-housing-intelligence.vercel.app**](https://global-housing-intelligence.vercel.app)
 
-![Status](https://img.shields.io/badge/status-production-2f6a57)
-![Economies](https://img.shields.io/badge/economies-217-18211e)
-![Horizon](https://img.shields.io/badge/projections-1%20to%2010%20years-b5502d)
-![Database](https://img.shields.io/badge/database-Turso%20(libSQL)-4ff8d2)
-![Framework](https://img.shields.io/badge/Next.js-16-000000)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+[![Live site](https://img.shields.io/badge/live-global--housing--intelligence.vercel.app-2f6a57)](https://global-housing-intelligence.vercel.app)
+[![CI](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/ci.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/ci.yml)
+[![Monthly data refresh](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/refresh.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/refresh.yml)
+[![Production probe](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/probe.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/probe.yml)
+[![Data quality](https://img.shields.io/badge/data%20quality-live%20checks-b5502d)](https://global-housing-intelligence.vercel.app/quality)
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
 ![Overview: world map of projected 10-year real house price change](docs/screenshots/overview.png)
 
@@ -342,3 +342,7 @@ A failing national adapter is logged and skipped. It never blocks the internatio
 Bank for International Settlements · OECD · International Monetary Fund · World Bank · Canada Mortgage and Housing Corporation and Statistics Canada (Open Government Licence, Canada) · Bank of Canada · US Census Bureau, Bureau of Labor Statistics and Freddie Mac via FRED (Federal Reserve Bank of St. Louis) · **Zillow Research** (ZHVI and ZORI) · HM Land Registry (Open Government Licence, contains HM Land Registry data © Crown copyright) · Australian Bureau of Statistics (CC BY 4.0) · Dubai Real Estate Data (dubairealestatedata.com), based on Dubai Land Department open data (CC BY 4.0).
 
 MIT licence. Built with Next.js, Turso, Recharts and d3-geo.
+
+## Contributing
+
+Contributions are welcome, especially new national data adapters. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, the honesty rules every change must follow, and a step-by-step guide to adding a country. Report bugs or request a data source through the [issue templates](https://github.com/ankitmishra01/global-housing-intelligence/issues/new/choose). Security issues: see [SECURITY.md](SECURITY.md).
