@@ -25,7 +25,7 @@ export default async function Overview() {
   const mapValues = Object.fromEntries(Object.entries(price10).map(([k, p]) => [k, p.median - 100]));
   const ranked = Object.values(price10).sort((a, b) => b.median - a.median);
   const tier1 = list.filter((c) => c.tier === 1).length;
-  const medianOf = (xs: number[]) => { const s = [...xs].sort((a, b) => a - b); return s.length ? s[Math.floor(s.length / 2)] : null; };
+  const medianOf = (xs: number[]) => { const s = [...xs].sort((a, b) => a - b); const n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
   const names = Object.fromEntries(list.map((c) => [c.iso3, c.name]));
   const med10 = medianOf(Object.values(price10).map((p) => p.median - 100));
   const medRent10 = medianOf(Object.values(rent10).map((p) => p.median - 100));

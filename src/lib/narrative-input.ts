@@ -8,7 +8,8 @@ import type { Band, SensMap } from "@/lib/toggle";
 export type NarrativeInput = Record<string, unknown> & { name: string; tier: number };
 
 const toPct = (logPts: number) => 100 * (Math.exp(logPts / 100) - 1);
-const median = (xs: number[]) => { const s = [...xs].sort((a, b) => a - b); return s.length ? s[Math.floor(s.length / 2)] : null; };
+// True median: mean of the two middle values when the count is even.
+const median = (xs: number[]) => { const s = [...xs].sort((a, b) => a - b); const n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
 // Rank against the other markets only, so a country never ranks below the count.
 const rankDesc = (others: number[], v: number) => others.filter((x) => x > v).length + 1;
 const lastYear = (series?: Record<string, number>) => { const ys = Object.keys(series ?? {}).map(Number).filter((y) => Number.isFinite(series![y])); return ys.length ? Math.max(...ys) : null; };

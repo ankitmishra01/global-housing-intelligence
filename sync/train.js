@@ -35,18 +35,33 @@ export async function loadRows(db) {
 
 // National levels the panel drops (it keeps national rows only): Canada's rent is the median
 // of the latest CMHC two-bedroom rents across the tracked metros.
+// What each country's national median income series measures, from its stored source.
+export const INCOME_LABELS = [
+  [/Statistics Canada/, 'median total income of families and unattached individuals, Statistics Canada, 2024 dollars'],
+  [/Census/, 'median household income, US Census Bureau'],
+];
+
 export async function loadNationalExtras(db) {
-  const { rows } = await db.execute(`SELECT country, region, period, value FROM observations WHERE indicator = 'AVG_RENT_2BR' AND frequency = 'A' AND region != ''`);
+  const { rows: incomeRows } = await db.execute("SELECT country, MAX(source) AS source FROM observations WHERE indicator = 'MEDIAN_HH_INCOME' AND region = '' GROUP BY country");
+  // Census metros only (centres that also report a CMHC vacancy rate), not the ~200 smaller centres.
+  const { rows } = await db.execute(`SELECT country, region, period, value FROM observations WHERE indicator = 'AVG_RENT_2BR' AND frequency = 'A' AND region != ''
+    AND region IN (SELECT DISTINCT region FROM observations WHERE indicator = 'VACANCY_RATE' AND region != '')`);
   const byCountry = {};
   for (const r of rows) {
     const c = (byCountry[r.country] ||= {});
     if (!c.year || r.period > c.year) { c.year = r.period; c.values = []; }
     if (r.period === c.year) c.values.push(Number(r.value));
   }
-  return Object.fromEntries(Object.entries(byCountry).map(([iso3, c]) => {
+  const extras = Object.fromEntries(Object.entries(byCountry).map(([iso3, c]) => {
     const v = [...c.values].sort((a, b) => a - b);
-    return [iso3, { rent: v[Math.floor(v.length / 2)], rentBasis: `median two-bedroom rent across ${v.length} CMHC metros, ${c.year}` }];
+    const n = v.length, med = n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2;
+    return [iso3, { rent: med, rentBasis: `median two-bedroom rent across ${v.length} CMHC census metros, ${c.year}` }];
   }));
+  for (const r of incomeRows) {
+    const label = INCOME_LABELS.find(([re]) => re.test(String(r.source)))?.[1];
+    if (label) extras[r.country] = { ...(extras[r.country] || {}), incomeLabel: label };
+  }
+  return extras;
 }
 
 const annualMean = (monthly, year) => {

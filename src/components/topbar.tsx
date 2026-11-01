@@ -10,7 +10,8 @@ const LABELS: Record<string, string> = {
 // Breadcrumb, live status and actions, styled like the Global Economic Intelligence top bar.
 export function Topbar() {
   const path = usePathname();
-  const parts = path.split("/").filter(Boolean);
+  // The prerendered home page can report "/index"; it is the overview.
+  const parts = path.split("/").filter((p) => p && p !== "index");
   const crumbs = parts.length ? parts.map((p, i) => (i === 0 ? LABELS[p] ?? p : p.toUpperCase().length <= 3 ? p.toUpperCase() : p.replace(/-/g, " "))) : ["Overview"];
   return (
     <div className="topbar">

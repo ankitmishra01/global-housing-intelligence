@@ -292,7 +292,7 @@ function fullChecks(s, now) {
     if (p?.REAL_PRICE && p?.OECD_REAL_PRICE) { const g = growthCorrelation(p.REAL_PRICE, p.OECD_REAL_PRICE); if (g) corr.push({ iso3: c.iso3, ...g, r: g.r == null ? null : +g.r.toFixed(2) }); }
   }
   const lowCorr = corr.filter(x => x.r != null && x.r < 0.7);
-  out.push(check('consistency.bis_oecd', 'Consistency', lowCorr.length ? 'warn' : 'pass', `BIS vs OECD real price growth: ${corr.length} countries compared, median r ${corr.length ? [...corr].sort((a, b) => a.r - b.r)[Math.floor(corr.length / 2)].r : '–'}, ${lowCorr.length} below 0.7`, { low: lowCorr, all: corr }));
+  out.push(check('consistency.bis_oecd', 'Consistency', lowCorr.length ? 'warn' : 'pass', `BIS vs OECD real price growth: ${corr.length} countries compared, median r ${corr.length ? (() => { const s = corr.map(x => x.r).sort((a, b) => a - b), n = s.length; return +(n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2).toFixed(3); })() : 'n/a'}, ${lowCorr.length} below 0.7`, { low: lowCorr, all: corr }));
 
   const nationalPairs = [
     { iso3: 'GBR', a: 'NOMINAL_PRICE', b: 'AVG_PRICE', label: 'UK BIS nominal vs Land Registry average' },
@@ -410,10 +410,53 @@ function fullChecks(s, now) {
   return out;
 }
 
-export async function runQuality({ db, live = false, write = true, now = new Date() } = {}) {
+// Accuracy checks (docs/ACCURACY_AUDIT.md): a small live re-fetch of three core sources compared
+// with stored values, plus label sanity for city names and units. Network failures are 'info',
+// never 'fail', because an upstream outage is not a data error.
+export async function accuracyChecks(db, { fetchFn = fetch } = {}) {
+  const out = [];
+  const one = async (sql, args) => (await db.execute({ sql, args })).rows[0];
+  const samples = [];
+  const probe = async (label, fn) => { try { samples.push({ label, ...(await fn()) }); } catch (e) { samples.push({ label, error: String(e.message || e) }); } };
+  await probe('BIS real price, Canada, latest quarter', async () => {
+    const t = await (await fetchFn('https://stats.bis.org/api/v1/data/WS_SPP/Q.CA.R.628?format=csv&lastNObservations=1', { signal: AbortSignal.timeout(60000) })).text();
+    const [h, row] = t.trim().split(/\r?\n/); const cols = h.split(','); const cells = row.split(',');
+    const period = cells[cols.indexOf('TIME_PERIOD')], value = Number(cells[cols.indexOf('OBS_VALUE')]);
+    const stored = await one("SELECT value FROM observations WHERE country='CAN' AND indicator='REAL_PRICE' AND region='' AND period=? AND frequency='Q'", [period]);
+    return { period, source: value, stored: stored ? Number(stored.value) : null };
+  });
+  await probe('FRED median sales price, latest quarter', async () => {
+    const rows = (await (await fetchFn('https://fred.stlouisfed.org/graph/fredgraph.csv?id=MSPUS', { signal: AbortSignal.timeout(60000) })).text()).trim().split(/\r?\n/);
+    const [date, v] = rows.at(-1).split(','); const [y, m] = date.split('-'); const period = `${y}-Q${Math.ceil(Number(m) / 3)}`;
+    const stored = await one("SELECT value FROM observations WHERE country='USA' AND indicator='MEDIAN_PRICE' AND region='' AND period=? AND frequency='Q'", [period]);
+    return { period, source: Number(v), stored: stored ? Number(stored.value) : null };
+  });
+  await probe('IMF inflation, Canada, last actual year', async () => {
+    const year = String(new Date().getUTCFullYear() - 1);
+    const j = await (await fetchFn('https://www.imf.org/external/datamapper/api/v1/PCPIPCH/CAN', { signal: AbortSignal.timeout(60000) })).json();
+    const stored = await one("SELECT value FROM observations WHERE country='CAN' AND indicator='INFLATION' AND region='' AND period=? AND frequency='A'", [year]);
+    return { period: year, source: j.values?.PCPIPCH?.CAN?.[year] ?? null, stored: stored ? Number(stored.value) : null };
+  });
+  const errors = samples.filter(x => x.error);
+  // A missing stored row means the latest source period has not been seeded yet (fine between refreshes).
+  const compared = samples.filter(x => !x.error && x.source != null && x.stored != null);
+  const off = compared.filter(x => Math.abs(x.source - x.stored) > Math.max(1e-6, Math.abs(x.source) * 0.005));
+  out.push(check('accuracy.source_sample', 'Accuracy', off.length ? 'warn' : compared.length ? 'pass' : 'info',
+    off.length ? `${off.length} of ${compared.length} re-fetched source values differ from storage by more than 0.5% (revision or parsing change)` : `${compared.length} re-fetched source values match storage${errors.length ? `; ${errors.length} source(s) unreachable` : ''}`, { samples }));
+  // City names: BIS title fragments must not leak through as places.
+  const badNames = (await db.execute({ sql: "SELECT DISTINCT country, region FROM observations WHERE region != '' AND (region IN ('whole country','cities','big cities','capital area','metropolitan area','rest of the country','non-urban areas') OR region GLOB '[0-9]* cities' OR region GLOB 'all dwellings*' OR region GLOB 'excluding *')", args: [] })).rows;
+  out.push(check('accuracy.region_names', 'Accuracy', badNames.length ? 'fail' : 'pass', badNames.length ? `${badNames.length} region names are source title fragments, not places` : 'City and region names are places or labelled aggregates', { badNames }));
+  // Units: no raw BIS unit codes in stored source labels.
+  const rawUnits = (await db.execute({ sql: "SELECT DISTINCT source FROM observations WHERE indicator = 'CITY_PRICE' AND source GLOB '*([0-9][0-9][0-9])*'", args: [] })).rows;
+  out.push(check('accuracy.unit_labels', 'Accuracy', rawUnits.length ? 'warn' : 'pass', rawUnits.length ? `${rawUnits.length} city price series still carry raw BIS unit codes` : 'City price series state their unit and base period', { rawUnits: rawUnits.map(r => r.source) }));
+  return out;
+}
+
+export async function runQuality({ db, live = false, write = true, now = new Date(), accuracy = !live } = {}) {
   await migrate(db);
   const state = await loadState(db, { live });
   const checks = live ? liveChecks(state, now) : [...fullChecks(state, now), ...liveChecks(state, now)];
+  if (accuracy) checks.push(...await accuracyChecks(db));
   if (write) {
     const runAt = now.toISOString();
     await upsertRows(db, 'data_quality', ['run_at', 'check_id', 'category', 'severity', 'summary', 'details'],
