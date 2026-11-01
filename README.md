@@ -104,6 +104,7 @@ Everything lives in **Turso**. About 190,000 observations are refreshed monthly 
 | **FRED** (Census, BLS, Freddie Mac) | Median sales price, CPI rent, 30-year mortgage rate, starts, rental vacancy | United States |
 | **Zillow Research** | Condo vs single-family typical values, typical market rent | United States |
 | **HM Land Registry** | Average price by detached / semi-detached / terraced / flat, UK and four nations | United Kingdom |
+| **Dubai Real Estate Data** (DLD open data, CC BY 4.0) | Monthly registered sales and median AED per sq ft, the official DLD price index, new-contract rents, gross yields; drives the Dubai sales-slump signal | Dubai (UAE) |
 | **Australian Bureau of Statistics** | Mean dwelling price, national and by state | Australia |
 
 **Coverage tiers**
@@ -338,6 +339,6 @@ A failing national adapter is logged and skipped. It never blocks the internatio
 
 ## Sources and attribution
 
-Bank for International Settlements · OECD · International Monetary Fund · World Bank · Canada Mortgage and Housing Corporation and Statistics Canada (Open Government Licence, Canada) · Bank of Canada · US Census Bureau, Bureau of Labor Statistics and Freddie Mac via FRED (Federal Reserve Bank of St. Louis) · **Zillow Research** (ZHVI and ZORI) · HM Land Registry (Open Government Licence, contains HM Land Registry data © Crown copyright) · Australian Bureau of Statistics (CC BY 4.0).
+Bank for International Settlements · OECD · International Monetary Fund · World Bank · Canada Mortgage and Housing Corporation and Statistics Canada (Open Government Licence, Canada) · Bank of Canada · US Census Bureau, Bureau of Labor Statistics and Freddie Mac via FRED (Federal Reserve Bank of St. Louis) · **Zillow Research** (ZHVI and ZORI) · HM Land Registry (Open Government Licence, contains HM Land Registry data © Crown copyright) · Australian Bureau of Statistics (CC BY 4.0) · Dubai Real Estate Data (dubairealestatedata.com), based on Dubai Land Department open data (CC BY 4.0).
 
 MIT licence. Built with Next.js, Turso, Recharts and d3-geo.

@@ -64,7 +64,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
     const priceSens = sens.filter((s) => s.target === "real_price");
     const rentSens = sens.find((s) => s.target === "real_rent");
     const priceLevel = latest("AVG_PRICE") ?? latest("MEDIAN_PRICE");
-    const rentLevel = latest("AVG_RENT") ?? latest("AVG_RENT_2BR", { region: "Toronto" });
+    const rentLevel = latest("AVG_RENT") ?? latest("AVG_RENT_2BR", { region: "Toronto" }) ?? latest("AVG_RENT", { region: "Dubai", type: "condo" });
     explorer = {
       name: c.name,
       history: {

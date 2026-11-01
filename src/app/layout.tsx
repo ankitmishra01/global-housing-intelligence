@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main id="main">{children}</main>
         <footer className="foot">
           Sources: BIS, OECD, IMF World Economic Outlook, World Bank, CMHC and Statistics Canada, Bank of Canada, US Census Bureau, BLS and Freddie Mac via FRED,
-          Zillow Research, HM Land Registry, Australian Bureau of Statistics. Projections are statistical estimates with published error rates, not financial advice.{" "}
+          Zillow Research, HM Land Registry, Australian Bureau of Statistics, and Dubai Real Estate Data (dubairealestatedata.com), based on Dubai Land Department open data (CC BY 4.0). Projections are statistical estimates with published error rates, not financial advice.{" "}
           <Link className="link" href="/methodology">Methodology</Link>
         </footer>
           </div>

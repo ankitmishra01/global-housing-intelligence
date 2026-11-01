@@ -11,7 +11,7 @@ import { fetchPolicyRates, fetchMortgageRates } from '../lib/live/rates.js';
 import { fetchGdeltDay } from '../lib/live/gdelt.js';
 import { fetchGdacs } from '../lib/live/gdacs.js';
 import { fetchFx } from '../lib/live/fx.js';
-import { detectEvents } from '../lib/live/detect.js';
+import { detectEvents, detectSalesSlumps } from '../lib/live/detect.js';
 import { countryShifts, HORIZONS, isSignificant } from '../lib/live/shifts.js';
 import { runQuality } from './quality.js';
 import { scoreAll, shiftComponents } from '../lib/engine/indexes.js';
@@ -20,7 +20,7 @@ const iso = d => d.toISOString().slice(0, 10);
 const addDays = (date, n) => iso(new Date(Date.parse(date) + n * 864e5));
 const pctFromLog = s => 100 * (Math.exp(s / 100) - 1);
 const signed = (v, d = 1) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(d)}`;
-const CLASS_LABELS = { armed_conflict: 'Armed conflict', regional_conflict: 'Regional conflict spillover', natural_disaster: 'Natural disaster', currency_crisis: 'Currency crisis' };
+const CLASS_LABELS = { armed_conflict: 'Armed conflict', regional_conflict: 'Regional conflict spillover', natural_disaster: 'Natural disaster', currency_crisis: 'Currency crisis', transaction_slump: 'Sales slump' };
 
 async function all(db, sql, args = []) {
   return (await db.execute({ sql, args })).rows.map(r => ({ ...r }));
@@ -87,7 +87,14 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
   }
   const historyArrays = Object.fromEntries(Object.entries(histories).filter(([c]) => valid.has(c)).map(([c, m]) => [c, [...m.values()].sort((a, b) => a.date.localeCompare(b.date))]));
   const previous = (await all(db, 'SELECT * FROM events')).map(e => ({ ...e, evidence: JSON.parse(e.evidence) }));
-  const events = detectEvents({ today, histories: historyArrays, regions, disasters: disasters.filter(d => valid.has(d.iso3)), fxMoves: Object.fromEntries(Object.entries(fx.moves).filter(([c]) => valid.has(c))), previous });
+  const events = detectEvents({ today, histories: historyArrays, regions, disasters: disasters.filter(d => valid.has(d.iso3)), fxMoves: Object.fromEntries(Object.entries(fx.moves).filter(([c]) => valid.has(c))), previous: previous.filter(e => e.class !== 'transaction_slump') });
+  // Land-registry sales counts (monthly) → market-cooling signal; recomputed from scratch each day.
+  const salesRows = await all(db, "SELECT country, region, period, value FROM observations WHERE indicator = 'SALES_COUNT' AND frequency = 'M'");
+  const sales = {};
+  for (const r of salesRows) ((sales[r.country] ||= { region: r.region || '', monthly: {} }).monthly)[r.period] = Number(r.value);
+  const slumps = detectSalesSlumps({ today, sales });
+  for (const e of previous.filter(p => p.class === 'transaction_slump' && p.status === 'active' && !slumps.some(s => s.id === p.id))) slumps.push({ ...e, status: 'expired', evidence: typeof e.evidence === 'string' ? JSON.parse(e.evidence) : e.evidence });
+  events.push(...slumps);
   await upsertRows(db, 'events', ['id', 'country', 'class', 'status', 'onset', 'last_seen', 'intensity', 'metric', 'evidence', 'source', 'updated_at'],
     events.map(e => ({ ...e, evidence: JSON.stringify(e.evidence), updated_at: now.toISOString() })));
   const active = events.filter(e => e.status === 'active');
@@ -136,13 +143,16 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
       const lib = library.find(l => l.class === e.class && l.target === 'real_price' && l.horizon === 3);
       const effect3 = lib ? pctFromLog(lib.effect) : null;
       const label = CLASS_LABELS[e.class] || e.class;
-      const evidenceText = e.class === 'natural_disaster' ? `${e.evidence.alert} GDACS alert: ${e.evidence.name}`
+      const evidenceText = e.class === 'transaction_slump' ? `${e.evidence.region || 'national'} registered sales ${signed(e.evidence.yoyPct)}% vs a year earlier, 3 months to ${e.evidence.months?.at(-1)}`
+        : e.class === 'natural_disaster' ? `${e.evidence.alert} GDACS alert: ${e.evidence.name}`
         : e.class === 'currency_crisis' ? `${e.evidence.currency} ${signed(e.evidence.changePct)}% vs USD over 90 days`
         : e.class === 'regional_conflict' ? `conflict news share z=${e.evidence.z} while ${e.evidence.conflictCountries.join(', ')} ${e.evidence.conflictCountries.length > 1 ? 'are' : 'is'} in armed conflict`
         : e.evidence.mode === 'ongoing' ? `conflict news share ${(e.evidence.share * 100).toFixed(1)}% vs ${(e.evidence.globalShare * 100).toFixed(1)}% global median` : `conflict news share z=${e.evidence.z}`;
       const clear = isSignificant(library, e.class, 'real_price') || isSignificant(library, e.class, 'real_rent');
       explanation.push(!e.evidence?.applies
-        ? { kind: 'event', text: e.class === 'natural_disaster'
+        ? { kind: 'event', text: e.class === 'transaction_slump'
+          ? `${label} (${evidenceText}): a market-cooling signal shown for context; there is no calibrated history for it yet, so projections are not adjusted`
+          : e.class === 'natural_disaster'
           ? `${label} (${evidenceText}): only Red alerts move national paths, so no adjustment`
           : `${label}, ongoing (${evidenceText}): already reflected in the data the model trained on, so no extra adjustment` }
         : effect3 == null ? { kind: 'event', text: `${label} detected ${e.onset} (${evidenceText}) → no historical episodes to size it, so no shift` }

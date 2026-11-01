@@ -36,4 +36,5 @@ export const EVENT_LABELS: Record<string, string> = {
   regional_conflict: "Regional conflict spillover",
   natural_disaster: "Natural disaster",
   currency_crisis: "Currency crisis",
+  transaction_slump: "Sales slump",
 };
