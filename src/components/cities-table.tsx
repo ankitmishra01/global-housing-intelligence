@@ -73,7 +73,7 @@ export function CitiesTable({ iso3, cities }: { iso3: string; cities: CitySummar
             {shown.map((c) => (
               <tr key={c.slug}>
                 <td><Link href={`/countries/${iso3}/${c.slug}`}>{c.name}</Link></td>
-                <td className="r" title={c.price ? `${c.price.indicator} ${c.price.period}` : undefined}>{fmtNum(c.price)}{c.price?.kind === "index" ? <span className="note"> idx</span> : null}</td>
+                <td className="r" title={c.price ? `${c.price.indicator} ${c.price.period}` : undefined}>{fmtNum(c.price)}{c.price?.kind === "index" ? <span className="note"> idx</span> : c.price?.indicator === "ASSESSED_VALUE" ? <span className="note"> assessed</span> : null}</td>
                 <td className={`r ${tone(c.price?.change1y) ?? ""}`}>{fmtPct(c.price?.change1y)}</td>
                 <td className={`r ${tone(c.price?.change5y) ?? ""}`}>{fmtPct(c.price?.change5y)}</td>
                 <td className="r" title={c.rent ? `${c.rent.indicator} ${c.rent.period}` : undefined}>{fmtNum(c.rent)}</td>

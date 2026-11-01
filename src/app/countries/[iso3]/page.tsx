@@ -7,7 +7,7 @@ import { PredictedActualLine } from "@/components/track-record-chart";
 import { NarrativeProse } from "@/components/narrative-prose";
 import { buildNarrativeInput } from "@/lib/narrative-input";
 import { buildCountryNarrative, names } from "../../../../lib/engine/narrative.js";
-import { computeSignals } from "../../../../lib/engine/signals.js";
+import { liveSignals } from "@/lib/signals-view";
 import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, nationalObservations, personaRows, projections, rebased, sensitivities, indicatorLabels, type IndexComponent, type LiveShift, type Projection, type Sensitivity, type Context } from "@/lib/data";
 import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
@@ -79,22 +79,9 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
     asOf: liveRateNewer ? rateLive!.policy_rate_date! : rateCtx.policy_rate_as_of,
     mortgage: liveRateNewer && rateCtx.mortgage_rate_source?.startsWith("policy") ? Math.max(0.1, rateLive!.policy_rate_now! + (run?.summary.mortgageSpread ?? 2)) : rateCtx.mortgage_rate,
   } : null;
-  // Signal reasons are rebuilt from the stored components so wording fixes apply without a retrain.
-  // Projection components carry today's live shifts (as the hero figures do); momentum is a quarterly
-  // year-on-year percent change, except where no quarterly index exists and it is annual log growth.
-  if (ctx) {
-    const mine = personas.filter((r) => r.country === iso3);
-    const momentumIsLog = !monthly.REAL_PRICE_Q;
-    const adjust = (list: IndexComponent[]) => list.map((x) => {
-      // From the unrounded projection (stored components carry two decimals), plus the live shift.
-      const [target, horizon] = LIVE_COMPONENTS[x.key] ?? [];
-      const p = target ? proj.find((r) => r.target === target && r.horizon === horizon) : undefined;
-      if (p && typeof x.value === "number") return { ...x, value: 100 * Math.log(p.median / 100) + (shifts?.[target]?.[horizon]?.shift ?? 0) };
-      if (x.key === "momentum" && momentumIsLog && typeof x.value === "number") return { ...x, value: toPct(x.value) };
-      return x;
-    });
-    if (mine.length) ctx.details = { ...ctx.details, signals: (computeSignals as (a: unknown) => NonNullable<Context["details"]["signals"]>)({ scores: Object.fromEntries(mine.map((r) => [r.persona, r.score])), components: Object.fromEntries(mine.map((r) => [r.persona, adjust(r.components)])), flags: myFlags.map((f) => f.flag), stress: ctx.details.stress ?? null }) };
-  }
+  // Signal reasons are rebuilt from the stored components (src/lib/signals-view.ts).
+  if (ctx) ctx.details = { ...ctx.details, signals: liveSignals({ iso3, ctx, personas, flags: myFlags, proj, shifts, hasQuarterly: !!monthly.REAL_PRICE_Q }) };
+
 
   const latest = (indicator: string, opts: { region?: string; type?: string; freq?: string } = {}) =>
     observations.filter((o) => o.indicator === indicator && o.region === (opts.region ?? "") && o.dwelling_type === (opts.type ?? "") && o.frequency === (opts.freq ?? "A") && o.status === "actual").at(-1);

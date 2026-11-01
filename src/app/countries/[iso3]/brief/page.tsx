@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PrintButton } from "@/components/print-button";
-import { applyLive, contexts, country, flags, latestRun, liveShifts, liveState, projections } from "@/lib/data";
+import { applyLive, contexts, country, countryPanel, flags, latestRun, liveShifts, liveState, personaRows, projections } from "@/lib/data";
+import { liveSignals } from "@/lib/signals-view";
 import { flagEmoji, fmt, pct } from "@/lib/labels";
 
 export const revalidate = 86400;
@@ -26,7 +27,7 @@ export default async function BriefPage({ params }: Params) {
   const iso3 = (await params).iso3.toUpperCase();
   const c = await country(iso3);
   if (!c) notFound();
-  const [run, proj, ctxs, allFlags, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), contexts(), flags(), liveState(iso3), liveShifts(iso3)]);
+  const [run, proj, ctxs, allFlags, live, shiftsAll, personas, { monthly }] = await Promise.all([latestRun(), projections(iso3), contexts(), flags(), liveState(iso3), liveShifts(iso3), personaRows(), countryPanel(iso3)]);
   const ctx = ctxs.find((x) => x.country === iso3);
   const shifts = shiftsAll[iso3];
   const band = (target: string, h: number) => {
@@ -48,7 +49,8 @@ export default async function BriefPage({ params }: Params) {
     num(a.rentToIncome) != null ? { label: "Rent / income", value: `${num(a.rentToIncome)!.toFixed(0)}%`, note: String(a.rentToIncomeBasis ?? "") } : null,
     ctx?.details.stress ? { label: "Mortgage stress index", value: `${ctx.details.stress.score.toFixed(0)} / 100`, note: "higher means more stress" } : null,
   ].filter(Boolean).slice(0, 3) as { label: string; value: string; note: string }[];
-  const signals = ctx?.details.signals ?? {};
+  // Same live-adjusted signal reasons as the country page.
+  const signals = (ctx ? liveSignals({ iso3, ctx, personas, flags: allFlags, proj, shifts, hasQuarterly: !!monthly.REAL_PRICE_Q }) : undefined) ?? {};
   const myFlags = allFlags.filter((f) => f.country === iso3);
   const range = (b: ReturnType<typeof band>) => (b ? `${pct(b.p10 - 100, 0)} to ${pct(b.p90 - 100, 0)}` : "–");
 
