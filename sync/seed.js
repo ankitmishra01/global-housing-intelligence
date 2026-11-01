@@ -29,6 +29,21 @@ async function step(label, fn) {
   return out;
 }
 
+// Flaky upstreams (the OECD SDMX API throws intermittent 500s): if a source still fails after its
+// own retries, reuse the rows already in Turso for its indicators so a refresh never fails or
+// silently drops a series. The report lists the source as carried forward.
+const carriedForward = [];
+async function stepOrCarry(label, fn, indicators) {
+  try { return await step(label, fn); }
+  catch (error) {
+    console.log(`  ${label} FAILED (${error.message}); carrying forward stored rows`);
+    const db = connect();
+    const { rows } = await db.execute({ sql: `SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE indicator IN (${indicators.map(() => '?').join(',')})`, args: indicators });
+    carriedForward.push({ source: label, error: String(error.message), rows: rows.length });
+    return rows.map(r => ({ ...r, value: Number(r.value) }));
+  }
+}
+
 async function main() {
   const countries = await step('World Bank country registry', loadCountries);
   const validIso3 = new Set(countries.map(c => c.iso3));
@@ -37,10 +52,10 @@ async function main() {
   const raw = [
     ...await step('BIS property prices, credit, policy rates', () => fetchBis(byIso2)),
     ...await step('BIS prices by dwelling type', () => fetchBisDwellingTypes(byIso2)),
-    ...await step('OECD analytical house prices', () => fetchOecd(validIso3)),
+    ...await stepOrCarry('OECD analytical house prices', () => fetchOecd(validIso3), OECD_INDICATORS.map(i => i.key)),
     ...await step('IMF World Economic Outlook', () => fetchImf(validIso3)),
     ...await step('World Bank housing drivers', () => fetchWorldBank(validIso3)),
-    ...await step('OECD unemployment and wages, BIS debt service', () => fetchStress(validIso3, byIso2)),
+    ...await stepOrCarry('OECD unemployment and wages, BIS debt service', () => fetchStress(validIso3, byIso2), STRESS_INDICATORS.map(i => i.key)),
     // Mortgage rates and household income are best-effort: a failed source is logged, never fatal.
     ...await step('Mortgage rates (ECB MIR, Bank of England)', () => fetchMortgageRates(byIso2, { log: console.log })),
     ...await step('Household income (Statistics Canada, OECD national accounts)', () => fetchIncome(validIso3, { log: console.log })),
@@ -65,7 +80,7 @@ async function main() {
     runAt: RUN_AT, dryRun: DRY_RUN, observations: rows.length, rejected: rejected.length, rejectedSample: rejected.slice(0, 25),
     rejectedByReason: rejected.reduce((acc, r) => { const k = `${r.country} ${r.indicator}: ${r.reason}`; acc[k] = (acc[k] || 0) + 1; return acc; }, {}),
     tier1: countryRows.filter(c => c.tier === 1).length, withRent: countryRows.filter(c => c.has_rent).length, totalCountries: countryRows.length,
-    nationalFailures: national.failures, gateFailures, dwellingTypes: typeCoverage(rows),
+    nationalFailures: national.failures, carriedForward, gateFailures, dwellingTypes: typeCoverage(rows),
     coverage: Object.fromEntries(Object.entries(coverage).map(([k, v]) => [k, { countries: v.countries, rows: v.rows, latest: v.latest }])),
   };
   fs.writeFileSync(new URL('./report.json', import.meta.url), JSON.stringify(report, null, 2));

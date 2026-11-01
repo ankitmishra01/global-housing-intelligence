@@ -90,6 +90,11 @@ export function latestQuarterVsOrigin(quarterly, origin, source) {
   return { quarter: last, index: +index.toFixed(3), changePct: +(index - 100).toFixed(2) };
 }
 
+// Readable names for the national mortgage-rate series behind MORTGAGE_RATE.
+const MORTGAGE_LABELS = { CAN: 'Bank of Canada 5-year conventional mortgage', USA: 'Freddie Mac 30-year fixed', GBR: 'Bank of England 2-year fixed (75% LTV)' };
+const ECB_MIR = new Set(['AUT', 'BEL', 'BGR', 'CYP', 'DEU', 'ESP', 'EST', 'FIN', 'FRA', 'GRC', 'HRV', 'IRL', 'ITA', 'LTU', 'LUX', 'LVA', 'MLT', 'NLD', 'PRT', 'SVK', 'SVN']);
+export const mortgageLabel = iso3 => MORTGAGE_LABELS[iso3] ?? (ECB_MIR.has(iso3) ? 'ECB new housing loans rate' : 'national series');
+
 export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIGIN } = {}) {
   const built = buildPanel(rows, { ttm });
   const engine = trainEngine(built);
@@ -111,7 +116,7 @@ export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIG
       country: iso3, origin_year: ctx.origin, rent_origin_year: ctx.rentOrigin ?? null,
       policy_rate: policy?.value ?? null, policy_rate_as_of: policy?.period ?? null,
       mortgage_rate: mortgage ? mortgage.value : policy ? Math.max(0.1, policy.value + MORTGAGE_SPREAD) : null,
-      mortgage_rate_source: mortgage ? (iso3 === 'CAN' ? 'Bank of Canada 5-year conventional mortgage' : iso3 === 'USA' ? 'Freddie Mac 30-year fixed' : 'national series') : policy ? `policy rate + ${MORTGAGE_SPREAD.toFixed(1)}pp assumed spread` : null,
+      mortgage_rate_source: mortgage ? mortgageLabel(iso3) : policy ? `policy rate + ${MORTGAGE_SPREAD.toFixed(1)}pp assumed spread` : null,
       details: JSON.stringify({ originLabel, originQuarter: c.TTM?.quarter ?? null, rentOriginLabel: ctx.rentOrigin ? String(ctx.rentOrigin) : null, nowcast, components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
     });
   }
