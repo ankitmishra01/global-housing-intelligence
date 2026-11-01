@@ -90,11 +90,26 @@ test('projection drivers add up to the shipped point projection at 3 and 10 year
     for (const h of [3, 10]) {
       const d = ctx.drivers?.[h];
       if (!d || d.total == null) continue;
-      const parts = d.base + d.anchor + d.features.reduce((s, f) => s + f.contribution, 0);
+      const parts = d.base + d.anchor + d.features.reduce((s, f) => s + f.contribution, 0) + (d.reality?.share ?? 0);
       assert.ok(Math.abs(parts - d.total) < 0.05, `${iso3} h${h}: parts ${parts} vs total ${d.total}`);
       assert.ok(Math.abs(d.total - ctx.realPriceCum[h]) < 0.01, `${iso3} h${h}: total ${d.total} vs projection ${ctx.realPriceCum[h]}`);
       checked++;
     }
   }
   assert.ok(checked > 0, 'at least one model-based horizon is decomposed');
+});
+
+test('historical analogue: mean of the nearest market-years, and the 10-year path blends it in', async () => {
+  const { analogue, REALITY_WEIGHTS, ANALOG_K } = await import('../lib/engine/projections.js');
+  const train = Array.from({ length: 200 }, (_, i) => ({ y: i < 100 ? 5 : 50, x: [i < 100 ? 0 : 10, i < 100 ? 0 : 10, 1, 1, null, null, 1, null, 1] }));
+  const near = analogue(train, [0, 0, 1, 1, null, null, 1, null, 1]);
+  assert.equal(near.n, ANALOG_K);
+  assert.equal(near.value, 5);
+  assert.ok(REALITY_WEIGHTS[10] > REALITY_WEIGHTS[5] && REALITY_WEIGHTS[3] === 0);
+  for (const [iso3, ctx] of Object.entries(out.contexts)) {
+    const r = ctx.drivers?.[10]?.reality;
+    if (!r) continue;
+    const blended = (1 - r.weight) * r.model + r.weight * r.analog;
+    assert.ok(Math.abs(blended - ctx.realPriceCum[10]) < 0.02, `${iso3}: blend ${blended} vs path ${ctx.realPriceCum[10]}`);
+  }
 });

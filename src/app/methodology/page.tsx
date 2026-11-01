@@ -80,6 +80,9 @@ export default async function Methodology() {
               <li>Otherwise the better baseline is shown, labelled &quot;no model skill, showing baseline&quot;.</li>
               <li>A trend baseline that loses to no-change on the held-out years falls back to no-change.</li>
             </ul>
+            <h3>Historical reality anchor</h3>
+            <p>At longer horizons the selected method is blended with what history delivered for markets in a similar position. The anchor is the average outcome of the 50 market years nearest to the country today on recent price momentum (one and three years), the real policy rate, household credit growth and population growth. Weights are 0% up to three years, 50% at five, 60% at seven and 75% at ten.</p>
+            <p>The pooled model learned from decades of falling interest rates, which flattered optimistic long-range projections. The blend was more accurate than the model alone on both halves of the backtest at five and seven years, and on the held-out half at ten, so it keeps ten-year paths within what history has delivered rather than assuming that era repeats. The backtest table below quotes the error of the blended, shipped projections.</p>
             <h3>Uncertainty</h3>
             <p>{run?.summary.uncertainty ?? "Empirical rolling-origin residual quantiles per horizon."}</p>
           </div>

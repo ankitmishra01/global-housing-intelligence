@@ -1,7 +1,7 @@
 // Waterfall-style bars for the ten-year projection: the pooled starting point, the long-run
 // trend share (blends only) and each driver's contribution, in percentage points.
 export type DriverShare = { name: string; value: number; typical: number; contribution: number };
-export type DriverBreakdown = { totalPct: number; base: number; anchor: number; weight: number; features: DriverShare[] };
+export type DriverBreakdown = { totalPct: number; base: number; anchor: number; weight: number; features: DriverShare[]; reality?: { weight: number; share: number } | null };
 
 const SHORT: Record<string, string> = {
   "own 1y real growth": "Last year's real price growth",
@@ -25,9 +25,11 @@ const fmt = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(1)}`;
 
 export function DriversChart({ d, name }: { d: DriverBreakdown; name: string }) {
   const shown = d.features.filter((f) => Math.abs(f.contribution) >= 0.3).slice(0, 8);
-  const other = d.totalPct - d.base - d.anchor - shown.reduce((s, f) => s + f.contribution, 0);
+  const realityShare = d.reality?.share ?? 0;
+  const other = d.totalPct - d.base - d.anchor - realityShare - shown.reduce((s, f) => s + f.contribution, 0);
   const rows = [
-    { label: "Typical market, pooled history", v: d.base, kind: "base" },
+    ...(d.reality ? [{ label: `Similar markets historically (${Math.round(d.reality.weight * 100)}% weight)`, v: realityShare, kind: "base" }] : []),
+    { label: d.reality ? `Typical market, pooled model (${Math.round((1 - d.reality.weight) * 100)}% weight)` : "Typical market, pooled history", v: d.base, kind: "base" },
     ...(Math.abs(d.anchor) >= 0.1 ? [{ label: `${name}${name.endsWith("s") ? "'" : "'s"} long-run trend (${Math.round((1 - d.weight) * 100)}% weight)`, v: d.anchor, kind: "base" }] : []),
     ...shown.map((f) => ({ label: SHORT[f.name] ?? f.name, v: f.contribution, kind: f.contribution >= 0 ? "pos" : "neg" })),
     ...(Math.abs(other) >= 0.05 ? [{ label: "Other drivers", v: other, kind: other >= 0 ? "pos" : "neg" }] : []),
@@ -45,7 +47,7 @@ export function DriversChart({ d, name }: { d: DriverBreakdown; name: string }) 
           </li>
         ))}
         <li className="drivers-chart__total">
-          <span className="drivers-chart__label">Model projection, 10 years</span>
+          <span className="drivers-chart__label">Projection, 10 years</span>
           <span className="drivers-chart__track"><span className="drivers-chart__bar drivers-chart__bar--total" style={{ width: `${(100 * Math.abs(d.totalPct)) / max}%` }} /></span>
           <span className="drivers-chart__value num">{fmt(d.totalPct)}%</span>
         </li>

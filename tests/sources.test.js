@@ -7,7 +7,7 @@ import { parseBisCsv, expandEuroPolicy, parseBisDwellingTypes } from '../lib/sou
 import { parseOecdCsv } from '../lib/sources/oecd.js';
 import { parseImf } from '../lib/sources/imf.js';
 import { parseWorldBank } from '../lib/sources/worldbank.js';
-import { parseCanadaRents, parseCanadaVacancy, parseCanadaStarts, parseCanadaNhpi, unzipEntry } from '../lib/sources/national/canada.js';
+import { parseCanadaRents, parseCanadaVacancy, parseCanadaStarts, parseCanadaNhpi, parseCanadaAssessedValues, isOntarioCma, unzipEntry } from '../lib/sources/national/canada.js';
 import { parseFred } from '../lib/sources/national/united-states.js';
 import { parseUkHpi } from '../lib/sources/national/united-kingdom.js';
 import { parseAbs } from '../lib/sources/national/australia.js';
@@ -107,6 +107,32 @@ test('Canada parsers: two-bedroom rents, vacancy, complete-year starts, NHPI', (
 
   const nhpi = ['REF_DATE,GEO,New housing price indexes,VALUE', '2026-09,Canada,Total (house and land),124.1', '2026-09,Canada,Land only,90'].join('\n');
   assert.deepEqual(parseCanadaNhpi(nhpi).map(r => [r.period, r.value]), [['2026-09', 124.1]]);
+});
+
+test('CHSP median assessment values: CMA rows by property type, Ontario skipped by default', () => {
+  const head = '"REF_DATE","GEO","DGUID","Property type","Period of construction","Property use","Ownership type","Estimates","UOM","VALUE","STATUS"';
+  const line = (geo, dguid, type, estimate, value, period = 'Total, all periods of construction') =>
+    `"2024","${geo}","${dguid}","${type}","${period}","Total, all property use categories","Total, all ownership types","${estimate}","Dollars","${value}",""`;
+  const csv = [head,
+    line('Vancouver, Census metropolitan area (CMA)', '2021S0503933', 'Total, all property types', 'Median assessment value', '1230000'),
+    line('Vancouver, Census metropolitan area (CMA)', '2021S0503933', 'Condominium apartment', 'Median assessment value', '678000'),
+    line('Vancouver, Census metropolitan area (CMA)', '2021S0503933', 'Row house', 'Average assessment value', '990000'),
+    line('Vancouver, Census metropolitan area (CMA)', '2021S0503933', 'Vacant land', 'Median assessment value', '500000'),
+    line('Vancouver, Census metropolitan area (CMA)', '2021S0503933', 'Single-detached house', 'Median assessment value', '1600000', '1960 or earlier'),
+    line('Abbotsford - Mission, Census metropolitan area (CMA)', '2021S0503932', 'Single-detached house', 'Median assessment value', '1050000'),
+    line("St. John's, Census metropolitan area (CMA)", '2021S0503001', 'Single-detached house', 'Median assessment value', ''),
+    line('Vancouver, City', '2021A00055915022', 'Total, all property types', 'Median assessment value', '1400000'),
+    line('Toronto, Census metropolitan area (CMA)', '2021S0503535', 'Total, all property types', 'Median assessment value', '580000'),
+    line('Ottawa - Gatineau (Ontario part), Census metropolitan area (CMA)', '2021S050535505', 'Semi-detached house', 'Median assessment value', '400000'),
+  ].join('\n');
+  const out = parseCanadaAssessedValues(csv);
+  assert.deepEqual(out.map(r => [r.indicator, r.region, r.dwelling_type, r.period, r.frequency, r.value]), [
+    ['ASSESSED_VALUE', 'Vancouver', '', '2024', 'A', 1230000], ['ASSESSED_VALUE', 'Vancouver', 'condo', '2024', 'A', 678000], ['ASSESSED_VALUE', 'Abbotsford-Mission', 'detached', '2024', 'A', 1050000],
+  ]);
+  assert.match(out[0].source, /table 46-10-0093, Open Government Licence/);
+  assert.deepEqual(parseCanadaAssessedValues(csv, { includeOntario: true }).filter(r => ['Toronto', 'Ottawa-Gatineau'].includes(r.region)).map(r => [r.region, r.dwelling_type]), [['Toronto', ''], ['Ottawa-Gatineau', 'semi_detached']]);
+  assert.equal(isOntarioCma('2021S0503825'), false, 'Calgary');
+  assert.equal(isOntarioCma('2021S050524505'), false, 'Ottawa-Gatineau, Quebec part');
 });
 
 // Build a single-entry deflate zip in memory to exercise the minimal reader.

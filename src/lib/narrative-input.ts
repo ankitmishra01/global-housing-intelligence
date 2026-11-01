@@ -130,7 +130,13 @@ export async function buildNarrativeInput(args: {
   // Cities: price changes (nominal, as published) and the national nominal change to compare.
   // Aggregates, size classes, remainders and duplicate spellings are not places, so they are left out
   // of the counts and names; region names keep hyphens but lose spaced dashes.
-  const cityPrices = placesOnly(cityList.filter((x) => x.price && x.price.change5y != null))
+  // Only cities sharing the most common price measure are compared, so an index is never set
+  // against an assessed value; assessed values never stand in for sale prices in the text.
+  const priced = placesOnly(cityList.filter((x) => x.price && x.price.change5y != null && x.price.indicator !== "ASSESSED_VALUE"));
+  const measureCount = new Map<string, number>();
+  for (const x of priced) measureCount.set(x.price!.indicator, (measureCount.get(x.price!.indicator) ?? 0) + 1);
+  const measure = [...measureCount].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const cityPrices = priced.filter((x) => x.price!.indicator === measure)
     .map((x) => ({ name: x.name, change5y: x.price!.change5y!, change1y: x.price!.change1y, period: x.price!.period, kind: x.price!.kind }));
   // The national change over the same five years as the city figures (their latest common year).
   const cityYear = cityPrices.length ? Math.max(...cityPrices.map((x) => Number(x.period))) : null;

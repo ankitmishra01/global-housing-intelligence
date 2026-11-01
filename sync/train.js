@@ -315,6 +315,34 @@ async function main() {
     fs.writeFileSync(process.argv[outIdx + 1], JSON.stringify({ dataVintage: run.dataVintage, features: FEATURES, countries: all }) + '\n');
     console.log(`Wrote drivers for ${Object.keys(all).length} countries to ${process.argv[outIdx + 1]}`);
   }
+  // --snapshot-out FILE: write the whole run (every run-scoped table) to a JSON file instead of the
+  // database. The site serves it while database writes are blocked; sync/flush-overlay.js loads it
+  // into Turso once writes reopen.
+  const snapIdx = process.argv.indexOf('--snapshot-out');
+  if (snapIdx > 0 && process.argv[snapIdx + 1]) {
+    const withRunId = list => list.map(r => ({ ...r, run_id: run.id }));
+    const projRows = run.engine.projections.map(p => {
+      const ctx = run.contexts.find(c => c.country === p.country), t = p.target.split(':')[1];
+      const origin = p.target.includes('rent') && ctx.rent_origin_year ? ctx.rent_origin_year : t ? JSON.parse(ctx.details).types[t]?.origin ?? ctx.origin_year : ctx.origin_year;
+      return { ...p, year: origin + p.horizon };
+    });
+    const snapshot = {
+      run: { id: run.id, created_at: new Date().toISOString(), model_version: MODEL_VERSION, data_vintage: run.dataVintage, summary: JSON.stringify(run.summary) },
+      tables: {
+        projections: withRunId(projRows),
+        backtests: withRunId(run.engine.backtests),
+        rate_sensitivity: withRunId([...run.engine.sensitivities.map(r => ({ ...r, method: 'ridge' })), ...causalRows.filter(r => Number.isFinite(r.coef))]),
+        risk_flags: withRunId(run.flags),
+        persona_indexes: withRunId(run.indexRows.map(r => ({ ...r, components: JSON.stringify(r.components) }))),
+        country_context: withRunId(run.contexts),
+        event_library: withRunId(run.eventLibrary),
+        feature_sensitivity: withRunId(run.engine.featureSensitivities),
+        backtest_points: withRunId(run.engine.backtestPoints),
+      },
+    };
+    fs.writeFileSync(process.argv[snapIdx + 1], JSON.stringify(snapshot) + '\n');
+    console.log(`Wrote run ${run.id} snapshot to ${process.argv[snapIdx + 1]}`);
+  }
   if (DRY_RUN) return;
 
   await upsertRows(db, 'projection_runs', ['id', 'created_at', 'model_version', 'data_vintage', 'summary'], [{ id: run.id, created_at: new Date().toISOString(), model_version: MODEL_VERSION, data_vintage: run.dataVintage, summary: JSON.stringify(run.summary) }]);

@@ -10,3 +10,4 @@ sync/report.json
 sync/cache/
 .gstack/
 scripts/.q.mjs
+scripts/.*

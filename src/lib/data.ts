@@ -1,5 +1,7 @@
 import "server-only";
 import notesFallback from "../../data/derived/country-notes.json";
+import runSnapshotFile from "../../data/derived/run-snapshot.json";
+import overlayFile from "../../data/derived/overlay-observations.json";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { connect } from "../../lib/db.js";
@@ -42,8 +44,17 @@ async function rows<T>(sql: string, args: (string | number)[] = []): Promise<T[]
   return (await cachedQuery(sql, args)) as T[];
 }
 
-export const latestRun = cache(async (): Promise<Run | null> => {
+// Run snapshot: a full training run written to data/derived/run-snapshot.json by
+// `node sync/train.js --dry-run --snapshot-out ...` while database writes were blocked. It is
+// served when it is newer than the latest stored run; sync/flush-overlay.js loads it into Turso.
+type Snapshot = { run: Omit<Run, "summary"> & { summary: string }; tables: Record<string, Record<string, unknown>[]> };
+const snapshot = (runSnapshotFile as unknown as Snapshot | null)?.run ? (runSnapshotFile as unknown as Snapshot) : null;
+const fromSnapshot = <T,>(run: Run | null, table: string, keep: (r: Record<string, unknown>) => boolean = () => true): T[] | null =>
+  run && snapshot && run.id === snapshot.run.id ? (snapshot.tables[table] ?? []).filter(keep) as T[] : null;
+
+export const latestRun = cache(async (): Promise<(Run & { liveRunId?: string }) | null> => {
   const [run] = await rows<Omit<Run, "summary"> & { summary: string }>("SELECT * FROM projection_runs ORDER BY created_at DESC LIMIT 1");
+  if (snapshot && (!run || snapshot.run.created_at > run.created_at)) return { ...snapshot.run, summary: JSON.parse(snapshot.run.summary), liveRunId: run?.id };
   return run ? { ...run, summary: JSON.parse(run.summary) } : null;
 });
 
@@ -54,26 +65,30 @@ export const country = cache(async (iso3: string) => (await countries()).find((c
 export const projections = cache(async (iso3?: string) => {
   const run = await latestRun();
   if (!run) return [];
+  const snap = fromSnapshot<Projection>(run, "projections", (r) => !iso3 || r.country === iso3);
+  if (snap) return snap;
   return iso3
     ? rows<Projection>("SELECT country, target, year, horizon, p10, p25, median, p75, p90, method FROM projections WHERE run_id = ? AND country = ? ORDER BY target, horizon", [run.id, iso3])
     : rows<Projection>("SELECT country, target, year, horizon, p10, p25, median, p75, p90, method FROM projections WHERE run_id = ? ORDER BY country, target, horizon", [run.id]);
 });
 
-export const backtests = cache(async () => { const run = await latestRun(); return run ? rows<Backtest>("SELECT * FROM backtests WHERE run_id = ? ORDER BY target, horizon", [run.id]) : []; });
-export const sensitivities = cache(async () => { const run = await latestRun(); return run ? rows<Sensitivity>("SELECT target, horizon, coef, se, valid, note FROM rate_sensitivity WHERE run_id = ? ORDER BY target, horizon", [run.id]) : []; });
-export const flags = cache(async () => { const run = await latestRun(); return run ? rows<Flag>("SELECT country, flag, value, threshold, as_of FROM risk_flags WHERE run_id = ? ORDER BY value DESC", [run.id]) : []; });
+export const backtests = cache(async () => { const run = await latestRun(); const snap = fromSnapshot<Backtest>(run, "backtests"); if (snap) return snap; return run ? rows<Backtest>("SELECT * FROM backtests WHERE run_id = ? ORDER BY target, horizon", [run.id]) : []; });
+export const sensitivities = cache(async () => { const run = await latestRun(); const snap = fromSnapshot<Sensitivity>(run, "rate_sensitivity"); if (snap) return [...snap].sort((a, b) => a.target.localeCompare(b.target) || a.horizon - b.horizon); return run ? rows<Sensitivity>("SELECT target, horizon, coef, se, valid, note FROM rate_sensitivity WHERE run_id = ? ORDER BY target, horizon", [run.id]) : []; });
+export const flags = cache(async () => { const run = await latestRun(); const snap = fromSnapshot<Flag>(run, "risk_flags"); if (snap) return [...snap].sort((a, b) => b.value - a.value); return run ? rows<Flag>("SELECT country, flag, value, threshold, as_of FROM risk_flags WHERE run_id = ? ORDER BY value DESC", [run.id]) : []; });
 
 export const personaRows = cache(async () => {
   const run = await latestRun();
   if (!run) return [];
-  const list = await rows<Omit<PersonaRow, "components"> & { components: string }>("SELECT country, persona, score, rank, components FROM persona_indexes WHERE run_id = ? ORDER BY persona, rank", [run.id]);
+  const list = fromSnapshot<Omit<PersonaRow, "components"> & { components: string }>(run, "persona_indexes")?.sort((a, b) => a.persona.localeCompare(b.persona) || a.rank - b.rank)
+    ?? await rows<Omit<PersonaRow, "components"> & { components: string }>("SELECT country, persona, score, rank, components FROM persona_indexes WHERE run_id = ? ORDER BY persona, rank", [run.id]);
   return list.map((r) => ({ ...r, components: JSON.parse(r.components) as IndexComponent[] }));
 });
 
 export const contexts = cache(async () => {
   const run = await latestRun();
   if (!run) return [];
-  const list = await rows<Omit<Context, "details"> & { details: string }>("SELECT country, origin_year, rent_origin_year, policy_rate, policy_rate_as_of, mortgage_rate, mortgage_rate_source, details FROM country_context WHERE run_id = ?", [run.id]);
+  const list = fromSnapshot<Omit<Context, "details"> & { details: string }>(run, "country_context")
+    ?? await rows<Omit<Context, "details"> & { details: string }>("SELECT country, origin_year, rent_origin_year, policy_rate, policy_rate_as_of, mortgage_rate, mortgage_rate_source, details FROM country_context WHERE run_id = ?", [run.id]);
   return list.map((r) => ({ ...r, details: JSON.parse(r.details) })) as Context[];
 });
 
@@ -89,9 +104,19 @@ export const nationalObservations = cache((iso3: string) =>
   query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? AND region = '' ORDER BY indicator, dwelling_type, period", [iso3]),
 );
 
+// Observations waiting to be written while database writes were blocked
+// (data/derived/overlay-observations.json; sync/flush-overlay.js --write loads them into Turso).
+type OverlayRow = { country: string; indicator: string; region: string; dwelling_type: string; period: string; frequency: string; value: number; status: string; source: string };
+const overlay = (overlayFile as unknown as OverlayRow[]) ?? [];
+const overlayFor = (iso3: string, keep: (r: OverlayRow) => boolean = () => true) => overlay.filter((r) => r.country === iso3.toUpperCase() && keep(r));
+// Labels for overlay indicators not yet in the indicators table.
+const OVERLAY_LABELS: Record<string, { key: string; label: string; unit: string; source: string }> = {
+  ASSESSED_VALUE: { key: "ASSESSED_VALUE", label: "Median assessed value of residential property", unit: "local currency", source: "Statistics Canada, Canadian Housing Statistics Program" },
+};
+
 export const indicatorLabels = cache(async () => {
   const list = await rows<{ key: string; label: string; unit: string; source: string }>("SELECT key, label, unit, source FROM indicators");
-  return Object.fromEntries(list.map((i) => [i.key, i]));
+  return { ...OVERLAY_LABELS, ...Object.fromEntries(list.map((i) => [i.key, i])) };
 });
 
 // Annual history for one country, rebased so the projection origin year = 100.
@@ -122,7 +147,8 @@ export type LiveLog = { id: number; date: string; country: string; kind: string;
 export const liveStates = cache(async () => {
   const run = await latestRun();
   if (!run) return [] as LiveState[];
-  const list = await rows<Omit<LiveState, "events" | "explanation"> & { events: string; explanation: string }>("SELECT * FROM live_state WHERE run_id = ?", [run.id]);
+  // Live state is keyed to the stored run it was computed against (the snapshot run has none).
+  const list = await rows<Omit<LiveState, "events" | "explanation"> & { events: string; explanation: string }>("SELECT * FROM live_state WHERE run_id = ?", [run.liveRunId ?? run.id]);
   return list.map((r) => ({ ...r, events: JSON.parse(r.events || "[]"), explanation: JSON.parse(r.explanation || "[]") })) as LiveState[];
 });
 
@@ -153,6 +179,8 @@ export const livePersonaRows = cache(async () => {
 
 export const eventLibrary = cache(async () => {
   const run = await latestRun();
+  const snap = fromSnapshot<{ class: string; target: string; horizon: number; effect: number; se: number; n_episodes: number; episodes: string }>(run, "event_library");
+  if (snap) return snap;
   return run ? rows<{ class: string; target: string; horizon: number; effect: number; se: number; n_episodes: number; episodes: string }>("SELECT class, target, horizon, effect, se, n_episodes, episodes FROM event_library WHERE run_id = ? ORDER BY class, target, horizon", [run.id]) : [];
 });
 
@@ -203,6 +231,8 @@ export type FeatureSensitivity = { target: string; feature: string; horizon: num
 // Pseudo-out-of-sample backtest points of the latest run for one country (x100 log growth).
 export const backtestPoints = cache(async (iso3: string) => {
   const run = await latestRun();
+  const snap = fromSnapshot<BacktestPoint>(run, "backtest_points", (r) => r.country === iso3);
+  if (snap) return snap;
   return run ? rows<BacktestPoint>("SELECT country, target, horizon, origin, predicted, actual, method FROM backtest_points WHERE run_id = ? AND country = ? ORDER BY target, horizon, origin", [run.id, iso3]) : [];
 });
 
@@ -217,7 +247,8 @@ export const vintageScores = cache((iso3?: string) =>
 // target/horizon (latest run), plus live vintage counts and 80%-band coverage once scored.
 export const trackRecordSummary = cache(async () => {
   const run = await latestRun();
-  const backtest = run ? await rows<{ target: string; horizon: number; n: number; mae: number; direction_hit: number; bias: number }>(
+  const snapPts = fromSnapshot<BacktestPoint>(run, "backtest_points");
+  const backtest = snapPts ? summariseBacktest(snapPts) : run ? await rows<{ target: string; horizon: number; n: number; mae: number; direction_hit: number; bias: number }>(
     `SELECT target, horizon, COUNT(*) AS n, AVG(ABS(actual - predicted)) AS mae,
             AVG(CASE WHEN (actual >= 0) = (predicted >= 0) THEN 1.0 ELSE 0.0 END) AS direction_hit,
             AVG(predicted - actual) AS bias
@@ -227,8 +258,22 @@ export const trackRecordSummary = cache(async () => {
   return { runId: run?.id ?? null, backtest, live };
 });
 
+// Same aggregates as the SQL in trackRecordSummary, for snapshot rows.
+function summariseBacktest(pts: BacktestPoint[]) {
+  const groups = new Map<string, BacktestPoint[]>();
+  for (const p of pts) { const k = `${p.target}|${p.horizon}`; (groups.get(k) || groups.set(k, []).get(k)!).push(p); }
+  return [...groups.values()].map((g) => ({
+    target: g[0].target, horizon: g[0].horizon, n: g.length,
+    mae: g.reduce((s, p) => s + Math.abs(p.actual - p.predicted), 0) / g.length,
+    direction_hit: g.filter((p) => (p.actual >= 0) === (p.predicted >= 0)).length / g.length,
+    bias: g.reduce((s, p) => s + p.predicted - p.actual, 0) / g.length,
+  })).sort((a, b) => a.target.localeCompare(b.target) || a.horizon - b.horizon);
+}
+
 export const featureSensitivities = cache(async () => {
   const run = await latestRun();
+  const snap = fromSnapshot<FeatureSensitivity>(run, "feature_sensitivity");
+  if (snap) return snap;
   return run ? rows<FeatureSensitivity>("SELECT target, feature, horizon, coef, se, valid, note FROM feature_sensitivity WHERE run_id = ? ORDER BY target, feature, horizon", [run.id]) : [];
 });
 
@@ -239,7 +284,9 @@ export const slugify = (name: string) =>
 // Distinct regions with observations for one country, with their slugs and series counts.
 export const regionsFor = cache(async (iso3: string) => {
   const list = await query<{ region: string; indicators: string }>("SELECT region, group_concat(DISTINCT indicator) AS indicators FROM observations WHERE country = ? AND region != '' GROUP BY region", [iso3]);
-  return list.map((r) => ({ name: r.region, slug: slugify(r.region), indicators: String(r.indicators).split(",") })).sort((a, b) => a.name.localeCompare(b.name));
+  const by = new Map(list.map((r) => [r.region, new Set(String(r.indicators).split(","))]));
+  for (const o of overlayFor(iso3, (r) => !!r.region)) (by.get(o.region) || by.set(o.region, new Set()).get(o.region)!).add(o.indicator);
+  return [...by].map(([name, ind]) => ({ name, slug: slugify(name), indicators: [...ind] })).sort((a, b) => a.name.localeCompare(b.name));
 });
 
 // All observations for one region, plus the national rows of the same indicators for comparison.
@@ -247,7 +294,8 @@ export const regionData = cache(async (iso3: string, slug: string) => {
   const region = (await regionsFor(iso3)).find((r) => r.slug === slug)?.name;
   if (!region) return null;
   const obs = await query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? AND region IN (?, '') ORDER BY indicator, region, dwelling_type, period", [iso3, region]);
-  const rows = obs.filter((o) => o.region === region).map((o) => ({ ...o, value: Number(o.value) }));
+  const extra = overlayFor(iso3, (r) => r.region === region) as unknown as Observation[];
+  const rows = [...obs.filter((o) => o.region === region), ...extra].map((o) => ({ ...o, value: Number(o.value) }));
   const indicators = new Set(rows.map((r) => r.indicator));
   const national = obs.filter((o) => !o.region && indicators.has(o.indicator)).map((o) => ({ ...o, value: Number(o.value) }));
   return { region, rows, national };
@@ -267,6 +315,8 @@ export async function countryTrackRecord(iso3: string, target = "real_price", ho
 // All backtest points of the latest run for a target/horizon, for the global scatter and country table.
 export const allBacktestPoints = cache(async (target: string, horizon: number) => {
   const run = await latestRun();
+  const snap = fromSnapshot<BacktestPoint>(run, "backtest_points", (r) => r.target === target && r.horizon === horizon);
+  if (snap) return snap;
   return run ? rows<BacktestPoint>("SELECT country, target, horizon, origin, predicted, actual, method FROM backtest_points WHERE run_id = ? AND target = ? AND horizon = ? ORDER BY country, origin", [run.id, target, horizon]) : [];
 });
 
@@ -283,7 +333,7 @@ export const cleanPlaceName = (name: string) => name.replace(/^all dwellings\.\s
 export type CityMetric = { indicator: string; dwellingType: string; value: number; period: string; change1y: number | null; change5y: number | null; kind: "level" | "index" | "rate" | "count" };
 export type CitySummary = { name: string; slug: string; price: CityMetric | null; rent: CityMetric | null; vacancy: CityMetric | null; sales: CityMetric | null; indicators: string[]; sources: string[] };
 
-const PRICE_ORDER: [string, string, CityMetric["kind"]][] = [["AVG_PRICE", "", "level"], ["MEDIAN_PRICE", "", "level"], ["MEDIAN_PRICE", "house", "level"], ["TYPE_PRICE_LEVEL", "house", "level"], ["REGION_PRICE_INDEX", "", "index"], ["CASE_SHILLER_INDEX", "", "index"], ["CITY_PRICE", "", "index"], ["NEW_HOUSING_PRICE", "", "index"], ["TYPE_PRICE_INDEX", "house", "index"]];
+const PRICE_ORDER: [string, string, CityMetric["kind"]][] = [["AVG_PRICE", "", "level"], ["MEDIAN_PRICE", "", "level"], ["MEDIAN_PRICE", "house", "level"], ["TYPE_PRICE_LEVEL", "house", "level"], ["REGION_PRICE_INDEX", "", "index"], ["CASE_SHILLER_INDEX", "", "index"], ["CITY_PRICE", "", "index"], ["NEW_HOUSING_PRICE", "", "index"], ["TYPE_PRICE_INDEX", "house", "index"], ["ASSESSED_VALUE", "", "level"]];
 const RENT_ORDER: [string, string][] = [["AVG_RENT", ""], ["AVG_RENT_2BR", ""], ["AVG_RENT", "condo"]];
 
 export const citySummaries = cache(async (iso3: string): Promise<CitySummary[]> => {
@@ -295,7 +345,9 @@ export const citySummaries = cache(async (iso3: string): Promise<CitySummary[]> 
     rows<{ region: string; source: string }>("SELECT region, source FROM observations WHERE country = ? AND region != '' GROUP BY region, source", [code]),
   ]);
   const series = new Map<string, Map<string, { period: string; value: number }[]>>();
-  for (const r of data) {
+  const extra = overlayFor(code, (r) => !!r.region && r.frequency === "A" && r.period >= "2014");
+  for (const r of extra) srcs.push({ region: r.region, source: r.source });
+  for (const r of [...data, ...extra].sort((a, b) => a.region.localeCompare(b.region) || a.indicator.localeCompare(b.indicator) || String(a.period).localeCompare(String(b.period)))) {
     const byKey = series.get(r.region) || series.set(r.region, new Map()).get(r.region)!;
     const key = `${r.indicator}|${r.dwelling_type}`;
     (byKey.get(key) || byKey.set(key, []).get(key)!).push({ period: String(r.period), value: Number(r.value) });
