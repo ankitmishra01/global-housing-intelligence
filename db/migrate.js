@@ -16,6 +16,13 @@ export async function migrate(db) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const db = connect();
-  await migrate(db);
-  console.log(`Schema applied to ${databaseUrl().replace(/\?.*$/, '')}`);
+  try {
+    await migrate(db);
+    console.log(`Schema applied to ${databaseUrl().replace(/\?.*$/, '')}`);
+  } catch (error) {
+    // A plan quota can block writes while reads still work. The deploy build only needs the
+    // existing schema to read from, so it carries on; the sync jobs still fail loudly.
+    if (!/writes are blocked|write operations are forbidden/i.test(String(error?.message))) throw error;
+    console.warn(`Schema not applied: database writes are blocked (${error.message.split('\n')[0]}). Continuing with the existing schema.`);
+  }
 }
