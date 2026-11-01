@@ -173,3 +173,40 @@ export const nationalLatest = cache(async (iso3: string) => {
   }
   return [...latest.values()].map((o) => ({ indicator: o.indicator, region: o.region || null, dwellingType: o.dwelling_type || null, period: o.period, frequency: o.frequency, value: Number(o.value), source: o.source }));
 });
+
+// ── Track record and scenario sensitivities (engine wave 1) ──
+export type BacktestPoint = { country: string; target: string; horizon: number; origin: number; predicted: number; actual: number; method: string };
+export type VintageScore = { vintage_run_id: string; country: string; target: string; horizon: number; target_year: number; projected_median: number; p10: number; p90: number; actual: number; error: number; in80: number; scored_at: string };
+export type FeatureSensitivity = { target: string; feature: string; horizon: number; coef: number; se: number; valid: number; note: string };
+
+// Pseudo-out-of-sample backtest points of the latest run for one country (x100 log growth).
+export const backtestPoints = cache(async (iso3: string) => {
+  const run = await latestRun();
+  return run ? rows<BacktestPoint>("SELECT country, target, horizon, origin, predicted, actual, method FROM backtest_points WHERE run_id = ? AND country = ? ORDER BY target, horizon, origin", [run.id, iso3]) : [];
+});
+
+// Real track record: past vintages scored against outcomes (all countries, or one).
+export const vintageScores = cache((iso3?: string) =>
+  iso3
+    ? rows<VintageScore>("SELECT * FROM vintage_scores WHERE country = ? ORDER BY target_year DESC, horizon", [iso3])
+    : rows<VintageScore>("SELECT * FROM vintage_scores ORDER BY target_year DESC, country, horizon"),
+);
+
+// Headline track-record numbers: backtest hit rate of direction and mean absolute error per
+// target/horizon (latest run), plus live vintage counts and 80%-band coverage once scored.
+export const trackRecordSummary = cache(async () => {
+  const run = await latestRun();
+  const backtest = run ? await rows<{ target: string; horizon: number; n: number; mae: number; direction_hit: number; bias: number }>(
+    `SELECT target, horizon, COUNT(*) AS n, AVG(ABS(actual - predicted)) AS mae,
+            AVG(CASE WHEN (actual >= 0) = (predicted >= 0) THEN 1.0 ELSE 0.0 END) AS direction_hit,
+            AVG(predicted - actual) AS bias
+     FROM backtest_points WHERE run_id = ? GROUP BY target, horizon ORDER BY target, horizon`, [run.id]) : [];
+  const live = await rows<{ target: string; horizon: number; n: number; mae: number; coverage80: number }>(
+    `SELECT target, horizon, COUNT(*) AS n, AVG(ABS(error)) AS mae, AVG(in80) AS coverage80 FROM vintage_scores GROUP BY target, horizon ORDER BY target, horizon`);
+  return { runId: run?.id ?? null, backtest, live };
+});
+
+export const featureSensitivities = cache(async () => {
+  const run = await latestRun();
+  return run ? rows<FeatureSensitivity>("SELECT target, feature, horizon, coef, se, valid, note FROM feature_sensitivity WHERE run_id = ? ORDER BY target, feature, horizon", [run.id]) : [];
+});

@@ -16,6 +16,12 @@ import { finite, mean } from '../lib/engine/stats.js';
 import { estimateEventLibrary, EVENT_CLASSES } from '../lib/engine/events.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
+// Projection origin: trailing 12 months to each country's latest BIS quarter when true, last
+// calendar year when false. Tested 2026-11-01 against calendar on held-out origins (real price
+// skill h1/h2/h3/h5: 25.2/16.6/16.7/13.3% vs 23.4/17.8/17.6/13.2%; type h1 8.5% vs 12.2%), so it
+// failed the "no worse at h1-h5 than -0.5pp" rule. Calendar ships; the latest quarter is shown
+// as an observed nowcast point (details.nowcast) instead.
+export const TTM_ORIGIN = false;
 export const MORTGAGE_SPREAD = 2.0; // assumed mortgage spread over the policy rate where no national series exists
 
 export async function loadRows(db) {
@@ -69,8 +75,20 @@ export function countryComponents(iso3, c, monthly, ctx, flags) {
   };
 }
 
-export function buildRun(rows, now = new Date(), { national = {} } = {}) {
-  const built = buildPanel(rows);
+// Observed nowcast point: the latest BIS real-price quarter relative to the origin year's
+// average (same base as the projection index, origin = 100). Only for BIS-priced countries.
+export function latestQuarterVsOrigin(quarterly, origin, source) {
+  if (!quarterly || source !== 'BIS') return null;
+  const keys = Object.keys(quarterly).sort();
+  const last = keys.at(-1);
+  const base = keys.filter(k => k.startsWith(`${origin}-Q`)).map(k => quarterly[k]);
+  if (!last || base.length !== 4 || Number(last.slice(0, 4)) <= origin) return null;
+  const index = (100 * quarterly[last]) / mean(base);
+  return { quarter: last, index: +index.toFixed(3), changePct: +(index - 100).toFixed(2) };
+}
+
+export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIGIN } = {}) {
+  const built = buildPanel(rows, { ttm });
   const engine = trainEngine(built);
   validateEngineOutput(engine);
   const flags = [], components = {}, contexts = [];
@@ -84,12 +102,14 @@ export function buildRun(rows, now = new Date(), { national = {} } = {}) {
     flags.push(...f);
     components[iso3] = countryComponents(iso3, c, monthly, ctx, f);
     const policy = latestMonthly(monthly.POLICY_RATE), mortgage = latestMonthly(monthly.MORTGAGE_RATE);
+    const nowcast = latestQuarterVsOrigin(monthly.REAL_PRICE_Q, ctx.origin, c.PRICE_SOURCE);
+    const originLabel = c.TTM ? `12 months to ${c.TTM.latest}` : String(ctx.origin);
     contexts.push({
       country: iso3, origin_year: ctx.origin, rent_origin_year: ctx.rentOrigin ?? null,
       policy_rate: policy?.value ?? null, policy_rate_as_of: policy?.period ?? null,
       mortgage_rate: mortgage ? mortgage.value : policy ? Math.max(0.1, policy.value + MORTGAGE_SPREAD) : null,
       mortgage_rate_source: mortgage ? (iso3 === 'CAN' ? 'Bank of Canada 5-year conventional mortgage' : iso3 === 'USA' ? 'Freddie Mac 30-year fixed' : 'national series') : policy ? `policy rate + ${MORTGAGE_SPREAD.toFixed(1)}pp assumed spread` : null,
-      details: JSON.stringify({ components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
+      details: JSON.stringify({ originLabel, originQuarter: c.TTM?.quarter ?? null, rentOriginLabel: ctx.rentOrigin ? String(ctx.rentOrigin) : null, nowcast, components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
     });
   }
   const { rows: indexRows, distributions } = scoreAll(components);
@@ -110,18 +130,54 @@ export function buildRun(rows, now = new Date(), { national = {} } = {}) {
   const summary = {
     modelVersion: MODEL_VERSION, latestYear: engine.latestYear, units: engine.units, features: FEATURES, flagRules: FLAG_RULES,
     personas: PERSONAS, distributions, mortgageSpread: MORTGAGE_SPREAD, eventClasses: EVENT_CLASSES,
+    featureSensitivities: engine.featureSensitivities, originMode: ttm ? 'trailing 12 months to latest quarter' : 'calendar year',
     stressComponents: STRESS_COMPONENTS, stressDistributions: stress.distributions, signalLabels: SIGNAL_LABELS, signalDisclaimer: SIGNAL_DISCLAIMER,
     uncertainty: 'Empirical rolling-origin residual quantiles per horizon, held non-decreasing with distance. p25-p75 is the 50% band, p10-p90 the 80% band.',
     limits: [
       'Tier 1 covers about 58 economies with official house price indexes; rents exist for about 43.',
       'Ten-year backtests rest on far fewer origins than one-year backtests; check n_origins on the methodology page.',
       'Rate sensitivity is pooled across countries and is a model-implied association, not a causal estimate.',
+      'Projections start from the last complete calendar year; the latest quarter is shown as an observed point (a trailing-12-month origin was tested and did not beat calendar origins on held-out years).',
       'Dwelling-type paths use a separate pooled model trained on the type series; coverage varies by country.',
       'Nominal paths use IMF WEO inflation forecasts, held flat after the last WEO year.',
       'Projections are not financial advice.',
     ],
   };
   return { id, dataVintage, engine, flags, contexts, indexRows, eventLibrary, summary };
+}
+
+// Run-keyed tables pruned together. A run is kept if it is among the latest KEEP_LATEST or the
+// last run of its calendar month (one per month is kept forever for the track record).
+const RUN_TABLES = ['projections', 'backtests', 'rate_sensitivity', 'risk_flags', 'persona_indexes', 'country_context', 'event_library', 'feature_sensitivity', 'backtest_points'];
+export const KEEP_LATEST = 10;
+export function runsToPrune(runs) {
+  const sorted = [...runs].sort((a, b) => b.created_at.localeCompare(a.created_at));
+  const keep = new Set(sorted.slice(0, KEEP_LATEST).map(r => r.id));
+  const monthLast = new Map();
+  for (const r of sorted) if (!monthLast.has(r.created_at.slice(0, 7))) monthLast.set(r.created_at.slice(0, 7), r.id);
+  for (const id of monthLast.values()) keep.add(id);
+  return sorted.filter(r => !keep.has(r.id)).map(r => r.id);
+}
+
+// Score past runs' projections whose target year is now observed (index, origin = 100).
+export function scoreVintages({ projections, contexts, panel, scoredAt }) {
+  const out = [];
+  const ctxBy = new Map(contexts.map(c => [`${c.run_id}|${c.country}`, c]));
+  for (const p of projections) {
+    if (p.target !== 'real_price' && p.target !== 'real_rent') continue;
+    const ctx = ctxBy.get(`${p.run_id}|${p.country}`);
+    let details = {};
+    try { details = typeof ctx?.details === 'string' ? JSON.parse(ctx.details) : ctx?.details || {}; } catch { /* old rows */ }
+    if (details.originQuarter) continue; // trailing-12-month vintages need the matching TTM series
+    const series = p.target === 'real_price' ? panel[p.country]?.PRICE : panel[p.country]?.REAL_RENT;
+    const origin = Number(p.year) - Number(p.horizon);
+    if (!series || !finite(series[origin]) || !finite(series[p.year])) continue;
+    const actual = (100 * series[p.year]) / series[origin];
+    out.push({ vintage_run_id: p.run_id, country: p.country, target: p.target, horizon: Number(p.horizon), target_year: Number(p.year),
+      projected_median: Number(p.median), p10: Number(p.p10), p90: Number(p.p90), actual: +actual.toFixed(3), error: +(actual - Number(p.median)).toFixed(3),
+      in80: actual >= Number(p.p10) && actual <= Number(p.p90) ? 1 : 0, scored_at: scoredAt });
+  }
+  return out;
 }
 
 async function main() {
@@ -155,7 +211,29 @@ async function main() {
   await upsertRows(db, 'persona_indexes', ['run_id', 'country', 'persona', 'score', 'rank', 'components'], withRun(run.indexRows.map(r => ({ ...r, components: JSON.stringify(r.components) }))));
   await upsertRows(db, 'country_context', ['run_id', 'country', 'origin_year', 'rent_origin_year', 'policy_rate', 'policy_rate_as_of', 'mortgage_rate', 'mortgage_rate_source', 'details'], withRun(run.contexts));
   await upsertRows(db, 'event_library', ['run_id', 'class', 'target', 'horizon', 'effect', 'se', 'n_episodes', 'episodes'], withRun(run.eventLibrary));
+  await upsertRows(db, 'feature_sensitivity', ['run_id', 'target', 'feature', 'horizon', 'coef', 'se', 'valid', 'note'], withRun(run.engine.featureSensitivities));
+  await upsertRows(db, 'backtest_points', ['run_id', 'country', 'target', 'horizon', 'origin', 'predicted', 'actual', 'method'], withRun(run.engine.backtestPoints));
   console.log(`Wrote ${run.id}`);
+
+  // Track record: score every stored past run whose target years are now observed.
+  const past = await db.execute({ sql: "SELECT run_id, country, target, year, horizon, median, p10, p90 FROM projections WHERE run_id != ? AND target IN ('real_price', 'real_rent')", args: [run.id] });
+  const pastCtx = await db.execute({ sql: 'SELECT run_id, country, details FROM country_context WHERE run_id != ?', args: [run.id] });
+  const scored = scoreVintages({ projections: past.rows, contexts: pastCtx.rows, panel: buildPanel(rows, { ttm: false }).panel, scoredAt: new Date().toISOString() });
+  await upsertRows(db, 'vintage_scores', ['vintage_run_id', 'country', 'target', 'horizon', 'target_year', 'projected_median', 'p10', 'p90', 'actual', 'error', 'in80', 'scored_at'], scored);
+  console.log(`Track record: ${run.engine.backtestPoints.length} backtest points, ${scored.length} vintage projections scored`);
+
+  // Retention: latest runs plus one per calendar month, forever.
+  const runs = (await db.execute('SELECT id, created_at FROM projection_runs')).rows;
+  const prune = runsToPrune(runs);
+  if (prune.length) {
+    const ph = prune.map(() => '?').join(',');
+    await db.batch([
+      ...RUN_TABLES.map(t => ({ sql: `DELETE FROM ${t} WHERE run_id IN (${ph})`, args: prune })),
+      { sql: `DELETE FROM vintage_scores WHERE vintage_run_id IN (${ph})`, args: prune },
+      { sql: `DELETE FROM projection_runs WHERE id IN (${ph})`, args: prune },
+    ], 'write');
+    console.log(`Retention: pruned ${prune.length} intra-month runs (kept latest ${KEEP_LATEST} + one per month)`);
+  }
   // Full data quality pass on the new run. Only integrity failures stop the pipeline.
   const quality = await runQuality({ db });
   const counts = Object.fromEntries(['pass', 'warn', 'fail'].map(k => [k, quality.checks.filter(c => c.severity === k).length]));
