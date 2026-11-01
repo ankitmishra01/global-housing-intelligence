@@ -210,3 +210,43 @@ export const featureSensitivities = cache(async () => {
   const run = await latestRun();
   return run ? rows<FeatureSensitivity>("SELECT target, feature, horizon, coef, se, valid, note FROM feature_sensitivity WHERE run_id = ? ORDER BY target, feature, horizon", [run.id]) : [];
 });
+
+// ── Wave 2 product: regions, briefs, track record (read-only) ──
+export const slugify = (name: string) =>
+  name.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+// Distinct regions with observations for one country, with their slugs and series counts.
+export const regionsFor = cache(async (iso3: string) => {
+  const obs = (await observations(iso3)).filter((o) => o.region);
+  const by = new Map<string, Set<string>>();
+  for (const o of obs) (by.get(o.region) || by.set(o.region, new Set()).get(o.region)!).add(o.indicator);
+  return [...by].map(([name, set]) => ({ name, slug: slugify(name), indicators: [...set] })).sort((a, b) => a.name.localeCompare(b.name));
+});
+
+// All observations for one region, plus the national rows of the same indicators for comparison.
+export const regionData = cache(async (iso3: string, slug: string) => {
+  const obs = await observations(iso3);
+  const region = [...new Set(obs.filter((o) => o.region).map((o) => o.region))].find((r) => slugify(r) === slug);
+  if (!region) return null;
+  const rows = obs.filter((o) => o.region === region).map((o) => ({ ...o, value: Number(o.value) }));
+  const indicators = new Set(rows.map((r) => r.indicator));
+  const national = obs.filter((o) => !o.region && indicators.has(o.indicator)).map((o) => ({ ...o, value: Number(o.value) }));
+  return { region, rows, national };
+});
+
+// Per-country backtest quality from pseudo-out-of-sample points (x100 log growth → %).
+export const toPctChange = (logPts: number) => 100 * (Math.exp(logPts / 100) - 1);
+export async function countryTrackRecord(iso3: string, target = "real_price", horizon = 1) {
+  const pts = (await backtestPoints(iso3)).filter((p) => p.target === target && Number(p.horizon) === horizon)
+    .map((p) => ({ origin: Number(p.origin), predicted: toPctChange(Number(p.predicted)), actual: toPctChange(Number(p.actual)), method: p.method }));
+  if (!pts.length) return null;
+  const mae = pts.reduce((s, p) => s + Math.abs(p.actual - p.predicted), 0) / pts.length;
+  const hit = pts.filter((p) => (p.actual >= 0) === (p.predicted >= 0)).length / pts.length;
+  return { points: pts, mae, hit, n: pts.length, first: pts[0].origin, last: pts.at(-1)!.origin };
+}
+
+// All backtest points of the latest run for a target/horizon, for the global scatter and country table.
+export const allBacktestPoints = cache(async (target: string, horizon: number) => {
+  const run = await latestRun();
+  return run ? rows<BacktestPoint>("SELECT country, target, horizon, origin, predicted, actual, method FROM backtest_points WHERE run_id = ? AND target = ? AND horizon = ? ORDER BY country, origin", [run.id, target, horizon]) : [];
+});

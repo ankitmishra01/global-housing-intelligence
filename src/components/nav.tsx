@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/live", label: "Live", key: "L" },
   { href: "/countries", label: "Countries", key: "C" },
   { href: "/indexes", label: "Indexes", key: "I" },
+  { href: "/track-record", label: "Track record", key: "T" },
   { href: "/compare", label: "Compare", key: "V" },
   { href: "/scenario", label: "Scenarios", key: "S" },
   { href: "/ask", label: "Ask AI", key: "A" },

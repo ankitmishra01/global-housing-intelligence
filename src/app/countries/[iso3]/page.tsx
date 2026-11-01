@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CountryExplorer, type ExplorerProps } from "@/components/country-explorer";
-import { applyLive, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
+import { PredictedActualLine } from "@/components/track-record-chart";
+import { applyLive, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
 import { EVENT_LABELS, flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
@@ -46,6 +47,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   if (!c) notFound();
   const [run, proj, sens, allFlags, personas, ctxs, { panel, observations }, labels, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels(), liveState(iso3), liveShifts(iso3)]);
   const shifts = shiftsAll[iso3];
+  const [record, regionList] = await Promise.all([countryTrackRecord(iso3), regionsFor(iso3)]);
   const ctx = ctxs.find((x) => x.country === iso3);
   const myFlags = allFlags.filter((f) => f.country === iso3);
 
@@ -121,6 +123,13 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         </div>
       </header>
 
+      <nav className="country-tools" aria-label="Share and follow">
+        <Link className="chip" href={`/countries/${iso3}/brief`}>Share or print brief</Link>
+        <a className="chip" href={`/countries/${iso3}/feed.xml`}>Follow changes (RSS)</a>
+        <a className="chip" href={`/api/v1/countries/${iso3}`}>Data as JSON</a>
+        {regionList.length ? <a className="chip" href="#regions">{regionList.length} {regionList.length === 1 ? "region" : "cities and regions"}</a> : null}
+      </nav>
+
       {live && live.explanation.length ? (
         <section className="section live-banner" aria-label="Live adjustments">
           <div className="live-banner__head">
@@ -148,6 +157,22 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
 
       {explorer ? <CountryExplorer {...explorer} /> : null}
 
+      {record ? (
+        <section className="section">
+          <div className="section-title">
+            <div><h2>How the model did here</h2></div>
+            <p>Pseudo-out-of-sample backtest: 1-year real price projections made at past dates with only the data available then, against what happened. <Link className="link" href="/track-record">All countries</Link></p>
+          </div>
+          <div className="grid-2">
+            <div className="panel"><PredictedActualLine points={record.points} label={`${c.name}: projected versus actual 1-year real price change`} /></div>
+            <div className="grid-2" style={{ alignContent: "start" }}>
+              <div className="persona-card"><h3>Average miss</h3><div className="score num">{fmt(record.mae, 1)}</div><p>percentage points of real price change, 1 year ahead</p></div>
+              <div className="persona-card"><h3>Right direction</h3><div className="score num">{Math.round(record.hit * 100)}%</div><p>of {record.n} forecasts got up or down right ({record.first + 1}–{record.last + 1})</p></div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {ctx?.details.affordability || ctx?.details.signals ? <AffordabilitySection ctx={ctx} disclaimer={run?.summary && (run.summary as unknown as { signalDisclaimer?: string }).signalDisclaimer} /> : null}
 
       {nationalTop.length || cityRows.length ? (
@@ -173,6 +198,13 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
               </table>
             </div>
           ) : null}
+        </section>
+      ) : null}
+
+      {regionList.length ? (
+        <section className="section" id="regions">
+          <div className="section-title"><div><h2>Cities and regions</h2></div><p>Published by national agencies; each page shows the history and compares it with the national figure.</p></div>
+          <div className="chips">{regionList.map((r) => <Link key={r.slug} className="chip" href={`/countries/${iso3}/${r.slug}`}>{r.name}</Link>)}</div>
         </section>
       ) : null}
 
