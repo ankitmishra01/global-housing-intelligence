@@ -1,0 +1,58 @@
+{
+  "iso3": "POL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Under the Polish Financial Supervision Authority's Recommendation S, every bank offering housing loans must also offer a fixed or periodically fixed rate, with the fixed period lasting at least five years, and must let existing borrowers switch from a variable rate. Fixed products still dominate new lending, although variable-rate loans rose from 24.3% to 35.2% of new housing loan agreements by number in Q4 2025 as rate cuts made them attractive again, which gradually restores the faster pass-through of policy-rate moves.",
+      "sources": [
+        { "title": "Rekomendacja S dotycząca dobrych praktyk w zakresie zarządzania ekspozycjami kredytowymi zabezpieczonymi hipotecznie (consolidated text, June 2023 amendment)", "publisher": "Komisja Nadzoru Finansowego", "url": "https://bip.knf.gov.pl/knf/pl/komponenty/img/Rekomendacja_S_nowelizacja_czerwiec_2023_82872.pdf", "date": "2023-06" },
+        { "title": "Interest Rate Cut by Poland's Central Bank May Accelerate Growth of Variable-Rate Mortgages", "publisher": "Poland Insight (citing AMRON-SARFiN)", "url": "https://polandinsight.com/interest-rate-cut-by-polands-central-bank-may-accelerate-growth-of-variable-rate-mortgages-41025/", "date": "2026-03-05" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Recommendation S caps the loan-to-value ratio at origination at 80%, or 90% where the portion above 80% is insured or otherwise secured, and asks banks to scrutinise debt-service-to-income ratios above 40% for borrowers on up to the regional average wage and above 50% for others. Creditworthiness for variable and periodically fixed loans must be tested against an interest-rate buffer, and maturities should not exceed 35 years; the main exception is the state-guaranteed family housing loan, which allows up to 100% LTV.",
+      "sources": [
+        { "title": "Rekomendacja S dotycząca dobrych praktyk w zakresie zarządzania ekspozycjami kredytowymi zabezpieczonymi hipotecznie (consolidated text, June 2023 amendment)", "publisher": "Komisja Nadzoru Finansowego", "url": "https://bip.knf.gov.pl/knf/pl/komponenty/img/Rekomendacja_S_nowelizacja_czerwiec_2023_82872.pdf", "date": "2023-06" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The Safe Credit 2% (Bezpieczny Kredyt 2%) programme, launched in July 2023, subsidised the first 120 instalments of a first-home loan for borrowers under 45, on loans of up to PLN 500,000 (PLN 600,000 for families). Demand overshot the design: more than 52,000 contracts were signed by mid-December 2023 against the 50,000 envisaged for 2023 and 2024, funding was exhausted and intake halted in January 2024, leaving a concentrated burst of subsidised demand in the 2023 to 2024 price data.",
+      "sources": [
+        { "title": "Ustawa o rodzinnym kredycie mieszkaniowym i bezpiecznym kredycie 2% (Dz.U. 2023 poz. 859, consolidated text)", "publisher": "Sejm of the Republic of Poland (ISAP / ELI)", "url": "https://eli.gov.pl/api/acts/DU/2023/859/text/U/D20230859Lj.pdf", "date": "2023" },
+        { "title": "Bezpieczny kredyt 2%: liczba wniosków, finansowanie wyczerpane", "publisher": "Strefa Inwestorów", "url": "https://strefainwestorow.pl/artykuly/gospodarka/20231220/bezpieczny-kredyt-liczba-wnioskow", "date": "2023-12-20" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Completions rose 4.3% to 208,800 dwellings in 2025 on preliminary data, with developers delivering 134,100 of them, but the pipeline is thinning: dwellings started fell 9.2% and permits or registered projects fell 8.8% over the same year. Lower starts point to slower new supply in 2026 and 2027 just as easier monetary policy revives credit demand.",
+      "sources": [
+        { "title": "Residential construction in the period of January-December 2025", "publisher": "Statistics Poland (GUS)", "url": "https://stat.gov.pl/en/topics/industry-construction-fixed-assets/construction/residential-construction-in-the-period-of-january-december-2025,3,163.html", "date": "2026-01-22" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_rents",
+      "text": "Poland hosted 965,990 people from Ukraine under EU temporary protection at the end of January 2026, 22.1% of the EU total and 26.5 per thousand residents. A displaced population of this size, with limited means to buy, adds chiefly to rental demand, and the IMF's 2025 Article IV consultation lists better integration of migrant workers among Poland's structural priorities.",
+      "sources": [
+        { "title": "Temporary protection for 4.38 million in January 2026", "publisher": "Eurostat", "url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260310-1", "date": "2026-03-10" },
+        { "title": "IMF Executive Board Concludes 2025 Article IV Consultation with Republic of Poland", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2026/02/02/pr-26030-poland-imf-concludes-2025-article-iv-consultation", "date": "2026-02-03" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Poland publishes a quarterly price index for residential premises covering both the primary and secondary markets, with a separate release for all 16 voivodships. In Q2 2025 prices rose 4.7% year on year nationally, 5.5% on the primary market and 4.0% on the secondary market, so headline readings can mask divergence between new-build and existing stock.",
+      "sources": [
+        { "title": "Price indices of residential premises in the second quarter of 2025", "publisher": "Statistics Poland (GUS)", "url": "https://stat.gov.pl/en/topics/prices-trade/price-indices/price-indices-of-residential-premises-in-the-second-quarter-of-2025,18,28.html", "date": "2025-10-02" },
+        { "title": "Price indices of residential premises by voivodships in the second quarter of 2025", "publisher": "Statistics Poland (GUS)", "url": "https://stat.gov.pl/en/latest-statistical-news/communications-and-announcements/list-of-communiques-and-announcements/price-indices-of-residential-premises-by-voivodships-in-the-second-quarter-of-2025,307,42.html", "date": "2025-10-02" }
+      ]
+    }
+  ]
+}

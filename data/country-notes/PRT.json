@@ -1,0 +1,64 @@
+{
+  "iso3": "PRT",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Portuguese mortgage lending was overwhelmingly variable rate, priced off Euribor, until recently: ECB data show loans floating or fixed for up to one year made up 88% of new house-purchase lending in June 2022. After the rate shock borrowers moved heavily into fixed and mixed-rate products, cutting that share to about 26% in 2025 and 13% in August 2026, so ECB moves now reach new borrowers far more slowly, while loans written before the shift remain exposed to Euribor.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Portugal (RAI.M.PT.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.PT.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        },
+        {
+          "title": "Notification by Banco de Portugal on the revision of the Macroprudential Recommendation",
+          "publisher": "European Systemic Risk Board / Banco de Portugal",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260702_Othermacroprudentialmeasures_PT~155a9efa59.en.pdf",
+          "date": "2026-07-02"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Banco de Portugal's revised macroprudential recommendation, applicable from 1 August 2026, keeps loan-to-value caps at 90% for own and permanent residence and 80% for other purposes, but lowers the debt-service-to-income limit from 50% to 45% and cuts permitted exceptions from 15% to 10% of each lender's annual credit. The DSTI is stress-tested with rate add-ons of 0.5 to 1.5 percentage points for variable and mixed-rate loans, and maximum mortgage maturity is 40 years for borrowers up to 35 and 35 years above, which together restrain loan sizes as prices outpace incomes.",
+      "sources": [
+        {
+          "title": "Notification by Banco de Portugal on the revision of the Macroprudential Recommendation",
+          "publisher": "European Systemic Risk Board / Banco de Portugal",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260702_Othermacroprudentialmeasures_PT~155a9efa59.en.pdf",
+          "date": "2026-07-02"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "A State guarantee scheme for young buyers has pulled first-time purchasers into the market: their share of new housing loans rose from about 55% between 2018 and July 2024 to about 62% between August 2024 and March 2026. Loans under the scheme carried an average maturity of nearly 38 years, close to the maximum allowed, which stretches affordability rather than improving it and adds to demand at the lower end of the market.",
+      "sources": [
+        {
+          "title": "Notification by Banco de Portugal on the revision of the Macroprudential Recommendation",
+          "publisher": "European Systemic Risk Board / Banco de Portugal",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260702_Othermacroprudentialmeasures_PT~155a9efa59.en.pdf",
+          "date": "2026-07-02"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "House prices rose 17.7% year on year in 2025 Q3, among the fastest rates in the EU, and Banco de Portugal's models point to overvaluation relative to fundamentals. The share of transactions financed with credit increased from 40% in 2024 to 54% in 2025 Q4 and the household debt ratio rose to 81.6% in 2025, ending years of deleveraging, which raises the risk of a self-reinforcing loop between credit and prices.",
+      "sources": [
+        {
+          "title": "Notification by Banco de Portugal on the revision of the Macroprudential Recommendation",
+          "publisher": "European Systemic Risk Board / Banco de Portugal",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260702_Othermacroprudentialmeasures_PT~155a9efa59.en.pdf",
+          "date": "2026-07-02"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "iso3": "SVK",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Slovak mortgages are almost entirely fixed for an initial period: variable-rate loans were below 1.5% of new household lending in February 2020, and in January 2024 fixations of three to five years made up 53.9% of mortgages and one to three years 35.9%. Policy-rate changes therefore reach borrowers mainly as fixations expire, which spread the post-2022 rate shock over several years of refixations, and renegotiated loans accounted for 69% of new mortgage business in January 2024.",
+      "sources": [
+        { "title": "Household mortgages are predominantly tied to fixed rates in Slovakia", "publisher": "Národná banka Slovenska", "url": "https://nbs.sk/en/news/household-mortgages-are-predominantly-tied-to-fixed-rates-in-slovakia/", "date": "2020-04-21" },
+        { "title": "Do you know the difference between renegotiated and refinanced loans?", "publisher": "Národná banka Slovenska", "url": "https://nbs.sk/en/news/do-you-know-the-difference-between-renegotiated-and-refinanced-loans/", "date": "2024-05-14" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Slovakia's borrower-based regime is binding: loan-to-value is capped at 80%, with up to 20% of new loans allowed up to 90%, and total debt service may not exceed 60% of income net of the subsistence minimum, tested against a rate 2 percentage points higher (capped at 6%) unless the rate is fixed for more than ten years. As of August 2026 these limits stood, and NBS has proposed differentiated LTV caps of 90% for first-time buyers up to 35, 70% for a third or subsequent property and 80% for others with the exception cut to 5%, now targeted for 1 January 2027 after an original 1 October 2026 date.",
+      "sources": [
+        { "title": "DSTI", "publisher": "Národná banka Slovenska", "url": "https://nbs.sk/en/financial-stability/fs-instruments/dsti/", "date": "2026" },
+        { "title": "LTV", "publisher": "Národná banka Slovenska", "url": "https://nbs.sk/en/financial-stability/fs-instruments/ltv/", "date": "2026" },
+        { "title": "Notification template for borrower-based measures: Slovak Republic, LTV recalibration", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260601_Othermacroprudentialmeasures_SK~8b84af699c.en.pdf", "date": "2026-06" },
+        { "title": "Nové podmienky hypoték od 1. 1. 2027: Mladí až 90 %, investori 70 %", "publisher": "Finančný kompas", "url": "https://www.financnykompas.sk/clanok/nove-podmienky-hypotek-od-1.-1.-2027-mladi-az-90-investori-70", "date": "2026-08-10" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "NBS reports that flat prices grew at double-digit rates in 2025 and accelerated further in early 2026, with investment demand contributing significantly and making first-time purchases less affordable; its June 2026 notification adds that more transactions are made by buyers who already own several properties while the number of underused dwellings has risen. Slovakia also hosted Ukrainian temporary protection beneficiaries equal to 25.8 per thousand residents at the end of January 2026, among the highest ratios in the EU.",
+      "sources": [
+        { "title": "Financial Stability Report May 2026", "publisher": "Národná banka Slovenska", "url": "https://nbs.sk/en/publications/financial-stability-report/financial-stability-report-may-2026/", "date": "2026-05" },
+        { "title": "Notification template for borrower-based measures: Slovak Republic, LTV recalibration", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260601_Othermacroprudentialmeasures_SK~8b84af699c.en.pdf", "date": "2026-06" },
+        { "title": "Temporary protection for 4.38 million in January 2026", "publisher": "Eurostat", "url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260310-1", "date": "2026-03-10" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Preliminary Statistics Office data show 14,300 flats completed in 2025, down 19% on 2024 and almost a quarter below the ten-year average, while 15,100 were started, 26% below that average. Thin new supply against strong investment and owner-occupier demand helps explain the double-digit flat price growth NBS reported for 2025 and early 2026.",
+      "sources": [
+        { "title": "Housing Construction Slowed Down, Number of Completed Flats Down in 2025", "publisher": "RTVS / STVR News (citing the Statistical Office of the Slovak Republic via TASR)", "url": "https://enrsi.stvr.sk/articles/news/436308/housing-construction-slowed-down-number-of-completed-flats-down-in-2025", "date": "2026-03-09" }
+      ]
+    }
+  ]
+}

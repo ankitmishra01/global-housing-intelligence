@@ -1,0 +1,57 @@
+{
+  "iso3": "NOR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "The great majority of Norwegian households borrow at a floating rate, a share Norges Bank describes as high by international standards, and floating mortgage rates are priced off three-month NIBOR plus a bank margin. Policy-rate changes therefore pass quickly to most mortgage payments, which makes household consumption and house prices unusually responsive to Norges Bank decisions.",
+      "sources": [
+        { "title": "Flytende rente eller fastrente?", "publisher": "Norges Bank (Bankplassen blog)", "url": "https://www.norges-bank.no/bankplassen/arkiv/2025/flytende-rente-eller-fastrente/", "date": "2025-05-28" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "The Lending Regulation, as applied from 31 December 2024, caps total debt at five times gross income, requires borrowers to withstand a 3 percentage point rate rise or a minimum rate of 7%, and requires amortisation of 2.5% a year on mortgages above 60% loan-to-value. Banks may grant 10% of new mortgage volume each quarter outside the rules, but only 8% in Oslo, and Norges Bank finds that the share of homes a buyer can afford within the debt-to-income cap has fallen most where demand is highest.",
+      "sources": [
+        { "title": "Notification of borrower-based measures: Norway", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification241204_BBMs_NO~671b20b959.en.pdf", "date": "2024-12-04" },
+        { "title": "Financial Stability Report 2025 H2", "publisher": "Norges Bank", "url": "https://www.norges-bank.no/contentassets/595bbc5e83a24a668669cf6fe55fe0a9/financialstabilityreport_2_25.pdf", "date": "2025-11-12" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "The maximum loan-to-value ratio was raised from 85% to 90% at the turn of 2024 to 2025, and Finanstilsynet's 2025 mortgage survey found loan volumes shifting up towards the new limit, average LTV on new repayment loans rising to 66% and new borrowers' debt-to-income ratio rising to 329%. Norges Bank links the strong rise in house prices in the first half of 2025 partly to this easing, and the IMF warned in 2025 against easing further.",
+      "sources": [
+        { "title": "Boliglånsundersøkelsen 2025", "publisher": "Finanstilsynet", "url": "https://www.finanstilsynet.no/nyhetsarkiv/nyheter/2025/boliglansundersokelsen-2025/", "date": "2025" },
+        { "title": "Financial Stability Report 2025 H2", "publisher": "Norges Bank", "url": "https://www.norges-bank.no/contentassets/595bbc5e83a24a668669cf6fe55fe0a9/financialstabilityreport_2_25.pdf", "date": "2025-11-12" },
+        { "title": "Norway: Staff Concluding Statement of the 2025 Article IV Mission", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2025/06/25/norway-staff-concluding-statement-for-the-2025-article-iv-consultation-mission", "date": "2025-06-25" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Mortgage interest remains deductible against income tax, and the IMF's 2025 Article IV mission recommended gradually phasing this out, starting with a cap, alongside tighter eligibility for state-subsidised mortgages. Tax incentives of this kind raise the amount households are willing to borrow and so capitalise into house prices.",
+      "sources": [
+        { "title": "Norway: Staff Concluding Statement of the 2025 Article IV Mission", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2025/06/25/norway-staff-concluding-statement-for-the-2025-article-iv-consultation-mission", "date": "2025-06-25" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Household formation has outpaced residential construction in recent years in every urbanisation class, most markedly in the main urban areas: building permits and completions have fallen since 2022 on higher rates and construction costs, with permits at very low levels in 2024. Norges Bank expects the low supply of new homes, together with lower rates, to push existing-home prices up somewhat faster than income.",
+      "sources": [
+        { "title": "Financial Stability Report 2025 H2", "publisher": "Norges Bank", "url": "https://www.norges-bank.no/contentassets/595bbc5e83a24a668669cf6fe55fe0a9/financialstabilityreport_2_25.pdf", "date": "2025-11-12" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Norway's price index for existing dwellings excludes new builds and draws on transactions registered by FINN.no, covering roughly 60% to 70% of sales. It is a seasonally adjusted hedonic index across three housing classes and eleven regions, published quarterly about 13 days after quarter end, and because it does not adjust for housing standard SSB notes it is expected to overstate price growth.",
+      "sources": [
+        { "title": "Price index for existing dwellings: About the statistics", "publisher": "Statistics Norway (SSB)", "url": "https://www.ssb.no/en/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-brukte-boliger?fane=om", "date": "2026-10-12" }
+      ]
+    }
+  ]
+}

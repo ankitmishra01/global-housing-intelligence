@@ -6,8 +6,9 @@ import { CountryExplorer, type ExplorerProps } from "@/components/country-explor
 import { PredictedActualLine } from "@/components/track-record-chart";
 import { NarrativeProse } from "@/components/narrative-prose";
 import { buildNarrativeInput } from "@/lib/narrative-input";
-import { buildCountryNarrative } from "../../../../lib/engine/narrative.js";
-import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
+import { buildCountryNarrative, names } from "../../../../lib/engine/narrative.js";
+import { computeSignals } from "../../../../lib/engine/signals.js";
+import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity, type Context } from "@/lib/data";
 import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
@@ -60,6 +61,18 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   const [record, regionList, cities] = await Promise.all([countryTrackRecord(iso3), regionsFor(iso3), citySummaries(iso3)]);
   const ctx = ctxs.find((x) => x.country === iso3);
   const myFlags = allFlags.filter((f) => f.country === iso3);
+  // Today's policy rate: the daily live reading when it is newer than the monthly series in the run.
+  const liveRateNewer = !!(ctx && live?.policy_rate_now != null && live.policy_rate_date && (!ctx.policy_rate_as_of || live.policy_rate_date.slice(0, 7) > ctx.policy_rate_as_of));
+  const rateNow = ctx ? {
+    policy: liveRateNewer ? live!.policy_rate_now! : ctx.policy_rate,
+    asOf: liveRateNewer ? live!.policy_rate_date! : ctx.policy_rate_as_of,
+    mortgage: liveRateNewer && ctx.mortgage_rate_source?.startsWith("policy") ? Math.max(0.1, live!.policy_rate_now! + (run?.summary.mortgageSpread ?? 2)) : ctx.mortgage_rate,
+  } : null;
+  // Signal reasons are rebuilt from the stored components so wording fixes apply without a retrain.
+  if (ctx) {
+    const mine = personas.filter((r) => r.country === iso3);
+    if (mine.length) ctx.details = { ...ctx.details, signals: (computeSignals as (a: unknown) => NonNullable<Context["details"]["signals"]>)({ scores: Object.fromEntries(mine.map((r) => [r.persona, r.score])), components: Object.fromEntries(mine.map((r) => [r.persona, r.components])), flags: myFlags.map((f) => f.flag), stress: ctx.details.stress ?? null }) };
+  }
 
   const latest = (indicator: string, opts: { region?: string; type?: string; freq?: string } = {}) =>
     observations.filter((o) => o.indicator === indicator && o.region === (opts.region ?? "") && o.dwelling_type === (opts.type ?? "") && o.frequency === (opts.freq ?? "A") && o.status === "actual").at(-1);
@@ -100,7 +113,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         return `Price effects ${scaled("real_price") ? `scale with this country's ${debt}` : "are pooled across countries, because household debt did not clearly change them"}; rent effects ${scaled("real_rent") ? `scale with its ${debt}` : "are pooled"}.`;
       })(),
       sensNotes: { price: priceSens[0]?.note ?? "", rent: rentSens?.note ? "Higher rates can push would-be buyers into renting, so the rent effect's sign is estimated, not assumed." : "", priceValid: priceSens.length > 0 && !!priceSens[0].valid },
-      rates: { policy: ctx.policy_rate, policyAsOf: ctx.policy_rate_as_of, mortgage: ctx.mortgage_rate, mortgageSource: ctx.mortgage_rate_source },
+      rates: { policy: rateNow!.policy, policyAsOf: rateNow!.asOf, mortgage: rateNow!.mortgage, mortgageSource: ctx.mortgage_rate_source },
       personas: {
         specs: run.summary.personas, components: liveComponents(ctx.details.components, shifts), distributions: run.summary.distributions,
         base: Object.fromEntries(["investor", "buyer", "renter", "seller"].map((k) => [k, personas.find((r) => r.country === iso3 && r.persona === k)?.score ?? null])),
@@ -115,7 +128,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   // Written analysis beside each chart, generated from the stored figures only.
   const narrativeInput = await buildNarrativeInput({ c, ctx, run, live, panel, observations, explorer, allCountries: await allCountries(),
     flagLabels: myFlags.map((f) => run?.summary.flagRules[f.flag]?.label ?? f.flag), flagIds: myFlags.map((f) => f.flag) });
-  const narrative = buildCountryNarrative(narrativeInput) as { headline: string; kpis: { label: string; value: string; period: string }[]; sections: { id: string; title: string; paragraphs: string[]; chart: string | null }[] };
+  const narrative = buildCountryNarrative(narrativeInput) as { headline: string; kpis: { label: string; value: string; period: string }[]; sections: { id: string; title: string; paragraphs: string[]; chart: string | null; sources?: { title: string; publisher?: string; url: string; date?: string }[] }[] };
   const dataYear = ctx?.origin_year ?? (observations.filter((o) => o.frequency === "A" && o.status === "actual").map((o) => o.period).sort().at(-1) ?? "");
   const series = (indicator: string, freq = "A") => observations.filter((o) => o.indicator === indicator && !o.region && !o.dwelling_type && o.frequency === freq && o.status === "actual" && Number(o.period.slice(0, 4)) >= Number(dataYear) - 24).map((o) => ({ period: o.period.slice(0, 4), value: Number(o.value) }));
   const labourSeries = [
@@ -124,7 +137,9 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   ].filter((x) => x.points.length >= 3);
   if (explorer) {
     explorer.narrative = { sections: narrative.sections };
-    explorer.rateInput = { name: c.name, rates: { policy: ctx?.policy_rate ?? null, mortgage: ctx?.mortgage_rate ?? null } };
+    explorer.drivers = (narrativeInput as { drivers?: { h10?: unknown } }).drivers?.h10 as never ?? null;
+    explorer.countryName = names(c.name).short;
+    explorer.rateInput = { name: c.name, rates: { policy: rateNow?.policy ?? null, mortgage: rateNow?.mortgage ?? null } };
     explorer.labourSeries = labourSeries;
     explorer.live = live && live.explanation.length ? { asOf: live.as_of, items: live.explanation } : null;
     explorer.signals = ctx?.details.signals;
@@ -152,7 +167,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
           {ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Price data to {ctx.origin_year}</span> : null}
           {ctx && run && ctx.rent_origin_year != null && ctx.rent_origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Rent data to {ctx.rent_origin_year}</span> : null}
         </div>
-        <HeroStats explorer={explorer} ctx={ctx} live={live} latest={latest} />
+        <HeroStats explorer={explorer} ctx={ctx} live={live} latest={latest} rateNow={rateNow} />
       </header>
 
       <nav className="country-tools" aria-label="Share and follow">
@@ -164,7 +179,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
 
       <section className="brief-card" aria-label="Country brief">
         <h2 className="brief-card__headline">{narrative.headline}</h2>
-        <p className="brief-card__meta">Data {dataYear}{ctx?.policy_rate_as_of ? `, rates as of ${ctx.policy_rate_as_of}` : ""}{live?.as_of ? `, live adjustments ${live.as_of}` : ""}</p>
+        <p className="brief-card__meta">Data {dataYear}{rateNow?.asOf ? `, rates as of ${rateNow.asOf}` : ""}{live?.as_of ? `, live adjustments ${live.as_of}` : ""}</p>
         <div className="brief-kpis">
           {narrative.kpis.map((k) => <div key={k.label}><span>{k.label}</span><strong className="num">{k.value}</strong><small>{k.period}</small></div>)}
         </div>
@@ -185,7 +200,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
 
       {explorer ? <CountryExplorer {...explorer} /> : narrative.sections.map((sec) => (
         <section key={sec.id} className={`section brief-section${sec.chart === "drivers" && drivers.length ? "" : " brief-section--full"}`}>
-          <NarrativeProse title={sec.title} paragraphs={sec.paragraphs} />
+          <NarrativeProse title={sec.title} paragraphs={sec.paragraphs} sources={sec.sources} />
           {sec.chart === "drivers" && drivers.length ? (
             <div className="brief-section__chart table-wrap">
               <table>
@@ -314,7 +329,7 @@ function AffordabilitySection({ ctx }: { ctx: Ctx; disclaimer?: string }) {
 }
 
 // Key figures inside the dark hero, as on the economic app's country pages.
-function HeroStats({ explorer, ctx, live, latest }: { explorer: ExplorerProps | null; ctx: Ctx | undefined; live: Awaited<ReturnType<typeof liveState>>; latest: (indicator: string) => { value: number; period: string } | undefined }) {
+function HeroStats({ explorer, ctx, live, latest, rateNow }: { rateNow: { policy: number | null; asOf: string | null; mortgage: number | null } | null; explorer: ExplorerProps | null; ctx: Ctx | undefined; live: Awaited<ReturnType<typeof liveState>>; latest: (indicator: string) => { value: number; period: string } | undefined }) {
   const at = (rows: Band[] | undefined, h: number) => rows?.find((r) => r.horizon === h)?.median;
   const chg = (v: number | undefined) => (v == null ? "–" : `${v >= 100 ? "+" : ""}${(v - 100).toFixed(1)}%`);
   const a = (ctx?.details.affordability ?? {}) as Record<string, number | string | boolean | null>;
@@ -322,8 +337,8 @@ function HeroStats({ explorer, ctx, live, latest }: { explorer: ExplorerProps | 
     ? [
         { label: "Real price, 10y", value: chg(at(explorer.bands.real_price, 10)), note: `3y ${chg(at(explorer.bands.real_price, 3))}` },
         { label: "Real rent, 10y", value: explorer.bands.real_rent.length ? chg(at(explorer.bands.real_rent, 10)) : "–", note: explorer.bands.real_rent.length ? "after inflation" : "no rent index" },
-        { label: "Policy rate", value: ctx?.policy_rate != null ? `${ctx.policy_rate.toFixed(2)}%` : "–", note: live?.rate_delta != null ? `${live.rate_delta > 0 ? "▲" : "▼"} ${Math.abs(live.rate_delta).toFixed(2)} since ${ctx?.origin_year}` : ctx?.policy_rate_as_of ?? undefined, tone: live?.rate_delta != null && live.rate_delta > 0 ? "warn" : "pos" },
-        { label: "Mortgage rate", value: ctx?.mortgage_rate != null ? `${ctx.mortgage_rate.toFixed(2)}%` : "–", note: ctx?.mortgage_rate_source?.startsWith("policy") ? "policy + 2.0pp proxy" : "national series" },
+        { label: "Policy rate", value: rateNow?.policy != null ? `${rateNow.policy.toFixed(2)}%` : "–", note: live?.rate_delta != null ? `${live.rate_delta > 0 ? "▲" : "▼"} ${Math.abs(live.rate_delta).toFixed(2)} since ${ctx?.origin_year}` : ctx?.policy_rate_as_of ?? undefined, tone: live?.rate_delta != null && live.rate_delta > 0 ? "warn" : "pos" },
+        { label: "Mortgage rate", value: rateNow?.mortgage != null ? `${rateNow.mortgage.toFixed(2)}%` : "–", note: ctx?.mortgage_rate_source?.startsWith("policy") ? "policy + 2.0pp proxy" : "national series" },
         { label: "Unemployment", value: typeof a.unemployment === "number" ? `${a.unemployment.toFixed(1)}%` : "–", note: typeof a.unemploymentChange12m === "number" ? `${a.unemploymentChange12m > 0 ? "+" : ""}${a.unemploymentChange12m.toFixed(1)}pp in 12m` : undefined, tone: a.unemploymentRising ? "neg" : "pos" },
         { label: "Mortgage stress", value: ctx?.details.stress ? `${ctx.details.stress.score.toFixed(0)}/100` : "–", note: ctx?.details.stress ? `rank ${ctx.details.stress.rank}` : "not enough data", tone: (ctx?.details.stress?.score ?? 0) >= 75 ? "neg" : (ctx?.details.stress?.score ?? 0) >= 60 ? "warn" : "pos" },
       ]

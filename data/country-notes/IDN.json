@@ -1,0 +1,90 @@
+{
+  "iso3": "IDN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Bank Indonesia has kept its loan-to-value and financing-to-value ceiling for property loans at up to 100 per cent for landed houses, apartments and shophouses, available to banks that meet non-performing loan criteria. At its October 2026 Board meeting it extended the relaxation, previously due to end on 31 December 2026, to 31 December 2027, so minimum down payments remain a policy choice of lenders rather than a regulatory floor.",
+      "sources": [
+        {
+          "title": "BI Perpanjang Kebijakan LTV Properti 100% dan DP Kendaraan 0% hingga 2027",
+          "publisher": "Kontan",
+          "url": "https://keuangan.kontan.co.id/news/bi-perpanjang-kebijakan-ltv-properti-100-dan-dp-kendaraan-0-hingga-2027",
+          "date": "2026-10-23"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Under Finance Minister Regulation PMK 90/2025, in force from 1 January 2026, the government bears 100 per cent of the VAT on the first Rp2 billion of the price of new, ready-to-occupy landed houses and apartment units priced up to Rp5 billion, for sale deeds signed and handed over during 2026. The incentive lowers the effective purchase price of new primary-market stock and supports developer sales while it lasts.",
+      "sources": [
+        {
+          "title": "Tahun Anggaran 2026, Pemerintah Kembali Berikan Diskon PPN Rumah",
+          "publisher": "Ortax",
+          "url": "https://ortax.org/tahun-anggaran-2026-pemerintah-kembali-berikan-diskon-ppn-rumah",
+          "date": "2026-01-05"
+        },
+        {
+          "title": "Insentif Bebas PPN Pembelian Rumah Resmi Diperpanjang hingga Akhir 2026",
+          "publisher": "Kontan",
+          "url": "https://industri.kontan.co.id/news/insentif-bebas-ppn-pembelian-rumah-resmi-diperpanjang-hingga-akhir-2026",
+          "date": "2025-09-25"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "lowers_rate_sensitivity",
+      "text": "The state housing-finance liquidity facility (FLPP), channelled through BP Tapera, offers low-income households a mortgage at a fixed 5 per cent for up to 20 years with a down payment of about 1 per cent; the 2025 quota was raised from 220,000 to 350,000 units. Borrowers in this subsidised segment are insulated from policy-rate changes for the life of the loan.",
+      "sources": [
+        {
+          "title": "Pemerintah Tambah Kuota Rumah Subsidi 2025 Jadi 350 Ribu Unit",
+          "publisher": "Pasardana",
+          "url": "https://pasardana.id/news/2025/7/15/pemerintah-tambah-kuota-rumah-subsidi-2025-jadi-350-ribu-unit",
+          "date": "2025-07-15"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "context",
+      "text": "In the second quarter of 2026 bank housing loans financed 70.05 per cent of primary-market home purchases, while developers funded 73.28 per cent of residential construction from internal funds rather than bank credit. Buyer demand is therefore sensitive to mortgage pricing, but the banking system's direct exposure to developer balance sheets is limited.",
+      "sources": [
+        {
+          "title": "Residential Property Price Survey, Quarter II 2026",
+          "publisher": "Bank Indonesia",
+          "url": "https://www.bi.go.id/en/publikasi/laporan/Documents/SHPR_Tw_II_2026-EN.pdf",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "About 58.8 per cent of Indonesians lived in urban areas in 2024, against 35.4 per cent in India and 76.9 per cent in Malaysia. Continued urbanisation keeps household formation in the large cities a durable source of housing demand.",
+      "sources": [
+        {
+          "title": "Urban population (% of total population), SP.URB.TOTL.IN.ZS",
+          "publisher": "World Bank",
+          "url": "https://api.worldbank.org/v2/country/IND;IDN;PHL;MYS/indicator/SP.URB.TOTL.IN.ZS?format=json&date=2024&per_page=20",
+          "date": "2024"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Bank Indonesia's Residential Property Price Index comes from a quarterly face-to-face survey of major developers in 18 cities and measures prices of new homes in the primary market only, with base 2018 = 100 since the third quarter of 2022. Because it reflects developer-reported prices for new units, it does not capture resales of existing homes.",
+      "sources": [
+        {
+          "title": "Residential Property Price Survey, Quarter II 2026",
+          "publisher": "Bank Indonesia",
+          "url": "https://www.bi.go.id/en/publikasi/laporan/Documents/SHPR_Tw_II_2026-EN.pdf",
+          "date": "2026"
+        }
+      ]
+    }
+  ]
+}

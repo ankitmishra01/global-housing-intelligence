@@ -1,0 +1,33 @@
+{
+  "iso3": "BRA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Brazilian housing loans are essentially fixed-rate, since the reference rate (TR) to which many are nominally indexed carries little weight in the total rate, so the existing stock is insulated from Selic moves. The pressure falls on new lending: savings deposits, which by law fund the SBPE mortgage system, fell from 62% to 80% of mortgage funding in 2014 to 2023 to about 50% in 2025, forcing banks to fund fixed-rate loans with costlier market instruments (LCI, LIG) and raising rates on new mortgages.",
+      "sources": [{ "title": "Voto 64/2025-CMN: direcionamento dos recursos captados em depósitos de poupança", "publisher": "Banco Central do Brasil / Conselho Monetário Nacional", "url": "https://normativos.bcb.gov.br/Votos/CMN/202564/Voto_do_CMN_64_2025.pdf", "date": "2025-10-09" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "In October 2025 the government announced a new savings-funded credit model: the rule that at least 65% of savings deposits go to housing credit, with 20% held as compulsory reserves, is being phased out so that up to the full savings balance can be lent, with the compulsory share cut to 15% during the transition and full effect expected from January 2027. The ceiling for SFH-financed properties also rose from BRL 1.5 million to BRL 2.25 million, widening access to regulated credit capped at 12% a year.",
+      "sources": [
+        { "title": "Presidente Lula anuncia novo modelo de crédito imobiliário, em benefício da classe média", "publisher": "Presidência da República (Planalto)", "url": "https://www.gov.br/planalto/pt-br/acompanhe-o-planalto/noticias/2025/10/presidente-lula-anuncia-novo-modelo-de-credito-imobiliario-em-beneficio-da-classe-media-1", "date": "2025-10-10" },
+        { "title": "Governo do Brasil anuncia novo modelo de crédito imobiliário e amplia acesso da classe média à casa própria", "publisher": "Casa Civil", "url": "https://www.gov.br/casacivil/pt-br/assuntos/noticias/governo-anuncia-novo-modelo-de-credito-imobiliario", "date": "2025-10-10" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Minha Casa Minha Vida, drawing on the FGTS workers' fund, offers loans at administered rates by income band; in April 2025 the FGTS board raised band limits (band 3 to BRL 8,600 a month, homes up to BRL 350,000 at 7.66% to 8.16%) and created band 4 for families earning up to BRL 12,000, financing homes up to BRL 500,000 at 10% over up to 35 years. Because these rates are set by the FGTS board rather than the market, demand for new low and middle-income homes is less sensitive to Selic moves.",
+      "sources": [{ "title": "Conselho do FGTS aprova nova faixa do Minha Casa, Minha Vida para classe média", "publisher": "Secretaria de Comunicação Social da Presidência", "url": "https://www.gov.br/secom/pt-br/assuntos/noticias/2025/04/conselho-do-fgts-aprova-nova-faixa-do-minha-casa-minha-vida-para-classe-media", "date": "2025-04-16" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The central bank's IVG-R index, launched in 2013, uses appraisal values of homes pledged as collateral on housing loans reported to the credit registry (SCR), taking monthly medians over three-month windows in the IPCA metropolitan regions, weighted by households and smoothed to show the long-run trend. Smoothing makes it lag turning points, and it covers only mortgage-financed homes and is sensitive to shifts in loan mix, such as the surge in low-value loans in 2015 and 2016.",
+      "sources": [{ "title": "Índice de Valores de Garantia de Imóveis Residenciais Financiados (IVG-R): motivação, histórico e metodologia", "publisher": "Banco Central do Brasil", "url": "https://www.bcb.gov.br/conteudo/home-ptbr/TextosApresentacoes/Apresentacao_IVG_R_e_MVG-R_Gilneu_Vivan_Desig_BCB_01_6_2017.pdf", "date": "2017-06" }]
+    }
+  ]
+}

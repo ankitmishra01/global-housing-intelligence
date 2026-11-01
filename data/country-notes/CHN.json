@@ -1,0 +1,59 @@
+{
+  "iso3": "CHN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "context",
+      "text": "Mortgage pricing has been eased repeatedly: the PBoC removed the national floor on first and second-home mortgage rates in May 2024, cut the over-five-year LPR from 4.20% in January 2024 to 3.60% in October 2024, and in September 2024 (Announcement No. 11) adjusted the pricing mechanism to lower rates on existing home loans. By December 2025 the weighted average rate on new mortgages was about 3.1%, 2.6 percentage points below the second half of 2018, yet IMF staff judge that these demand-side measures gave only a modest and short-lived lift to sales, so cheaper credit has not offset weak price expectations.",
+      "sources": [
+        { "title": "Highlights of Monetary Policies in 2024", "publisher": "People's Bank of China", "url": "https://camlmac.pbc.gov.cn/en/3688229/3688353/3688362/2025080817514246071/index.html", "date": "2025-08-08" },
+        { "title": "People's Republic of China: 2025 Article IV Consultation, Staff Report (Country Report No. 26/44)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1chnea2026001-source-pdf.pdf", "date": "2026-02" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Borrower-based limits have been loosened rather than tightened: since 24 September 2024 the national minimum down payment is 15% for both first and second homes (from 15% and 25% set in May 2024), with local authorities free to set levels above this base. The PBoC also extended its real estate financial support policies from end-2024 to end-2026, so the easing stance is in force through the current year.",
+      "sources": [
+        { "title": "Highlights of Monetary Policies in the First Three Quarters of 2024", "publisher": "People's Bank of China", "url": "https://camlmac.pbc.gov.cn/en/3688229/3688353/3688362/2025080817514243079/index.html", "date": "2025-08-08" },
+        { "title": "China abolishes mortgage floor rates, cuts minimum down payment ratios to boost property market", "publisher": "State Council of the People's Republic of China", "url": "https://english.www.gov.cn/news/202405/17/content_WS66475a81c6d0868f4e8e73ac.html", "date": "2024-05-17" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "Policy centres on finishing pre-sold homes and absorbing unsold stock: the White-List programme channels bank financing to viable projects, and a PBoC relending facility created in June 2024 funds local state firms to buy completed unsold housing for use as affordable housing. IMF staff report that inventory purchases have gained limited traction because low rental yields discourage participation, and estimate that completing troubled developers' pre-sold projects could cost around 5% of GDP over three years.",
+      "sources": [
+        { "title": "People's Republic of China: 2025 Article IV Consultation, Staff Report (Country Report No. 26/44)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1chnea2026001-source-pdf.pdf", "date": "2026-02" },
+        { "title": "Highlights of Monetary Policies in the First Three Quarters of 2024", "publisher": "People's Bank of China", "url": "https://camlmac.pbc.gov.cn/en/3688229/3688353/3688362/2025080817514243079/index.html", "date": "2025-08-08" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Construction remains in deep contraction: in January to September 2026 real estate investment fell 20.6% year on year, floor space newly started fell 24.9% and completions fell 25.1%, while unsold completed floor space stood at 748.25 million square metres at end-September. The IMF puts housing investment at 6.1% of GDP in 2025 against a 12.3% peak in 2020, the inventory overhang at about 30 months of sales, and more than half of private developers still in financial distress, which keeps downward pressure on new-home prices, especially in lower-tier cities.",
+      "sources": [
+        { "title": "Investment in Real Estate Development from January to September 2026", "publisher": "National Bureau of Statistics of China", "url": "https://www.stats.gov.cn/english/PressRelease/202610/t20261020_1965663.html", "date": "2026-10-20" },
+        { "title": "People's Republic of China: 2025 Article IV Consultation, Staff Report (Country Report No. 26/44)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1chnea2026001-source-pdf.pdf", "date": "2026-02" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "Buyers have shifted from new to existing homes amid doubts over developers' ability to deliver: in January to September 2026 sales of new commercial floor space fell 13.2%, while second-hand online transactions rose 10.7% to 617.46 million square metres. Longer term, the authorities expect a smaller development market as urbanisation slows, although they note that the urbanisation rate measured by hukou registration is only about 48%, leaving scope for further urban settlement.",
+      "sources": [
+        { "title": "Investment in Real Estate Development from January to September 2026", "publisher": "National Bureau of Statistics of China", "url": "https://www.stats.gov.cn/english/PressRelease/202610/t20261020_1965663.html", "date": "2026-10-20" },
+        { "title": "People's Republic of China: 2025 Article IV Consultation, Staff Report (Country Report No. 26/44)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1chnea2026001-source-pdf.pdf", "date": "2026-02" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The NBS monthly price survey covers the municipal districts of 70 medium and large-sized cities, excluding counties: new-home indices are a full count of online contract signings recorded by local real estate departments, while second-hand indices combine agency and platform reports with on-site price collection. From January 2026 the survey uses 2025 as its base period with revised city weights; in September 2026 new-home prices fell month on month in 49 of the 70 cities and second-hand prices in 57.",
+      "sources": [
+        { "title": "Sales Prices of Commercial Residential Buildings in 70 Medium and Large-sized Cities in September 2026", "publisher": "National Bureau of Statistics of China", "url": "https://www.stats.gov.cn/english/PressRelease/202610/t20261019_1965629.html", "date": "2026-10-19" }
+      ]
+    }
+  ]
+}

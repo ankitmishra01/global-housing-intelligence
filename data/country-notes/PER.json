@@ -1,0 +1,12 @@
+{
+  "iso3": "PER",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "context",
+      "text": "Peru's credit system has largely de-dollarised: foreign-currency loans fell from 46.5% of total credit in 2010 to 24.6% in 2023, helped by repo operations and higher reserve requirements on foreign-currency funding after 2013, though the IMF finds the trend has stalled since 2022. A lower dollar share limits households' exposure to sol depreciation, although the IMF judges remaining unhedged dollar credit riskier and recommends targeted macroprudential measures.",
+      "sources": [{ "title": "Peru: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/125)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/06/10/peru-2025-article-iv-consultation-press-release-and-staff-report-567572", "date": "2025-06-10" }]
+    }
+  ]
+}

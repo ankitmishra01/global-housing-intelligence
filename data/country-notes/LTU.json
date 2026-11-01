@@ -1,0 +1,77 @@
+{
+  "iso3": "LTU",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "About 96 percent of Lithuanian mortgages carried variable rates as of 2023, prompting the Bank of Lithuania to propose that lenders be required to offer five-year fixed-rate products. The exposure showed in 2022 and 2023: the monthly payment on a 30-year, 100,000 euro loan rose from about 370 euros at the early 2022 average rate of 2 percent to 568 euros at the late 2023 average of 5.8 percent.",
+      "sources": [
+        {
+          "title": "Lithuanian bank calls on lenders to offer fixed-rate mortgages",
+          "publisher": "LRT",
+          "url": "https://www.lrt.lt/en/news-in-english/19/1995976/lithuanian-bank-calls-on-lenders-to-offer-fixed-rate-mortgages",
+          "date": "2023-05-23"
+        },
+        {
+          "title": "Notification of borrower-based measures: amendments to the Responsible Lending Regulations, Lithuania",
+          "publisher": "European Systemic Risk Board / Bank of Lithuania",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251024_BBMs_LT~1ed213ffce.en.pdf",
+          "date": "2025-10-24"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "lowers_rate_sensitivity",
+      "text": "From 1 August 2026 new housing loans face a single debt-service-to-income cap of 50 percent calculated at an interest rate of at least 6 percent, replacing dual limits of 40 percent at the actual rate and 50 percent at a 5 percent floor. The Bank of Lithuania designed the change to bind harder when rates are low and less when they are high, damping the credit cycle's sensitivity to rate moves.",
+      "sources": [
+        {
+          "title": "Notification of borrower-based measures: amendments to the Responsible Lending Regulations, Lithuania",
+          "publisher": "European Systemic Risk Board / Bank of Lithuania",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251024_BBMs_LT~1ed213ffce.en.pdf",
+          "date": "2025-10-24"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "From 1 August 2026 first-time buyers, defined as borrowers who have not owned property in the previous five years, may borrow up to 90 percent of the property value instead of 85 percent. The central bank cited house price growth outpacing wages in 2021 and 2022 and argued that, with adequate supply, a lower deposit improves affordability, though it also adds to demand.",
+      "sources": [
+        {
+          "title": "Notification of borrower-based measures: amendments to the Responsible Lending Regulations, Lithuania",
+          "publisher": "European Systemic Risk Board / Bank of Lithuania",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251024_BBMs_LT~1ed213ffce.en.pdf",
+          "date": "2025-10-24"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since February 2022 second and subsequent housing loans have been capped at a 70 percent loan-to-value ratio. Because house prices rose more than 70 percent from early 2020, many borrowers qualified for an exemption tied to their outstanding loan balance, so from August 2026 the exemption applies only where more than half of each earlier mortgage's principal has been repaid, tightening access for investors.",
+      "sources": [
+        {
+          "title": "Notification of borrower-based measures: amendments to the Responsible Lending Regulations, Lithuania",
+          "publisher": "European Systemic Risk Board / Bank of Lithuania",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251024_BBMs_LT~1ed213ffce.en.pdf",
+          "date": "2025-10-24"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The official house price index is compiled quarterly by the State Data Agency from Centre of Registers transaction data, covering household purchases of houses and flats with separate sub-indices for new and existing dwellings and for Vilnius versus the rest of the country. It is a stratified index across 59 strata by location, age, type and size, without hedonic adjustment.",
+      "sources": [
+        {
+          "title": "House price index (prc_hpi): national reference metadata, Lithuania",
+          "publisher": "Eurostat / State Data Agency (Statistics Lithuania)",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_lt.htm",
+          "date": "2026-06-23"
+        }
+      ]
+    }
+  ]
+}

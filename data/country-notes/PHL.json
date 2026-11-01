@@ -1,0 +1,84 @@
+{
+  "iso3": "PHL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Under the Bangko Sentral ng Pilipinas Manual of Regulations for Banks, real estate loans of universal and commercial banks may not exceed 25 per cent of their total loan portfolio net of interbank loans, and banks must pass a real estate stress test that writes off 25 per cent of real estate exposure while keeping a 10 per cent capital adequacy ratio and a 6 per cent CET1 ratio. Loans to households for their own homes are excluded from both tests as of the 2023 clarification, so the rules mainly constrain bank funding of developers and investors rather than owner-occupier mortgages.",
+      "sources": [
+        {
+          "title": "Philippines: BSP Clarifies Exclusions From Real Estate Loan Limit And Stress Test",
+          "publisher": "SyCip Salazar Hernandez & Gatmaitan via Conventus Law",
+          "url": "https://conventuslaw.com/report/philippines-bsp-clarifies-exclusions-from-real-estate-loan-limit-and-stress-test",
+          "date": "2023-06-01"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The state Pag-IBIG Fund is a major mortgage lender: it released P55.26 billion of housing loans financing 34,641 homes in the first five months of 2026, has raised its maximum loan to P10 million, and offers promotional rates of 4.5 per cent on loans up to P4.9 million and 5.75 per cent up to P10 million, with a subsidised 3 per cent rate for socialised housing under the Expanded 4PH programme. Administered rates on this scale cushion a large segment of buyers from swings in bank lending rates.",
+      "sources": [
+        {
+          "title": "Pag-IBIG expands affordable home loans",
+          "publisher": "Daily Tribune",
+          "url": "https://tribune.net.ph/2026/07/07/pag-ibig-expands-affordable-home-loans",
+          "date": "2026-07-08"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "The Condominium Act of 1966 bars the transfer of condominium units to anyone other than Filipino citizens or corporations at least 60 per cent Filipino-owned, which in practice limits foreign ownership to a minority share of each project. Foreign demand is therefore concentrated in condominiums and capped by project, limiting its weight in the wider housing market.",
+      "sources": [
+        {
+          "title": "Republic Act No. 4726, The Condominium Act",
+          "publisher": "Lawphil Project (Arellano Law Foundation)",
+          "url": "https://lawphil.net/statutes/repacts/ra1966/ra_4726_1966.html",
+          "date": "1966-06-18"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Nationwide condominium prices fell quarter on quarter for three consecutive quarters to the fourth quarter of 2025 before rebounding by 11.1 per cent in the first quarter of 2026, a recovery the BSP attributes partly to developers' aggressive promotional offers and more flexible payment terms on ready-for-occupancy units. Reliance on discounts to clear completed stock signals that condominium supply has run ahead of demand, while house prices have been steadier.",
+      "sources": [
+        {
+          "title": "Residential Property Price Index, First Quarter 2026",
+          "publisher": "Bangko Sentral ng Pilipinas",
+          "url": "https://www.bsp.gov.ph/Media_And_Research/RPPI/RPPI-Report-2026-Q1.pdf",
+          "date": "2026-06"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "About 55.5 per cent of Filipinos lived in urban areas in 2024, against 76.9 per cent in Malaysia. Further urbanisation from this level sustains urban household formation and housing demand.",
+      "sources": [
+        {
+          "title": "Urban population (% of total population), SP.URB.TOTL.IN.ZS",
+          "publisher": "World Bank",
+          "url": "https://api.worldbank.org/v2/country/IND;IDN;PHL;MYS/indicator/SP.URB.TOTL.IN.ZS?format=json&date=2024&per_page=20",
+          "date": "2024"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The BSP Residential Property Price Index, renamed from the Residential Real Estate Price Index, is a quarterly hedonic index built from the acquisition cost of homes bought with mortgages reported by all universal, commercial, thrift and digital banks, with sub-indices for Metro Manila and areas outside it. It excludes cash purchases, non-bank transactions and socialised housing, so it reflects only the bank-financed segment of the market.",
+      "sources": [
+        {
+          "title": "Technical Notes on the Hedonic Residential Property Price Index (RPPI)",
+          "publisher": "Bangko Sentral ng Pilipinas",
+          "url": "https://www.bsp.gov.ph/Media_And_Research/RPPI/TechnicalNotes_RPPI.pdf",
+          "date": "2025-06"
+        }
+      ]
+    }
+  ]
+}

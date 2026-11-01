@@ -1,0 +1,77 @@
+{
+  "iso3": "MAR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Morocco has no binding loan-to-value cap: a 2008 ethics code agreed between Bank Al-Maghrib and banks only guides LTVs below 100%. In 2024 new housing loans had an average LTV of about 84%, with 41% originated at 90% to 100% and about 8% above 100%, and the IMF has recommended binding, more conservative caps once a borrower-level database is completed by end-2026, which would tighten access to credit for buyers with small deposits.",
+      "sources": [
+        {
+          "title": "Morocco: 2026 Article IV Consultation and Review under the Flexible Credit Line Arrangement, Staff Report (IMF Country Report No. 26/72)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2026/03/30/morocco-2026-article-iv-consultation-and-review-under-the-flexible-credit-line-arrangement-575083",
+          "date": "2026-03-30"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "supports_prices",
+      "text": "Supported by infrastructure projects and lower interest rates, credit grew 8% year on year in December 2025, with mortgage and consumer lending among the drivers, while non-performing loans to households rose as inflation and drought squeezed incomes. Easier credit supports housing demand, but rising household arrears limit how far lending can expand.",
+      "sources": [
+        {
+          "title": "Morocco: 2026 Article IV Consultation and Review under the Flexible Credit Line Arrangement, Staff Report (IMF Country Report No. 26/72)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2026/03/30/morocco-2026-article-iv-consultation-and-review-under-the-flexible-credit-line-arrangement-575083",
+          "date": "2026-03-30"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "In January 2024 Morocco switched its housing support from the supply side, through tax incentives and exemptions for developers, to direct cash aid to buyers allocated first come, first served through a digital process; about 28,262 households had benefited by December 2024, and the housing ministry earmarked about MAD 3.6 billion for housing aid in 2025. Demand-side grants raise buyers' purchasing power and support prices in the eligible segments.",
+      "sources": [
+        {
+          "title": "Intervention de la délégation marocaine, groupe de travail intergouvernemental sur le logement convenable pour tous",
+          "publisher": "UN-Habitat (statement by Morocco's Conseil National de l'Habitat)",
+          "url": "https://unhabitat.org/sites/default/files/2024/12/discours_experience_maroc.pdf",
+          "date": "2024-12-09"
+        },
+        {
+          "title": "Un budget de 3,6 milliards de dirhams pour l'aide au logement en 2025",
+          "publisher": "Le360",
+          "url": "https://fr.le360.ma/economie/un-budget-de-36-milliards-de-dirhams-pour-laide-au-logement-en-2025_F6W6DTLOJ5BL5HH22654IC42H4/",
+          "date": "2024-11-10"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "Urbanisation reached 65.2% in 2024, keeping housing demand concentrated in cities, although state programmes such as Villes sans bidonvilles and social housing at about USD 25,000 a unit, which delivered more than 721,600 units between 2010 and 2020, cut the official housing deficit from 1.2 million units in 2002 to 278,000 in 2023.",
+      "sources": [
+        {
+          "title": "Intervention de la délégation marocaine, groupe de travail intergouvernemental sur le logement convenable pour tous",
+          "publisher": "UN-Habitat (statement by Morocco's Conseil National de l'Habitat)",
+          "url": "https://unhabitat.org/sites/default/files/2024/12/discours_experience_maroc.pdf",
+          "date": "2024-12-09"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Bank Al-Maghrib's real estate asset price index (IPAI) is published quarterly with a global index and separate residential (apartments, houses and villas), land and commercial (shops and offices) segments, so the residential series should be read separately from the land and commercial components.",
+      "sources": [
+        {
+          "title": "Indice des prix des actifs immobiliers",
+          "publisher": "Bank Al-Maghrib",
+          "url": "https://www.bkam.ma/fr/Statistiques/Prix/Indice-des-prix-des-actifs-immobiliers",
+          "date": "2026"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "iso3": "CAN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "A typical Canadian mortgage is amortised over 25 years with a five-year term, so borrowers face interest-rate risk at each renewal, roughly four times over the life of the loan; the five-year norm stems largely from the Interest Act, which caps prepayment penalties after year five. Policy-rate moves therefore reach households with a lag of up to five years: the Bank of Canada expects the last pandemic-era five-year fixed-payment mortgages, about 12% of the outstanding stock, to renew within the 12 months after its 2026 Financial Stability Report, with payments rising by about 15% on average.",
+      "sources": [
+        { "title": "Canada's mortgage market: A question of balance (remarks by Carolyn Rogers)", "publisher": "Bank of Canada", "url": "https://www.bankofcanada.ca/2024/11/canadas-mortgage-market-a-question-of-balance/", "date": "2024-11-06" },
+        { "title": "Financial Stability Report 2026: Households", "publisher": "Bank of Canada", "url": "https://www.bankofcanada.ca/publications/financial-stability-report/financial-stability-report-2026/households/", "date": "2026-05" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "OSFI requires federally regulated lenders to qualify uninsured borrowers at the greater of the contract rate plus 2 percentage points or 5.25%, and since fiscal 2025 each lender must also cap the share of new uninsured loans above 4.5 times borrower income (renewals and insured loans excluded). Both limits remained in force on OSFI's pages as updated in January 2026, constraining how far lower rates can translate into larger loans and higher bids.",
+      "sources": [
+        { "title": "Minimum qualifying rate for uninsured mortgages", "publisher": "Office of the Superintendent of Financial Institutions", "url": "https://www.osfi-bsif.gc.ca/en/supervision/financial-institutions/banks/minimum-qualifying-rate-uninsured-mortgages", "date": "2026-01-29" },
+        { "title": "Loan-to-income limits for uninsured mortgage portfolios", "publisher": "Office of the Superintendent of Financial Institutions", "url": "https://osfi-bsif.gc.ca/en/supervision/financial-institutions/banks/loan-income-limits-uninsured-mortgage-portfolios", "date": "2026-01-29" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "Foreign commercial enterprises and people who are not Canadian citizens or permanent residents are barred from buying residential property; in February 2024 the ban, then due to lapse on January 1, 2025, was extended to January 1, 2027. Whether it is renewed beyond that date should be checked, as the official extension notice runs only to 2027.",
+      "sources": [{ "title": "Government announces two-year extension to ban on foreign ownership of Canadian housing", "publisher": "Department of Finance Canada", "url": "https://www.canada.ca/en/department-finance/news/2024/02/government-announces-two-year-extension-to-ban-on-foreign-ownership-of-canadian-housing.html", "date": "2024-02-04" }]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_rents",
+      "text": "Ottawa has cut immigration to slow population growth: the 2026 to 2028 Levels Plan holds permanent resident admissions at 380,000 a year and lowers new temporary resident arrivals to 385,000 in 2026 and 370,000 in 2027 and 2028, with the aim of reducing non-permanent residents to under 5% of the population by end-2027. Fewer students and temporary workers weigh most on rental demand in large cities.",
+      "sources": [{ "title": "2026 to 2028 Immigration Levels Plan (CIMM briefing, December 4, 2025)", "publisher": "Immigration, Refugees and Citizenship Canada", "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/transparency/committees/cimm-dec-04-2025/2026-2028-immigration-levels-plan.html", "date": "2025-12-04" }]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "CMHC estimated in September 2026 that housing starts would need to rise to between 417,000 and 469,000 a year to restore pre-pandemic affordability by 2036, well above the roughly 250,000 a year it projected in 2025 under current trends. A persistent supply gap of this scale supports prices over the medium term even as demand cools.",
+      "sources": [
+        { "title": "Slowing home construction threatens recent affordability gains: CMHC", "publisher": "Canada Mortgage and Housing Corporation", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/slowing-home-construction-threatens-recent-affordability-gains", "date": "2026-09-10" },
+        { "title": "Canada's Housing Supply Shortages: Moving to a New Framework", "publisher": "Canada Mortgage and Housing Corporation", "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-research/research-reports/accelerate-supply/canadas-housing-supply-shortages-a-new-framework", "date": "2025-06-19" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Canada's New Housing Price Index tracks builders' contract selling prices, net of sales taxes, for new single, semi-detached and row homes with unchanged specifications, monthly, nationally, by province and for 27 metropolitan areas. It covers new houses only, not resale homes or apartments, and is neither revised nor seasonally adjusted, so it can diverge from resale benchmarks.",
+      "sources": [{ "title": "The Daily: New Housing Price Index, June 2026", "publisher": "Statistics Canada", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260724/dq260724c-eng.htm", "date": "2026-07-24" }]
+    }
+  ]
+}

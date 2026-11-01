@@ -1,0 +1,42 @@
+{
+  "iso3": "GBR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "UK mortgages are dominated by short fixed-rate deals, typically two or five years, so Bank Rate and gilt-market moves reach households in waves as fixes expire rather than all at once. As of July 2026 the Bank of England projected that a little over 5 million households would see repayments rise by the end of 2028, with the average two-year fixed rate at 75% loan to value at 4.92%, 72 basis points above its December 2025 level after the Middle East conflict lifted market rates.",
+      "sources": [{ "title": "Financial Stability Report, July 2026", "publisher": "Bank of England", "url": "https://www.bankofengland.co.uk/financial-stability-report/2026/july-2026", "date": "2026-07-07" }]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Since 2014 the Financial Policy Committee has capped the aggregate flow of new mortgages at or above 4.5 times income at 15% of lending. Its June 2025 recommendation let individual lenders exceed their own share provided the aggregate stays within 15%, and the high loan-to-income share rose to 13.2% in 2026 Q1 from 11.8% in 2025 Q4, easing credit availability for stretched buyers.",
+      "sources": [{ "title": "Financial Stability Report, July 2026", "publisher": "Bank of England", "url": "https://www.bankofengland.co.uk/financial-stability-report/2026/july-2026", "date": "2026-07-07" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "Stamp Duty Land Tax in England and Northern Ireland is charged at 0% up to GBP 125,000 rising to 12% above GBP 1.5 million, with first-time buyer relief at 0% only up to GBP 300,000 and none above GBP 500,000, as of 2026. Buyers of additional homes pay a 5% surcharge on top and non-UK residents a further 2%, which weighs on investor and second-home demand.",
+      "sources": [{ "title": "Stamp Duty Land Tax: residential property rates", "publisher": "HM Revenue & Customs (GOV.UK)", "url": "https://www.gov.uk/stamp-duty-land-tax/residential-property-rates", "date": "2025" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "The Renters' Rights Act took effect in England on 1 May 2026, abolishing section 21 no-fault evictions, converting fixed-term tenancies into rolling ones, limiting rent increases to once a year and banning rental bidding. The rules strengthen tenant security and may slow rent growth on sitting tenancies, while raising the regulatory cost for small buy-to-let landlords.",
+      "sources": [{ "title": "Historic protections for renters in action across England", "publisher": "Ministry of Housing, Communities and Local Government (GOV.UK)", "url": "https://www.gov.uk/government/news/historic-protections-for-renters-in-action-across-england", "date": "2026-04-30" }]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "The government targets 1.5 million new homes in England over the current Parliament, roughly 300,000 a year, but official estimates put delivery at 342,100 net additions between 9 July 2024 and 15 March 2026. Building control data show 142,040 completions in 2025, down 8%, and 124,860 starts, so the gap between supply and the target persists and keeps upward pressure on prices and rents.",
+      "sources": [{ "title": "Housing supply: indicators of new supply, England: October to December 2025", "publisher": "Ministry of Housing, Communities and Local Government (GOV.UK)", "url": "https://www.gov.uk/government/statistics/housing-supply-indicators-of-new-supply-england-october-to-december-2025/housing-supply-indicators-of-new-supply-england-october-to-december-2025", "date": "2026-03-19" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The official UK House Price Index, published monthly by HM Land Registry and the ONS, is a mix-adjusted hedonic index of completed cash and mortgage sales of new and existing homes, drawn from Land Registry, Registers of Scotland and HMRC data. Because it records sales at registration, it lags market turning points, and the first estimate rests on about 40% of eventual transactions, so recent months are often revised.",
+      "sources": [{ "title": "About the UK House Price Index", "publisher": "HM Land Registry (GOV.UK)", "url": "https://www.gov.uk/government/publications/about-the-uk-house-price-index/about-the-uk-house-price-index", "date": "2026-07-23" }]
+    }
+  ]
+}

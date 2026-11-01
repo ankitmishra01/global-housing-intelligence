@@ -1,0 +1,56 @@
+{
+  "iso3": "AUS",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Australian housing credit is predominantly variable-rate, and borrowers who fix usually do so for three years or less. The fixed share of outstanding housing credit roughly doubled from about 20% in late 2019 to almost 40% in early 2022, and around two-thirds of those fixed loans expired during 2022 and 2023, so the post-2022 tightening cycle reached household budgets quickly and in full once the low pandemic fixed rates rolled off.",
+      "sources": [
+        { "title": "Fixed-rate Housing Loans: Monetary Policy Transmission and Financial Stability Risks", "publisher": "Reserve Bank of Australia, Bulletin", "url": "https://www.rba.gov.au/publications/bulletin/2023/mar/fixed-rate-housing-loans-monetary-policy-transmission-and-financial-stability-risks.html", "date": "2023-03-16" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "APRA requires lenders to assess new borrowers at a rate at least 3 percentage points above the loan rate, a buffer it confirmed in July 2025, which caps borrowing capacity well below what current repayments alone would allow. From 1 February 2026 APRA added a debt-to-income limit: no more than 20% of new owner-occupier lending and 20% of new investor lending may be at six times income or more, with loans for new construction exempt, a constraint aimed mainly at highly leveraged investor demand in an upswing.",
+      "sources": [
+        { "title": "APRA announces update on macroprudential settings", "publisher": "Australian Prudential Regulation Authority", "url": "https://www.apra.gov.au/news-and-publications/apra-announces-update-macroprudential-settings", "date": "2025-07-23" },
+        { "title": "Activation of debt to income limits as a macroprudential policy tool", "publisher": "Australian Prudential Regulation Authority", "url": "https://www.apra.gov.au/activation-of-debt-to-income-limits-as-a-macroprudential-policy-tool", "date": "2025-11-27" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Since 1 October 2025 the federal Home Guarantee Scheme, rebranded the 5% Deposit Scheme, has had no income caps and no limit on places, with property price caps raised, allowing eligible first home buyers to purchase with a 5% deposit backed by a government guarantee. By lowering the deposit hurdle rather than adding supply, the scheme channels additional demand into the price brackets below the caps.",
+      "sources": [
+        { "title": "Frequently asked questions: Australian Government 5% Deposit Scheme", "publisher": "Housing Australia, firsthomebuyers.gov.au", "url": "https://firsthomebuyers.gov.au/faq", "date": "2026" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Construction is running well short of the National Housing Accord target of 1.2 million new homes in the five years to June 2029: about 219,000 homes were completed in the first five quarters to September 2025, 18% of the target, and the National Housing Supply and Affordability Council projected in March 2026 that the target would be met only by June 2030. Persistent under-building relative to population growth keeps upward pressure on both prices and rents.",
+      "sources": [
+        { "title": "Quarterly Report, March 2026", "publisher": "National Housing Supply and Affordability Council", "url": "https://nhsac.gov.au/reports-and-submissions/quarterly-report-march-2026", "date": "2026-03-25" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "Net overseas migration, the main driver of household formation, fell from a peak of about 538,000 in 2022-23 to 429,000 in 2023-24 and a preliminary 306,000 in 2024-25, easing but not removing pressure on rental demand. Foreign demand for existing homes is also curtailed: foreign persons, including temporary residents and foreign-owned companies, are barred from buying established dwellings from 1 April 2025 to 31 March 2027, subject to a review on extension.",
+      "sources": [
+        { "title": "Annual net overseas migration falls for the second year in a row", "publisher": "Australian Bureau of Statistics", "url": "https://www.abs.gov.au/media-centre/media-releases/annual-net-overseas-migration-falls-second-year-row", "date": "2025-12-19" },
+        { "title": "Albanese Government clamping down on foreign purchase of established homes and land banking", "publisher": "Treasury Ministers, Australian Government", "url": "https://ministers.treasury.gov.au/ministers/jim-chalmers-2022/media-releases/albanese-government-clamping-down-foreign-purchase", "date": "2025-02-16" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The ABS ceased its Residential Property Price Indexes after the December quarter 2021. Its official quarterly successor, Total Value of Dwellings, reports the value of the entire residential stock and a mean dwelling price for each state and territory, released about 12 weeks after quarter end, so it reflects stock values rather than a quality-adjusted index of transaction prices.",
+      "sources": [
+        { "title": "Total Value of Dwellings methodology, June Quarter 2026", "publisher": "Australian Bureau of Statistics", "url": "https://www.abs.gov.au/methodologies/total-value-dwellings-methodology/jun-quarter-2026", "date": "2026-09-08" }
+      ]
+    }
+  ]
+}

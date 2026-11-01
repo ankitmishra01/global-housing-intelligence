@@ -1,0 +1,39 @@
+{
+  "iso3": "USA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Nearly all of the roughly 50 million active US mortgages carry fixed rates, most of them far below prevailing market rates, so policy-rate rises pass through to new buyers but barely touch existing owners. FHFA researchers estimate that each percentage point by which market rates exceed a borrower's locked-in rate cuts the probability of selling by 18.1%, which reduced fixed-rate home sales by 57% in 2023Q4 and prevented 1.33 million sales between 2022Q2 and 2023Q4.",
+      "sources": [{ "title": "The Lock-In Effect of Rising Mortgage Rates (Working Paper 24-03)", "publisher": "Federal Housing Finance Agency", "url": "https://www.fhfa.gov/research/papers/wp2403", "date": "2024-03-18" }]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Rate lock-in works as a supply shock: by keeping owners in place it shrinks the resale stock, and FHFA estimates this lifted house prices by 5.7%, more than offsetting the 3.3% drag from higher borrowing costs. The homeowner vacancy rate stood at 1.2% in the third quarter of 2026, little changed from a year earlier, which keeps for-sale inventory tight.",
+      "sources": [
+        { "title": "The Lock-In Effect of Rising Mortgage Rates (Working Paper 24-03)", "publisher": "Federal Housing Finance Agency", "url": "https://www.fhfa.gov/research/papers/wp2403", "date": "2024-03-18" },
+        { "title": "Quarterly Residential Vacancies and Homeownership, Third Quarter 2026", "publisher": "U.S. Census Bureau", "url": "https://www.census.gov/housing/hvs/files/currenthvspress.pdf", "date": "2026-10-28" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_rents",
+      "text": "The rental market has loosened as completions caught up with demand: the national rental vacancy rate rose from 5.6% in the second quarter of 2022 to 7.6% in the third quarter of 2026, above its year-earlier level of 7.1%. Higher vacancy reduces landlords' pricing power and restrains rent growth.",
+      "sources": [{ "title": "Quarterly Residential Vacancies and Homeownership, Third Quarter 2026", "publisher": "U.S. Census Bureau", "url": "https://www.census.gov/housing/hvs/files/currenthvspress.pdf", "date": "2026-10-28" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "Mortgage credit is anchored by Fannie Mae and Freddie Mac, which can only acquire loans up to the conforming loan limit; for 2026 that limit is USD 832,750 for a one-unit home in most of the country and up to USD 1,249,125 in high-cost areas. The limit rises each year in line with FHFA's house price index (3.26% for 2026), so government-backed securitisation keeps pace with prices.",
+      "sources": [{ "title": "FHFA Announces Conforming Loan Limit Values for 2026", "publisher": "Federal Housing Finance Agency", "url": "https://www.fhfa.gov/news/news-release/fhfa-announces-conforming-loan-limit-values-for-2026", "date": "2025-11-25" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The FHFA House Price Index is a weighted repeat-sales index of single-family homes whose mortgages were purchased or securitised by Fannie Mae or Freddie Mac, published monthly and quarterly from national down to census-tract level. Because it relies on conforming loans, it under-represents jumbo-loan and all-cash segments; FHFA's expanded-data version adds FHA and county recorder sales.",
+      "sources": [{ "title": "FHFA House Price Index", "publisher": "Federal Housing Finance Agency", "url": "https://www.fhfa.gov/data/hpi", "date": "2026" }]
+    }
+  ]
+}

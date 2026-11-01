@@ -1,0 +1,46 @@
+{
+  "iso3": "HUN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Hungarian housing credit has shifted decisively towards fixed rates: the MNB describes a move of the entire loan market toward fixed interest, and state-subsidised loans, a growing share of new lending, carry a fixed customer rate for the subsidy period or full term while the state absorbs the gap to market rates. Policy-rate moves therefore pass through slowly to household budgets, with the interest-rate risk shifting to banks' hedging books and to the budget.",
+      "sources": [
+        { "title": "Financial Stability Report June 2026", "publisher": "Magyar Nemzeti Bank", "url": "https://www.mnb.hu/letoltes/financial-stability-report-june-2026.pdf", "date": "2026-06" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Under the MNB's borrower-based rules, in force since 2015, forint mortgage LTV is capped at 80%, raised to 90% for first-time buyers from January 2024 with the age restriction removed in September 2025. Its debt-service-to-income limits are tied to rate fixation: for borrowers earning under HUF 800,000 net a month, the cap is 25% for interest periods under five years, 35% for five to ten years and 50% for ten years or fixed to maturity (30%, 40% and 60% above that threshold, which rose from HUF 600,000 in January 2026), which steers borrowers towards long fixation.",
+      "sources": [
+        { "title": "Borrower-based measures (LTV, DSTI)", "publisher": "Magyar Nemzeti Bank", "url": "https://www.mnb.hu/en/financial-stability/macroprudential-policy/the-macroprudential-toolkit/borrower-based-measures-ltv-dsti", "date": "2026" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The Home Start (Otthon Start) programme, announced in July 2025 and launched in September 2025, offers first-time buyers loans of up to HUF 50 million at a rate fixed at no more than 3% for the full term, on flats up to HUF 100 million and HUF 1.5 million per square metre, with no age limit or family condition. HUF 1,161 billion was disbursed by 31 March 2026, two-thirds of it estimated as additional lending; the share of purchases financed by a loan rose from 35 to 40% before launch to over 60% in Q1 2026, and the MNB credits the programme with a further rise in house prices.",
+      "sources": [
+        { "title": "Financial Stability Report June 2026 (Box 3: Home Start Programme)", "publisher": "Magyar Nemzeti Bank", "url": "https://www.mnb.hu/letoltes/financial-stability-report-june-2026.pdf", "date": "2026-06" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Only 12,100 homes were completed in 2025, but permits were issued for 28,100, up 37% on 2024, and banks signed HUF 309 billion of housing project loans, more than 2.5 times the previous four-year average. By mid-April 2026, 31 large projects had priority investment status in exchange for selling at least 70% of units within Home Start price caps; the MNB expects this pipeline to slow appreciation and reduce its estimated 22.5% overvaluation, though rising construction material costs are a risk to delivery.",
+      "sources": [
+        { "title": "Financial Stability Report June 2026", "publisher": "Magyar Nemzeti Bank", "url": "https://www.mnb.hu/letoltes/financial-stability-report-june-2026.pdf", "date": "2026-06" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The MNB house price index is built from National Tax and Customs Administration transaction data, and its latest quarter is published as preliminary and later revised. On this measure prices rose 23.5% in the year to Q4 2025 and 17.7% to Q1 2026 on preliminary data, faster than rents and incomes, so the most recent reading should be treated as provisional.",
+      "sources": [
+        { "title": "Financial Stability Report June 2026", "publisher": "Magyar Nemzeti Bank", "url": "https://www.mnb.hu/letoltes/financial-stability-report-june-2026.pdf", "date": "2026-06" }
+      ]
+    }
+  ]
+}

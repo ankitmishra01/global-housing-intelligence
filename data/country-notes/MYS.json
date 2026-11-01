@@ -1,0 +1,89 @@
+{
+  "iso3": "MYS",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Since 1 August 2022 new retail floating-rate loans in Malaysia, including mortgages and refinancings, have been priced off a Standardised Base Rate set equal to Bank Negara Malaysia's Overnight Policy Rate plus a lender spread. Lenders must move the SBR by the full amount of any OPR change within seven working days, and from 1 July 2026 must reflect it in instalments within 60 calendar days, tightening to 30 days from January 2028, so policy moves reach floating-rate borrowers within roughly two months.",
+      "sources": [
+        {
+          "title": "Policy Document: Reference Rate Framework",
+          "publisher": "Bank Negara Malaysia",
+          "url": "https://www.bnm.gov.my/documents/20124/938039/pd-rrf-mar2026.pdf",
+          "date": "2026-03-27"
+        },
+        {
+          "title": "Revised Reference Rate Framework",
+          "publisher": "Bank Negara Malaysia",
+          "url": "https://www.bnm.gov.my/-/pd-revised-reference-rate",
+          "date": "2021-08-11"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since November 2010 Bank Negara Malaysia has capped the loan-to-value ratio at 70 per cent for a borrower's third housing loan, targeting speculative purchases while leaving first and second homes to lenders' own limits. The median loan-to-value ratio on outstanding housing loans was 70.3 per cent in December 2025 and the housing loan impairment ratio was 1.1 per cent, indicating moderate leverage in the mortgage book.",
+      "sources": [
+        {
+          "title": "Measures in Promoting a Stable and Sustainable Property Market and Sound Financial and Debt Management of Households",
+          "publisher": "Bank Negara Malaysia",
+          "url": "https://www.bnm.gov.my/-/measures-in-promoting-a-stable-and-sustainable-property-market-and-sound-financial-and-debt-management-of-households",
+          "date": "2010-11-03"
+        },
+        {
+          "title": "Financial Stability Review, Second Half 2025: Credit Risk",
+          "publisher": "Bank Negara Malaysia",
+          "url": "https://www.bnm.gov.my/publications/fsr2025h2/ch1b",
+          "date": "2026-03"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "Budget 2026 doubled the stamp duty on transfers of residential property to non-citizens and foreign companies, excluding permanent residents, from a flat 4 per cent to a flat 8 per cent from 1 January 2026, levied on the higher of price or market value. The higher entry cost discourages foreign demand at the margin.",
+      "sources": [
+        {
+          "title": "Proposed Amendments to the Stamp Act",
+          "publisher": "Skrine",
+          "url": "https://www.skrine.com/insights/alerts/november-2025/proposed-amendments-to-the-stamp-act",
+          "date": "2025-11-24"
+        },
+        {
+          "title": "The Malaysian tax landscape in 2026",
+          "publisher": "The Star",
+          "url": "https://www.thestar.com.my/business/insight/2025/12/23/the-malaysian-tax-landscape-in-2026",
+          "date": "2025-12-23"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Unsold housing units, under construction and completed, rose to 2.5 per cent of the overall housing stock in the fourth quarter of 2025 from 2.3 per cent in the second quarter, and almost two-fifths of unsold properties had been on the market for at least three years. A persistent stock of hard-to-sell units caps pricing power in the affected segments even as landed properties drive overall price growth.",
+      "sources": [
+        {
+          "title": "Financial Stability Review, Second Half 2025: Credit Risk",
+          "publisher": "Bank Negara Malaysia",
+          "url": "https://www.bnm.gov.my/publications/fsr2025h2/ch1b",
+          "date": "2026-03"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "About 76.9 per cent of Malaysians lived in urban areas in 2024, against 58.8 per cent in Indonesia, 55.5 per cent in the Philippines and 35.4 per cent in India. With urbanisation largely advanced, future housing demand depends more on household formation and income growth than on rural-to-urban migration.",
+      "sources": [
+        {
+          "title": "Urban population (% of total population), SP.URB.TOTL.IN.ZS",
+          "publisher": "World Bank",
+          "url": "https://api.worldbank.org/v2/country/IND;IDN;PHL;MYS/indicator/SP.URB.TOTL.IN.ZS?format=json&date=2024&per_page=20",
+          "date": "2024"
+        }
+      ]
+    }
+  ]
+}

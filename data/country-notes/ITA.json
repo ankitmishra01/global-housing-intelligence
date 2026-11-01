@@ -1,0 +1,30 @@
+{
+  "iso3": "ITA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Italian borrowers have favoured fixed rates since the 2022 tightening: the Bank of Italy reports that variable-rate loans fell to a record low of 26.1% of outstanding mortgages at end-2025, with new variable lending around 10% for most of that year. As ECB cuts narrowed the gap, new variable-rate loans rose to almost 20% in early 2026, at 3.1% against 3.5% for fixed in February, and ECB data put the share floating or fixed for up to one year at 24% in August 2026, so rate sensitivity of new lending is rising again.",
+      "sources": [
+        { "title": "Rapporto sulla stabilità finanziaria, n. 1, 2026", "publisher": "Banca d'Italia", "url": "https://www.bancaditalia.it/pubblicazioni/rapporto-stabilita/2026-1/RSF_1_2026.pdf", "date": "2026-04" },
+        { "title": "Share of variable rate loans in total loans for house purchase, Italy (RAI.M.IT.SVLHPHH.EUR.MIR.Z)", "publisher": "European Central Bank Data Portal", "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.IT.SVLHPHH.EUR.MIR.Z", "date": "2026-08" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "The Bank of Italy finds no signs of overvaluation: house prices rose 4.1% year on year in 2025 Q4, also in real terms, yet remain below their long-run averages relative to disposable income and rents. Household debt is low at 55.8% of disposable income in late 2025, more than 25 percentage points below the euro area, which leaves room for credit-financed demand, although the Bank expects nominal price growth to moderate through 2026 to 2028.",
+      "sources": [{ "title": "Rapporto sulla stabilità finanziaria, n. 1, 2026", "publisher": "Banca d'Italia", "url": "https://www.bancaditalia.it/pubblicazioni/rapporto-stabilita/2026-1/RSF_1_2026.pdf", "date": "2026-04" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "ISTAT's house price index (IPAB) is a quarterly index of all residential properties bought by households, new and existing, whether for own occupation or investment, with separate new and existing dwelling indices. It is built from notarial deeds of sale supplied by the tax agency and uses stratification combined with hedonic re-pricing by macro-area, as described in the 2015 methodological note.",
+      "sources": [
+        { "title": "House prices", "publisher": "Istituto Nazionale di Statistica (ISTAT)", "url": "https://www.istat.it/en/prices/house-prices/", "date": "2015" },
+        { "title": "House price index: methodological note", "publisher": "Istituto Nazionale di Statistica (ISTAT)", "url": "https://www.istat.it/wp-content/uploads/2015/07/Methodological-note2015.pdf", "date": "2015-07" }
+      ]
+    }
+  ]
+}

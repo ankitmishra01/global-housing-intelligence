@@ -3,7 +3,8 @@ import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { FanChart } from "./fan-chart";
 import { SeriesChart } from "./series-chart";
-import { NarrativeProse } from "./narrative-prose";
+import { NarrativeProse, type ProseSource } from "./narrative-prose";
+import { DriversChart, type DriverBreakdown } from "./drivers-chart";
 import { rewriteRateSection } from "../../lib/engine/narrative.js";
 import { shiftBand, monthlyPayment, type Band, type SensMap } from "@/lib/toggle";
 import { scorePersona, shiftComponents } from "../../lib/engine/indexes.js";
@@ -23,7 +24,9 @@ export type ExplorerProps = {
   rates: { policy: number | null; policyAsOf: string | null; mortgage: number | null; mortgageSource: string | null };
   personas: { specs: Record<string, PersonaSpec>; components: Record<string, number | null>; distributions: Record<string, number[]>; base: Record<string, number | null> };
   calculator: { price: number | null; priceLabel: string | null; rent: number | null; rentLabel: string | null };
-  narrative?: { sections: { id: string; title: string; paragraphs: string[]; chart: string | null }[] };
+  narrative?: { sections: { id: string; title: string; paragraphs: string[]; chart: string | null; sources?: ProseSource[] }[] };
+  drivers?: DriverBreakdown | null;
+  countryName?: string;
   rateInput?: { name: string; rates: { policy: number | null; mortgage: number | null } };
   labourSeries?: { name: string; color: string; points: { period: string; value: number }[] }[];
   live?: { asOf: string; items: { kind: string; text: string }[] } | null;
@@ -299,6 +302,7 @@ export function CountryExplorer(p: ExplorerProps) {
     labour: labourBlock,
     types: <div style={{ display: "grid", gap: 16 }}>{typesBlock}{regionsBlock}</div>,
     live: liveBlock,
+    drivers: p.drivers ? <DriversChart d={p.drivers} name={p.countryName ?? "This market"} /> : null,
     signals: <div style={{ display: "grid", gap: 16 }}>{signalsBlock}{personasBlock}{p.signalDisclaimer ? <p className="note">{p.signalDisclaimer}</p> : null}</div>,
   };
 
@@ -313,7 +317,7 @@ export function CountryExplorer(p: ExplorerProps) {
           return (
             <div key={sec.id}>
               <section className={`section brief-section${chart ? "" : " brief-section--full"}`} id={`brief-${sec.id}`}>
-                <NarrativeProse title={sec.title} paragraphs={paragraphs} />
+                <NarrativeProse title={sec.title} paragraphs={paragraphs} sources={sec.sources} />
                 {chart ? <div className="brief-section__chart">{chart}</div> : null}
               </section>
               {sec.id === "rents" ? calculatorBlock : null}

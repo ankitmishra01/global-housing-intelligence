@@ -1,0 +1,49 @@
+{
+  "iso3": "DNK",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Danish homeowners finance through mortgage banks that issue covered bonds, and the 30-year fixed-rate callable loan lets a borrower buy back the underlying bond at market price when yields rise: in October 2023, 70% of 30-year fixed-rate callable bonds traded below 90, giving many households a way to cut principal by refinancing. The mix is now tilting towards floating rates, with the number of homeowners holding fixed-rate loans down 43,000 in 2025 and variable-rate holders up 32,000, concentrated in and around the large cities, so policy-rate moves reach a growing share of mortgage debt within months.",
+      "sources": [
+        { "title": "Danish homeowners shift from fixed to variable interest rates", "publisher": "Danmarks Nationalbank", "url": "https://www.nationalbanken.dk/en/news-and-knowledge/data-and-statistics/banking-and-mortgage-lending/microdata-for-banking-and-mortgage-lending/20260312-danish-homeowners-shift-from-fixed-to-variable-interest-rates", "date": "2026-03-12" },
+        { "title": "The potential for buyback of mortgage bonds remains significant", "publisher": "Danmarks Nationalbank", "url": "https://www.nationalbanken.dk/en/news-and-knowledge/data-and-statistics/securities/20231128-the-potential-for-buyback-of-mortgage-bonds-remains-significant", "date": "2023-11-28" }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "supports_prices",
+      "text": "Only about 52% of homeowners' mortgage debt was on amortising terms in 2025, unchanged from 2024, and regular instalments averaged DKK 18,700 per million borrowed, DKK 5,500 below their 2020 level. The wide use of interest-only periods lowers monthly payments and so stretches purchasing power, but it also leaves more highly leveraged households exposed if prices fall.",
+      "sources": [
+        { "title": "Unchanged instalments on homeowners' mortgage debt", "publisher": "Danmarks Nationalbank", "url": "https://www.nationalbanken.dk/en/news-and-knowledge/data-and-statistics/banking-and-mortgage-lending/lending/20260128-unchanged-installments-on-homeowners-mortgage-debt", "date": "2026-01-28" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Buyers must provide a 5% down payment, which caps loan-to-value at 95%, and since January 2018 borrowers with debt above four times income face restrictions on the loan types they may choose, measures the government credited in 2019 with cutting the share of high-risk new loans and helping stabilise Copenhagen prices. The IMF's 2025 Article IV judged borrower-based measures still too loose for pockets of vulnerability and recommended lowering the 95% LTV ceiling.",
+      "sources": [
+        { "title": "Reaction of the Danish Minister of Industry, Business and Financial Affairs to ESRB Recommendation ESRB/2019/5", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/recommendations/esrb.recommendation190923_dk_response~4401369110.en.pdf", "date": "2019-09-09" },
+        { "title": "IMF Executive Board Concludes 2025 Article IV Consultation with Denmark", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2025/07/02/pr-25236-denmark-imf-executive-board-concludes-2025-article-iv-consultation-with-denmark/index.md", "date": "2025-07-02" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Mortgage interest remains tax deductible, and the IMF recommended in 2025 that Denmark lower this deductibility to reduce the incentive to take larger mortgages. Since 2024 property value tax and land tax are levied on new public valuations less a 20% deduction, and owners who bought before 1 January 2024 keep a personal rebate for as long as they own the home, so the full new tax falls mainly on recent buyers.",
+      "sources": [
+        { "title": "IMF Executive Board Concludes 2025 Article IV Consultation with Denmark", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2025/07/02/pr-25236-denmark-imf-executive-board-concludes-2025-article-iv-consultation-with-denmark/index.md", "date": "2025-07-02" },
+        { "title": "Housing tax in your tax assessment notice", "publisher": "Danish Tax Agency (Skattestyrelsen)", "url": "https://skat.dk/en-us/individuals/property/charging-property-tax/housing-tax-in-your-tax-assessment-notice", "date": "2025" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Denmark's property price index covers one-family houses, owner-occupied flats and other property types, both newly built and existing, using all registered transactions from the electronic land register. It applies the SPAR method to correct for the quality of the properties sold, and publishes preliminary quarterly figures about three months after the period, with regional detail.",
+      "sources": [
+        { "title": "Documentation of statistics: Sales of real property", "publisher": "Statistics Denmark", "url": "https://www.dst.dk/en/Statistik/dokumentation/documentationofstatistics/sales-of-real-property", "date": "2026" }
+      ]
+    }
+  ]
+}

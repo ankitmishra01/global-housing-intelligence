@@ -3,6 +3,8 @@
 // observations in Turso, validates them, and writes a new versioned run.
 // Run: node sync/train.js            (writes)
 //      node sync/train.js --dry-run  (prints the backtest table only)
+//      node sync/train.js --dry-run --explain IND  (also prints one country's projection drivers)
+import fs from 'node:fs';
 import { connect, upsertRows } from '../lib/db.js';
 import { fetchShocks } from '../lib/sources/shocks.js';
 import { causalRateEffect, monthlyToQuarterly, quarterIndex } from '../lib/engine/causal.js';
@@ -132,7 +134,7 @@ export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIG
       policy_rate: policy?.value ?? null, policy_rate_as_of: policy?.period ?? null,
       mortgage_rate: mortgage ? mortgage.value : policy ? Math.max(0.1, policy.value + MORTGAGE_SPREAD) : null,
       mortgage_rate_source: mortgage ? mortgageLabel(iso3) : policy ? `policy rate + ${MORTGAGE_SPREAD.toFixed(1)}pp assumed spread` : null,
-      details: JSON.stringify({ originLabel, originQuarter: c.TTM?.quarter ?? null, rentOriginLabel: ctx.rentOrigin ? String(ctx.rentOrigin) : null, nowcast, components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
+      details: JSON.stringify({ originLabel, originQuarter: c.TTM?.quarter ?? null, rentOriginLabel: ctx.rentOrigin ? String(ctx.rentOrigin) : null, nowcast, components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, drivers: ctx.drivers ?? null, rentDrivers: ctx.rentDrivers ?? null, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
     });
   }
   const { rows: indexRows, distributions } = scoreAll(components);
@@ -276,7 +278,7 @@ export function applyCausal(run, causal) {
 
 async function main() {
   const db = connect();
-  await migrate(db);
+  if (!DRY_RUN) await migrate(db); // a dry run never writes, so it works when writes are blocked
   const rows = await loadRows(db);
   const national = await loadNationalExtras(db);
   const { rows: salesRows } = await db.execute("SELECT country, region, period, frequency, value FROM observations WHERE indicator = 'SALES_COUNT' AND frequency IN ('M', 'Q')");
@@ -299,6 +301,20 @@ async function main() {
   console.log('\nEvent library (x100 log points vs model, shrunk):');
   for (const e of run.eventLibrary) console.log(`  ${e.class.padEnd(18)} ${e.target.padEnd(10)} h${e.horizon} ${String(e.effect).padStart(8)} ± ${String(e.se).padEnd(6)} n=${e.n_episodes}${e.pooled ? ' (pooled fallback)' : ''}`);
   console.log(`\n${new Set(run.engine.projections.map(p => p.country)).size} countries projected, ${run.flags.length} flags, ${run.indexRows.length} index scores`);
+  // --explain ISO3: print that country's projection drivers (with --dry-run for a quick look).
+  const explainIso = process.argv[process.argv.indexOf('--explain') + 1];
+  if (process.argv.includes('--explain') && explainIso) {
+    const d = JSON.parse(run.contexts.find(c => c.country === explainIso)?.details ?? '{}');
+    console.log(JSON.stringify({ drivers: d.drivers, rentDrivers: d.rentDrivers }, null, 1));
+  }
+  // --drivers-out FILE: write every country's projection drivers to a JSON file. The site reads
+  // it only when the stored context has no drivers (used while database writes were blocked).
+  const outIdx = process.argv.indexOf('--drivers-out');
+  if (outIdx > 0 && process.argv[outIdx + 1]) {
+    const all = Object.fromEntries(run.contexts.map(c => { const d = JSON.parse(c.details); return [c.country, { drivers: d.drivers ?? null, rentDrivers: d.rentDrivers ?? null }]; }));
+    fs.writeFileSync(process.argv[outIdx + 1], JSON.stringify({ dataVintage: run.dataVintage, features: FEATURES, countries: all }) + '\n');
+    console.log(`Wrote drivers for ${Object.keys(all).length} countries to ${process.argv[outIdx + 1]}`);
+  }
   if (DRY_RUN) return;
 
   await upsertRows(db, 'projection_runs', ['id', 'created_at', 'model_version', 'data_vintage', 'summary'], [{ id: run.id, created_at: new Date().toISOString(), model_version: MODEL_VERSION, data_vintage: run.dataVintage, summary: JSON.stringify(run.summary) }]);

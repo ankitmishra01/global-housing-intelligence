@@ -1,0 +1,70 @@
+{
+  "iso3": "BGR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 October 2024 the Bulgarian National Bank has capped mortgages secured on Bulgarian residential property at 85% loan-to-value and 50% debt-service-to-income at origination, with a 30-year maximum maturity. Banks may exceed these limits for only up to 5% of the previous quarter's new residential lending, which curbs the most stretched borrowers without halting overall credit growth.",
+      "sources": [
+        {
+          "title": "Press release on borrower-based measures",
+          "publisher": "Bulgarian National Bank",
+          "url": "https://bnb.bg/AboutUs/PressOffice/POPressReleases/POPRDate/PR_20240911_1_EN",
+          "date": "2024-09-11"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "context",
+      "text": "Bulgaria adopted the euro on 1 January 2026 at 1.95583 lev per euro, and lev mortgages converted at that rate with unchanged interest rates, schedules and maturities. Under the euro adoption law, a variable-rate loan changes its rate only if its benchmark ceases to be published, and the replacement rate cannot exceed the pre-changeover level, so the switch itself did not raise borrowing costs; mortgage pricing now sits inside euro area monetary policy.",
+      "sources": [
+        {
+          "title": "Bulgaria introduces the euro",
+          "publisher": "European Central Bank",
+          "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260101~c830245e42.en.html",
+          "date": "2026-01-01"
+        },
+        {
+          "title": "What Bulgaria's euro adoption means for your loans and bank accounts",
+          "publisher": "Novinite",
+          "url": "https://www.novinite.com/articles/232338",
+          "date": "2025-05-18"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "An IMF mission in September 2025 linked rapid mortgage growth to residential price increases of about 15%, noting that some mortgage credit financed unoccupied investment properties and reduced affordability in some areas. It also warned that lower reserve requirements after euro adoption could release bank liquidity into lending, adding to housing pressure, although household debt remained low at about 26% of GDP.",
+      "sources": [
+        {
+          "title": "Bulgaria must strengthen its fiscal discipline to reap eurozone membership benefits, IMF mission recommends",
+          "publisher": "BTA",
+          "url": "https://www.bta.bg/en/news/972569-bulgaria-must-strengthen-its-fiscal-discipline-to-reap-eurozone-membership-benef",
+          "date": "2025-09-23"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The National Statistical Institute publishes quarterly house price indices for new and existing dwellings, compiled since 2015 under the EU harmonised framework, at national and regional level and for the six cities above 120,000 inhabitants, now on a 2025 = 100 base. Its related owner-occupied housing index switched in 2022 from a survey to Property Register and cadastral data with hedonic models by district, creating a series break in Q1 2022 that readers should note when comparing long runs.",
+      "sources": [
+        {
+          "title": "Housing price statistics",
+          "publisher": "National Statistical Institute of Bulgaria",
+          "url": "https://www.nsi.bg/en/content/13025/housing-price-statistics",
+          "date": "2026"
+        },
+        {
+          "title": "Owner-occupied housing price index (OOHPI) quality report",
+          "publisher": "National Statistical Institute of Bulgaria",
+          "url": "https://www.nsi.bg/en/quality-reports/owner-occupied-housing-price-index-oohpi-367",
+          "date": "2025"
+        }
+      ]
+    }
+  ]
+}

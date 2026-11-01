@@ -1,0 +1,64 @@
+{
+  "iso3": "MKD",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "From December 2025 the National Bank of the Republic of North Macedonia raised the minimum down payment on housing loans from 15% to 25%, while first-time buyers of a home to live in can put down as little as 10%. Debt service is capped at 50% of income for denar loans, with first-time buyers allowed 55% on denar loans and 50% on loans with a foreign-currency component, a design that favours owner-occupiers and local-currency borrowing over investors.",
+      "sources": [
+        {
+          "title": "National Bank measures on housing lending",
+          "publisher": "Republika (English edition)",
+          "url": "https://english.republika.mk/?p=6363",
+          "date": "2026-05-22"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "Following the December 2025 changes, loans for non-residential property bought as an investment became harder to obtain and that lending slowed, while first-time buyers accounted for nearly a quarter of approved housing loans in early 2026. The shift of credit away from buy-to-invest demand towards owner-occupiers should temper investor-driven price growth.",
+      "sources": [
+        {
+          "title": "National Bank measures on housing lending",
+          "publisher": "Republika (English edition)",
+          "url": "https://english.republika.mk/?p=6363",
+          "date": "2026-05-22"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "A 2025 National Bank working paper covering Q1 2012 to Q4 2023 finds residential prices overvalued relative to fundamentals in almost the entire period on both static and dynamic measures of household borrowing capacity. It also shows that a lower regulatory DSTI threshold reduces the fundamental value of homes, which links the central bank's borrower-based limits directly to its view of sustainable prices.",
+      "sources": [
+        {
+          "title": "Assessment of the fundamental value of residential properties in the Macedonian real estate market with a macroprudential approach (Working Paper 2025-02)",
+          "publisher": "National Bank of the Republic of North Macedonia",
+          "url": "https://ideas.repec.org/p/mae/wpaper/2025-02.html",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The State Statistical Office does not list a transaction-based residential property price index; its dwelling price data come from a semi-annual survey of dwellings whose construction is contracted by construction companies, reported without VAT and split between Skopje and other settlements. Its stand-alone release on the average price per square metre was last issued in March 2020 for 2019, so official price coverage is limited and mainly reflects new-build stock.",
+      "sources": [
+        {
+          "title": "Construction",
+          "publisher": "State Statistical Office of the Republic of North Macedonia",
+          "url": "https://www.stat.gov.mk/OblastOpsto_en.aspx?id=20",
+          "date": "2026"
+        },
+        {
+          "title": "Average price per 1 m2 of dwelling surface, 2019",
+          "publisher": "State Statistical Office of the Republic of North Macedonia",
+          "url": "https://www.stat.gov.mk/PrikaziSoopstenie_en.aspx?rbrtxt=65",
+          "date": "2020-03-31"
+        }
+      ]
+    }
+  ]
+}

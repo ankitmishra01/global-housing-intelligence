@@ -83,3 +83,18 @@ test('coverageReport counts national, all-dwelling rows only', () => {
   assert.equal(cov.RENT.countries, 3);
   assert.equal(cov.RENT.latest, '2025');
 });
+
+test('projection drivers add up to the shipped point projection at 3 and 10 years', () => {
+  let checked = 0;
+  for (const [iso3, ctx] of Object.entries(out.contexts)) {
+    for (const h of [3, 10]) {
+      const d = ctx.drivers?.[h];
+      if (!d || d.total == null) continue;
+      const parts = d.base + d.anchor + d.features.reduce((s, f) => s + f.contribution, 0);
+      assert.ok(Math.abs(parts - d.total) < 0.05, `${iso3} h${h}: parts ${parts} vs total ${d.total}`);
+      assert.ok(Math.abs(d.total - ctx.realPriceCum[h]) < 0.01, `${iso3} h${h}: total ${d.total} vs projection ${ctx.realPriceCum[h]}`);
+      checked++;
+    }
+  }
+  assert.ok(checked > 0, 'at least one model-based horizon is decomposed');
+});

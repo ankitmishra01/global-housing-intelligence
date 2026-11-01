@@ -1,0 +1,58 @@
+{
+  "iso3": "ROU",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 January 2019 the National Bank of Romania has capped total debt service at 40% of a household's net income, raised by 5 percentage points for first-time home buyers, with up to 15% of new loans exempt. When the limit was set, the median DSTI on new mortgages for borrowers below the median wage was 50%, so the cap binds mainly on lower-income buyers and limits how far credit can lift prices at the entry level.",
+      "sources": [
+        {
+          "title": "Notification by Banca Naţională a României on debt-service-to-income limit for households' total indebtedness",
+          "publisher": "National Bank of Romania via European Systemic Risk Board",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification190116_other_ro.en.pdf",
+          "date": "2019-01-16"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Romania differentiated LTV limits by currency from 2011 and, since 2019, caps debt service on unhedged foreign-currency loans at 20% of income against 40% for lei loans, policies the National Bank designed to steer new mortgage credit into domestic currency. As a result, mortgage costs depend chiefly on domestic lei rates set by National Bank of Romania policy more than on euro area rates.",
+      "sources": [
+        {
+          "title": "Notification by Banca Naţională a României on debt-service-to-income limit for households' total indebtedness",
+          "publisher": "National Bank of Romania via European Systemic Risk Board",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification190116_other_ro.en.pdf",
+          "date": "2019-01-16"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The state-guaranteed Noua Casa programme, run by FNGCIMM, lets buyers with no home, or one under 50 square metres, buy with a 5% down payment on loans up to EUR 66,500 with a guarantee of up to 50%, or 15% down on new homes with loans up to EUR 119,000 and a guarantee of up to 60%. The guarantee ceiling for 2026 is RON 500 million, so the scheme sustains entry-level and new-build demand within a capped annual envelope.",
+      "sources": [
+        {
+          "title": "Programul Noua Casa",
+          "publisher": "FNGCIMM (National Credit Guarantee Fund for SMEs)",
+          "url": "https://www.fngcimm.ro/noua-casa",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The National Institute of Statistics compiles Romania's house price index quarterly from transaction prices recorded by public notaries, covering household purchases nationwide with separate new and existing dwelling sub-indices, and existing homes split into Bucharest and other apartments and urban and rural houses. It uses hedonic rolling time-dummy models and is published about 112 days after the quarter ends, so it lags faster market indicators.",
+      "sources": [
+        {
+          "title": "House price index (HPI) national metadata: Romania",
+          "publisher": "Eurostat",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_ro.htm",
+          "date": "2026-06-30"
+        }
+      ]
+    }
+  ]
+}

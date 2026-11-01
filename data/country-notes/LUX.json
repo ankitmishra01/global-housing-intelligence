@@ -1,0 +1,38 @@
+{
+  "iso3": "LUX",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Luxembourg has the most rate-sensitive mortgage flow of the larger euro area markets covered here: ECB data show that loans floating or fixed for up to one year averaged about 44% of new house-purchase lending in 2025 and reached 52% in June 2026, against roughly 17% for the euro area. ECB cuts and hikes therefore pass quickly into borrowing costs, making the market unusually responsive to the policy cycle.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Luxembourg (RAI.M.LU.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.LU.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-06"
+        },
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, euro area (RAI.M.U2.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.U2.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 January 2021, and as of its 2020 notification, the CSSF has applied legally binding loan-to-value limits on new residential mortgages: 100% for first-time buyers of a primary residence, 90% for other primary-residence buyers with 15% of such lending allowed up to 100%, and 80% for other loans including buy-to-let. The limits were introduced to curb the combination of high household debt and high prices, and the tighter 80% cap restrains leveraged investor purchases most.",
+      "sources": [
+        {
+          "title": "Notification by the CSSF (Luxembourg) on loan-to-value limits",
+          "publisher": "European Systemic Risk Board / Commission de Surveillance du Secteur Financier",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification20201218_LTV_LU~71b58fd4c4.EN.pdf",
+          "date": "2020-12-18"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "iso3": "CZE",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Czech mortgages are fixed for an initial period and then refixed, with the five-year fixation the most popular choice, covering 53% of loans in the CNB's survey sample; the average fixation peaked at 7.6 years after 2019 and fell to 5.1 years once rates rose in 2021. Policy-rate changes therefore reach household budgets gradually as fixations expire, and the CNB estimated that about CZK 907 billion of loans granted at around 2% in 2020 to 2022 fall due for refixation in 2025 to 2028.",
+      "sources": [
+        { "title": "Refixation and refinancing of mortgages and their effects on household expenditure (Monetary Policy Report Summer 2023, Box 2)", "publisher": "Czech National Bank", "url": "https://www.cnb.cz/en/monetary-policy/monetary-policy-reports/boxes-and-articles/Refixation-and-refinancing-of-mortgages-and-their-effects-on-household-expenditure", "date": "2023-08-04" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "As of November 2025, the CNB caps loan-to-value at 80% for owner-occupier mortgages, or 90% for applicants under 36, while its debt-to-income and debt-service limits remain deactivated. Citing double-digit price growth and a rising share of riskier investment loans, it recommended from 1 April 2026 a 70% LTV and a DTI of 7 for mortgages on a third or subsequent dwelling or on buy-to-let property, a measure the IMF supports while suggesting regional or broader DTI and DSTI limits if investment lending keeps growing.",
+      "sources": [
+        { "title": "CNB recommends stricter limits for investment mortgages. Capital buffers remain unchanged", "publisher": "Czech National Bank", "url": "https://www.cnb.cz/en/cnb-news/press-releases/CNB-recommends-stricter-limits-for-investment-mortgages.-Capital-buffers-remain-unchanged", "date": "2025-11-27" },
+        { "title": "Czech Republic: Staff Concluding Statement of the 2026 Article IV Mission", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2026/02/03/pr26031-czech-republic-2026-article-iv-concluding-statement", "date": "2026-02-03" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Recurrent property tax raises only 0.3% of GDP, low by international standards, so holding housing is cheap and investment demand faces little carrying cost. The IMF recommends moving to a value-based property tax, with part of the revenue directed to social housing, as part of a broader push to address affordability.",
+      "sources": [
+        { "title": "Czech Republic: Staff Concluding Statement of the 2026 Article IV Mission", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2026/02/03/pr26031-czech-republic-2026-article-iv-concluding-statement", "date": "2026-02-03" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Czech house prices have been among the fastest rising in the EU over the past decade, and the IMF links the resulting affordability squeeze to weaker labour mobility and access to high-productivity jobs. Its 2026 Article IV mission names streamlining and digitalising permitting as a supply-side priority, signalling that slow approvals constrain the supply response to rising prices.",
+      "sources": [
+        { "title": "Czech Republic: Staff Concluding Statement of the 2026 Article IV Mission", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/news/articles/2026/02/03/pr26031-czech-republic-2026-article-iv-concluding-statement", "date": "2026-02-03" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_rents",
+      "text": "Czechia hosts the highest number of Ukrainian temporary protection beneficiaries relative to population in the EU: 397,185 people, or 36.4 per thousand residents, at the end of January 2026, against an EU average of 9.7. A displaced population of this size, with limited means to buy, adds chiefly to rental demand.",
+      "sources": [
+        { "title": "Temporary protection for 4.38 million in January 2026", "publisher": "Eurostat", "url": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260310-1", "date": "2026-03-10" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Czech Statistical Office publishes an EU-harmonised House Price Index alongside separate indices of realised prices for new and older flats and a Czech-only series of asking prices. New-flat prices come from an annual developer report, second-hand prices from a price-collector survey supplemented by internet listings and cadastre data, and indices are revised in the following release, so the latest quarter should be read as provisional.",
+      "sources": [
+        { "title": "Statistical definitions of Real estate statistics", "publisher": "Czech Statistical Office", "url": "https://csu.gov.cz/statistical-definitions-of-real-estate-statistics", "date": "2026" }
+      ]
+    }
+  ]
+}

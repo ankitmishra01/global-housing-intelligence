@@ -295,3 +295,15 @@ CREATE TABLE IF NOT EXISTS live_runs (
   seconds     INTEGER,
   error       TEXT
 );
+
+-- Curated, sourced context per country (sync/notes.js loads data/country-notes/*.json).
+CREATE TABLE IF NOT EXISTS country_notes (
+  country TEXT NOT NULL,
+  idx     INTEGER NOT NULL,
+  topic   TEXT NOT NULL,     -- mortgage_market, macroprudential, policy, supply, demand, rental, data
+  effect  TEXT NOT NULL,     -- supports_prices, restrains_prices, raises/lowers_rate_sensitivity, supports/restrains_rents, context
+  text    TEXT NOT NULL,
+  sources TEXT NOT NULL,     -- JSON [{title, publisher, url, date}]
+  as_of   TEXT,
+  PRIMARY KEY (country, idx)
+);

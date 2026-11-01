@@ -1,0 +1,95 @@
+{
+  "iso3": "DEU",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "German home loans are predominantly long-term fixed rate: ECB data show that loans floating or fixed for up to one year made up about 12% of new house-purchase lending in 2025 and 13% in August 2026. ECB rate changes therefore pass slowly into the debt service of existing owners and act mainly on new buyers, so the 2022 rate shock showed up mainly in a slump in new lending, which BaFin reports recovered from 2024 while loss rates stayed low.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Germany (RAI.M.DE.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.DE.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        },
+        {
+          "title": "Notification by BaFin (Germany) on Systemic Risk Buffer (SyRB)",
+          "publisher": "European Systemic Risk Board / BaFin",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification250420_SyRB_DE~281de8db93.en.pdf",
+          "date": "2025-04-20"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "context",
+      "text": "Germany relies on bank capital rather than binding borrower limits: BaFin set a 2% sectoral systemic risk buffer on residential mortgage exposures in 2022, alongside a supervisory expectation of prudent loan-to-value and debt-service ratios, and cut the buffer to 1% from 1 May 2025. BaFin justified the cut by the stabilisation of the market, noting that prices had been rising again for several quarters and that overvaluations had largely subsided.",
+      "sources": [
+        {
+          "title": "Notification by BaFin (Germany) on Systemic Risk Buffer (SyRB)",
+          "publisher": "European Systemic Risk Board / BaFin",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification250420_SyRB_DE~281de8db93.en.pdf",
+          "date": "2025-04-20"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "The Mietpreisbremse lets state governments designate tight housing markets in which rent at the start of a new tenancy may not exceed the local comparative rent by more than 10%, and designations must now lapse by 31 December 2029 at the latest. Dwellings first let after 1 October 2014 and first lettings after comprehensive modernisation are exempt, so the cap bears on the existing stock while steering investment towards new and refurbished units.",
+      "sources": [
+        {
+          "title": "Bürgerliches Gesetzbuch, § 556d Zulässige Miethöhe bei Mietbeginn",
+          "publisher": "Bundesministerium der Justiz (gesetze-im-internet.de)",
+          "url": "https://www.gesetze-im-internet.de/bgb/__556d.html",
+          "date": "2025"
+        },
+        {
+          "title": "Bürgerliches Gesetzbuch, § 556f Ausnahmen",
+          "publisher": "Bundesministerium der Justiz (gesetze-im-internet.de)",
+          "url": "https://www.gesetze-im-internet.de/bgb/__556f.html",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Dwelling completions fell from about 294,000 to 295,000 a year in 2021 to 2023 to 251,937 in 2024 and 206,586 in 2025, following the 2022 rise in interest rates. Permits rose year on year in July and August 2026, but the completion shortfall is likely to feed through to tighter rental markets and firmer prices in the large cities for several years.",
+      "sources": [
+        {
+          "title": "Baufertigstellungen: Wohnungen insgesamt",
+          "publisher": "Statistisches Bundesamt (Destatis)",
+          "url": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Bauen/Tabellen/baufertigstellungen.html",
+          "date": "2026-05-22"
+        },
+        {
+          "title": "Bauen: Baugenehmigungen August 2026",
+          "publisher": "Statistisches Bundesamt (Destatis)",
+          "url": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Bauen/_inhalt.html",
+          "date": "2026-10-16"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Destatis house price index (Häuserpreisindex) covers transactions in new and existing single and two-family houses and owner-occupied flats, using transaction prices reported by the local expert valuation committees (Gutachterausschüsse) and hedonic quality adjustment. It is quarterly, first estimates appear about 85 days after the quarter ends, and the previous quarter is revised with each release.",
+      "sources": [
+        {
+          "title": "Qualitätsbericht: Häuserpreisindex",
+          "publisher": "Statistisches Bundesamt (Destatis)",
+          "url": "https://www.destatis.de/DE/Methoden/Qualitaet/Qualitaetsberichte/Preise/haeuserpreisindex.pdf?__blob=publicationFile&v=3",
+          "date": "2018-02-01"
+        },
+        {
+          "title": "Bau- und Immobilienpreisindex",
+          "publisher": "Statistisches Bundesamt (Destatis)",
+          "url": "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Baupreise-Immobilienpreisindex/_inhalt.html",
+          "date": "2026"
+        }
+      ]
+    }
+  ]
+}

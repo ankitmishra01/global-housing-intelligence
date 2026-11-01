@@ -1,0 +1,96 @@
+{
+  "iso3": "IRL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Irish new lending has shifted decisively towards fixed rates: ECB data show the share of new house-purchase loans that are floating or fixed for up to one year fell from 31% in January 2025 to 6% in August 2026. New borrowers are therefore shielded from ECB moves for the length of their fixation, which slows pass-through to monthly repayments in both directions.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Ireland (RAI.M.IE.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.IE.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Under the Central Bank of Ireland's mortgage measures, revised in October 2022, first-time buyers may borrow up to 4 times gross income and second and subsequent buyers up to 3.5 times, with a 10% minimum deposit for owner-occupiers and 30% for buy-to-let. Lenders may exceed the limits on 15% of owner-occupier and 10% of buy-to-let lending, which ties purchasing power to incomes rather than to credit conditions.",
+      "sources": [
+        {
+          "title": "Mortgage measures",
+          "publisher": "Central Bank of Ireland",
+          "url": "https://www.centralbank.ie/financial-system/financial-stability/macro-prudential-policy/mortgage-measures",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The Help to Buy scheme refunds first-time buyers of new or self-built homes the lesser of 10% of the price or four years of income tax and DIRT paid, with the cap raised to EUR 35,000 for purchases from 7 October 2026 to 31 December 2029. Demand-side grants of this kind support new-build prices and developer viability more than they improve affordability.",
+      "sources": [
+        {
+          "title": "How much can you claim? Help to Buy incentive",
+          "publisher": "Revenue Commissioners",
+          "url": "https://www.revenue.ie/en/property/help-to-buy-incentive/how-much-can-you-claim.aspx",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "Rent Pressure Zone rules were extended to every private tenancy in the State on 20 June 2025, capping annual increases at the lower of 2% or inflation. From 1 March 2026 a national system keeps that cap but lets landlords reset to market rent at the start of a new tenancy and at the end of a six-year tenancy cycle, while apartments commenced from 10 June 2025 may rise with CPI without the 2% ceiling to encourage rental supply.",
+      "sources": [
+        {
+          "title": "New legislation extends Rent Pressure Zones nationwide",
+          "publisher": "Residential Tenancies Board",
+          "url": "https://rtb.ie/?p=51199",
+          "date": "2025-06-20"
+        },
+        {
+          "title": "Setting and reviewing private rents from 1 March 2026",
+          "publisher": "Residential Tenancies Board",
+          "url": "https://rtb.ie/renting/setting-and-reviewing-private-rents-from-1-march-2026/",
+          "date": "2026-03"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "context",
+      "text": "New dwelling completions reached 36,284 in 2025, up 20.4% on 2024 and the highest since the CSO series began in 2011, with apartments a third of the total. The recovery is concentrated in Dublin and the Mid-East, and output still trails the government's goal of at least 300,000 homes over 2025 to 2030.",
+      "sources": [
+        {
+          "title": "New Dwelling Completions Q4 2025",
+          "publisher": "Central Statistics Office",
+          "url": "https://www.cso.ie/en/releasesandpublications/ep/p-ndc/newdwellingcompletionsq42025/",
+          "date": "2026-01-29"
+        },
+        {
+          "title": "Delivering Homes, Building Communities 2025-2030: Mid-Year Progress Report 2026",
+          "publisher": "Department of Housing, Local Government and Heritage",
+          "url": "https://assets.gov.ie/static/documents/eb4bd98c/DHBC_Progress_Report_H1_2026_web.pdf",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The CSO Residential Property Price Index is built from Revenue stamp duty returns matched to energy-rating and address data, and uses a rolling 12-month hedonic regression. It covers household market purchases only, excluding non-household, non-market and self-build transactions, is published monthly with separate quarterly indices for new and existing homes, and the latest three months are provisional.",
+      "sources": [
+        {
+          "title": "Background Notes, Residential Property Price Index August 2026",
+          "publisher": "Central Statistics Office",
+          "url": "https://www.cso.ie/en/releasesandpublications/ep/p-rppi/residentialpropertypriceindexaugust2026/backgroundnotes/",
+          "date": "2026-10"
+        }
+      ]
+    }
+  ]
+}

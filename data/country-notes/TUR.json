@@ -1,0 +1,89 @@
+{
+  "iso3": "TUR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Türkiye's housing market is overwhelmingly cash-financed: in September 2025 only 21,266 of 150,657 home sales, about 14%, were mortgaged, even after mortgaged sales rose 34.4% year on year. With lira loan rates kept high since mid-2023 to fight inflation, credit plays a marginal role in prices, which have instead tracked general inflation; analysts cited in October 2025 warned that falling mortgage rates could revive price pressure.",
+      "sources": [
+        {
+          "title": "Turkish house sales up 6.9% to top 150,000 units in September",
+          "publisher": "Daily Sabah, reporting TurkStat",
+          "url": "https://www.dailysabah.com/business/economy/turkish-house-sales-up-69-to-top-150000-units-in-september",
+          "date": "2025-10"
+        },
+        {
+          "title": "Türkiye's housing market sees nearly 2 years of real price declines",
+          "publisher": "Daily Sabah, reporting CBRT data",
+          "url": "https://www.dailysabah.com/business/economy/turkiyes-housing-market-sees-nearly-2-years-of-real-price-declines",
+          "date": "2025-10-21"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since August 2023 the banking regulator BDDK has cut the maximum loan-to-value for buyers who already own a home, directly or through a spouse or minor child, by 75%, for example from 90% to 22.5%, and raised the risk weight on such loans to 150%. In early 2026 it removed the stricter treatment of second-hand homes, lifting the LTV for resale homes priced at TL 2 to 5 million from 60% to 90%, while cutting it to 40% for new homes of TL 20 million or more, a shift that favours first-time buyers in the mid-market over investors and luxury purchases.",
+      "sources": [
+        {
+          "title": "Regulator introduces new cap on some housing loans",
+          "publisher": "Hürriyet Daily News",
+          "url": "https://hurriyetdailynews.com/regulator-introduces-new-cap-on-some-housing-loans-185804",
+          "date": "2023-08-28"
+        },
+        {
+          "title": "What mortgage limit overhaul means for Turkish housing market",
+          "publisher": "Daily Sabah",
+          "url": "https://www.dailysabah.com/business/economy/what-mortgage-limit-overhaul-means-for-turkish-housing-market",
+          "date": "2026-02-03"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "After the February 2023 earthquakes, tight supply and rising building costs drove a price surge, but large-scale state-backed construction and delivery of homes in the affected provinces has since added supply. By September 2025 real house prices had fallen year on year for 20 consecutive months on central bank data, even as nominal prices rose 32.2%.",
+      "sources": [
+        {
+          "title": "Türkiye's housing market sees nearly 2 years of real price declines",
+          "publisher": "Daily Sabah, reporting CBRT data",
+          "url": "https://www.dailysabah.com/business/economy/turkiyes-housing-market-sees-nearly-2-years-of-real-price-declines",
+          "date": "2025-10-21"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "Foreign demand is now a small part of the market: sales to foreigners were 1,867 units in September 2025, 1.2% of the total, and fell 12.6% year on year to 14,944 in January to September 2025, concentrated in Istanbul and Antalya with Russian, Iranian and Iraqi buyers leading. Domestic demand, particularly second-hand sales at 68.7% of transactions, sets the price trend.",
+      "sources": [
+        {
+          "title": "Turkish house sales up 6.9% to top 150,000 units in September",
+          "publisher": "Daily Sabah, reporting TurkStat",
+          "url": "https://www.dailysabah.com/business/economy/turkish-house-sales-up-69-to-top-150000-units-in-september",
+          "date": "2025-10"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Central Bank of the Republic of Türkiye compiles the residential property price index from appraisal reports prepared when housing loans are approved, not from completed transaction prices, using hedonic models across 19 regional strata. It is published monthly with separate indices for new dwellings (built in the current or previous year) and existing dwellings, so it reflects the mortgaged segment's valuations in a largely cash market.",
+      "sources": [
+        {
+          "title": "House price index (HPI) national metadata: Türkiye",
+          "publisher": "Eurostat",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_tr.htm",
+          "date": "2025-11-06"
+        },
+        {
+          "title": "Türkiye's housing market sees nearly 2 years of real price declines",
+          "publisher": "Daily Sabah, reporting CBRT data",
+          "url": "https://www.dailysabah.com/business/economy/turkiyes-housing-market-sees-nearly-2-years-of-real-price-declines",
+          "date": "2025-10-21"
+        }
+      ]
+    }
+  ]
+}

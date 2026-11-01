@@ -1,0 +1,50 @@
+{
+  "iso3": "THA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "The Bank of Thailand temporarily suspended its loan-to-value limits for loan agreements signed from 1 May 2025, allowing LTVs of up to 100% on homes under THB10 million from the second contract onward and on homes of THB10 million or more from the first contract, to help clear high housing inventory. The relaxation, originally due to end on 30 June 2026, was extended by a year to end-June 2027, removing the main lending brake on investor and upmarket purchases.",
+      "sources": [
+        { "title": "Financial Stability Report 2024", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/research-and-publications/reports/financial-stability-report/FSR2024e.pdf", "date": "2025-06" },
+        { "title": "Monetary Policy Report Q2/2026", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/our-roles/monetary-policy/mpc-publication/monetary-policy-report/MPR_2026_Q2.pdf", "date": "2026-08" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Alongside the LTV easing, the Ministry of Finance cut property transfer and mortgage registration fees to 0.01% for homes priced below THB7 million, as of 2025, lowering transaction costs at the mass-market end. Foreign demand is structurally capped: under Section 19 bis of the Condominium Act, as described in 2013 legal guidance, foreigners may collectively own no more than 49% of the total floor area of units in a condominium project, and the Land Code generally prohibits foreign land ownership, so foreign buying is concentrated in condominiums.",
+      "sources": [
+        { "title": "Financial Stability Report 2024", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/research-and-publications/reports/financial-stability-report/FSR2024e.pdf", "date": "2025-06" },
+        { "title": "Inheritance of Condominium Units by Foreigners in Thailand", "publisher": "Tilleke & Gibbins", "url": "https://www.tilleke.com/insights/inheritance-condominium-units-foreigners-thailand/", "date": "2013-11-01" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "The market faces oversupply, especially in the segment priced at THB5 million and above, as developers kept launching projects despite softening demand, and the 28 March 2025 earthquake further dented demand for condominiums. Developers have since pulled back: new units launched for sale in Bangkok and vicinity fell from 61,453 in 2024 to 40,217 in 2025, slowing additions to inventory.",
+      "sources": [
+        { "title": "Financial Stability Report 2024", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/research-and-publications/reports/financial-stability-report/FSR2024e.pdf", "date": "2025-06" },
+        { "title": "Monetary Policy Report Q2/2026", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/our-roles/monetary-policy/mpc-publication/monetary-policy-report/MPR_2026_Q2.pdf", "date": "2026-08" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "Housing demand has been weighed down by weak purchasing power and high household debt, particularly among households earning less than THB30,000 a month, while foreign demand slowed with weaker Chinese buying. Commercial-bank mortgage approvals in Bangkok and vicinity fell from 47,129 units in 2024 to 38,412 in 2025, and the non-performing loan ratio on housing loans was around 4.5% in early 2026, an elevated level of credit risk that tempers the effect of looser LTV rules.",
+      "sources": [
+        { "title": "Financial Stability Report 2024", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/research-and-publications/reports/financial-stability-report/FSR2024e.pdf", "date": "2025-06" },
+        { "title": "Monetary Policy Report Q2/2026", "publisher": "Bank of Thailand", "url": "https://www.bot.or.th/content/dam/bot/documents/en/our-roles/monetary-policy/mpc-publication/monetary-policy-report/MPR_2026_Q2.pdf", "date": "2026-08" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Bank of Thailand's residential property price index uses appraisal prices from mortgage loan data reported by commercial banks and, since 2023, all specialised financial institutions, with hedonic regression and monthly time dummies combining detached houses, townhouses and condominiums by value weights. Introduced in 2004 for Bangkok and vicinity, it has been aggregated into a national index since 2023, but it reflects appraisals on mortgaged homes rather than transaction prices, and regional series rest on a few high-volume provinces.",
+      "sources": [
+        { "title": "The Development of the Bank of Thailand's Residential Property Price Index (RPPI)", "publisher": "Bank of Thailand, International Conference on Real Estate Statistics 2026", "url": "https://cures.hias.hit-u.ac.jp/wp-content/uploads/2026/02/BOT_RPPI_Final.pdf", "date": "2026-02" }
+      ]
+    }
+  ]
+}

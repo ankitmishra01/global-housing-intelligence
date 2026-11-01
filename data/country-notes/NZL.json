@@ -1,0 +1,56 @@
+{
+  "iso3": "NZL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "About 85% of New Zealand mortgage borrowing is on fixed rates, but fixation periods are short: 81% of fixed-rate borrowing repriced in 2025, a 13-year high, and 72% of all mortgage borrowing was due to reprice within the following 12 months as of early 2026. Changes in the Official Cash Rate therefore pass through to most household budgets within one to two years, far faster than in long-fixed markets.",
+      "sources": [
+        { "title": "How much juice is left in the mortgage refixing trend?", "publisher": "Bank of New Zealand", "url": "https://www.bnz.co.nz/about-us/news/how-much-juice-is-left-in-the-mortgage-refixing-trend", "date": "2026-02-02" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Debt-to-income restrictions in force since July 2024 limit new lending above six times gross income for owner-occupiers and seven times for investors, a cap that binds most in upswings when rates are low. With DTIs in place, the Reserve Bank loosened loan-to-value limits from 1 December 2025: up to 25% of new owner-occupier lending may exceed an 80% LVR (previously 20%) and up to 10% of investor lending may exceed a 70% LVR (previously 5%).",
+      "sources": [
+        { "title": "Reserve Bank proposes easing loan-to-value ratios", "publisher": "RNZ", "url": "https://www.rnz.co.nz/news/business/575892/reserve-bank-proposes-easing-loan-to-value-ratios", "date": "2025-10-14" },
+        { "title": "Reserve Bank To Ease LVR Restrictions", "publisher": "Reserve Bank of New Zealand, via Scoop", "url": "https://www.scoop.co.nz/stories/BU2510/S00220.htm", "date": "2025-10-14" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Tax settings for investors have been eased: the bright-line test, which taxes gains on residential property sold within a set period, is two years for sales on or after 1 July 2024, and full deductibility of mortgage interest on residential rentals was restored from 1 April 2025 after 80% in the 2024-25 year. Both changes improve after-tax returns on rental property and support investor demand, while foreign demand stays limited: since October 2018 most overseas persons have needed consent to buy residential land and generally cannot hold it solely as an investment, with a carve-out from 6 March 2026 for certain investor-visa holders buying homes worth NZ$5 million or more.",
+      "sources": [
+        { "title": "Property rules", "publisher": "Inland Revenue (Te Tari Taake)", "url": "https://www.ird.govt.nz/property-rules", "date": "2025-10-01" },
+        { "title": "Learn about the history of the overseas investment regulatory regime in New Zealand", "publisher": "Toitū Te Whenua Land Information New Zealand", "url": "https://www.linz.govt.nz/our-work/overseas-investment-regulation/history-overseas-investment-regime", "date": "2026" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Building consents are recovering: 41,268 new dwellings were consented in the year ended August 2026, up 21% on a year earlier, equivalent to 7.7 per 1,000 residents against 6.4 a year before, led by Auckland and Canterbury. A rising consent pipeline against subdued population growth points to more completions and less pressure on prices and rents over the next few years.",
+      "sources": [
+        { "title": "Building consents issued: August 2026", "publisher": "Stats NZ", "url": "https://www.stats.govt.nz/information-releases/building-consents-issued-August-2026/", "date": "2026-10-01" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_rents",
+      "text": "Net migration has slowed sharply from a record gain of 133,700 in the year to October 2023 to a provisional 20,500 in the year to August 2026, as a net gain of 58,800 non-citizens was largely offset by a net loss of 38,200 New Zealand citizens; the net loss to Australia alone was a provisional 27,900 in the year to March 2026. Weaker population inflows reduce new household formation and rental demand.",
+      "sources": [
+        { "title": "International migration: August 2026", "publisher": "Stats NZ", "url": "https://www.stats.govt.nz/information-releases/international-migration-august-2026/", "date": "2026-10-14" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The most widely used monthly measure, the REINZ House Price Index, was developed with the Reserve Bank and is based on residential sales by REINZ members dated at the unconditional sale date rather than settlement, published at national, regional and territorial authority level. Because it tracks value changes rather than the mix of homes sold, it complements median price data and turns earlier than settlement-based series.",
+      "sources": [
+        { "title": "HPI Dashboard", "publisher": "Real Estate Institute of New Zealand", "url": "https://www.reinz.co.nz/Web/Data-and-Products/HPI-Dashboard.aspx", "date": "2026" }
+      ]
+    }
+  ]
+}

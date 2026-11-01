@@ -1,0 +1,83 @@
+{
+  "iso3": "HRV",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 July 2025 the Croatian National Bank has capped debt service at 45% of income for housing loans and 40% for other consumer loans, with a 90% loan-to-value limit and a 30-year maximum maturity for property-secured loans. Banks could exceed the DSTI limit for up to 20% of housing loans and the LTV limit for up to 20% of loans; in August 2026 the CNB consulted on halving these quotas from 1 October 2026, a change that would further slow credit-fuelled demand.",
+      "sources": [
+        {
+          "title": "Consumer lending criteria",
+          "publisher": "Croatian National Bank",
+          "url": "https://www.hnb.hr/en/-/kriteriji-kreditiranja-potrosaca",
+          "date": "2025-03-19"
+        },
+        {
+          "title": "Croatia tightens consumer lending rules from October 2026",
+          "publisher": "Croatia Week",
+          "url": "https://www.croatiaweek.com/croatia-tightens-consumer-lending-rules-october-2026/",
+          "date": "2026-08-23"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Croatian banks expanded long-term fixed-rate lending in recent years, which shifts interest-rate risk from households to banks and slows the pass-through of euro area rate moves to existing borrowers. As of mid-2026 the CNB reports that banks are again offering variable-rate loans, often after an initial fixed period, so household sensitivity to rates is set to rise gradually.",
+      "sources": [
+        {
+          "title": "Croatia central bank warns of interest rate and property market risks",
+          "publisher": "Croatia Week",
+          "url": "https://www.croatiaweek.com/croatia-central-bank-warns-interest-rate-property-market-risks/",
+          "date": "2026-07"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "From 1 January 2025 Croatia levies an annual property tax of EUR 0.60 to EUR 8 per square metre, set by each municipality, on dwellings that are vacant or let short-term, while homes let long-term for at least ten months a year are exempt. The flat tax on short-term rentals also rose to EUR 150 to EUR 300 per bed in the most developed tourist areas, narrowing the yield advantage of holiday letting over long-term renting.",
+      "sources": [
+        {
+          "title": "How Croatia's new property tax will work",
+          "publisher": "Croatia Week",
+          "url": "https://www.croatiaweek.com/how-croatias-new-property-tax-will-work",
+          "date": "2024-09-23"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "The OECD's 2026 Economic Survey attributes Croatian price growth to limited supply, strong domestic and foreign demand and rising construction costs, alongside many vacant dwellings and a growing short-term rental stock that has crowded out long-term lets. A tourism and rental law enacted in summer 2025 tightened licensing of private holiday rentals, and early reports show thousands of tourist beds withdrawn in some Dalmatian counties.",
+      "sources": [
+        {
+          "title": "The chapter on housing challenges of the 2026 OECD Economic Survey of Croatia",
+          "publisher": "Institute of Public Finance (Zagreb)",
+          "url": "https://www.ijf.hr/en/news/details//the-chapter-on-housing-challenges-of-the-2026-oecd-economic-survey-of-croatia,3776.html",
+          "date": "2026-02-05"
+        },
+        {
+          "title": "Croatia introduces tougher tourism and property rules to curb coastal apartment inflation",
+          "publisher": "European Commission, Transition Pathways for Tourism",
+          "url": "https://transition-pathways.europa.eu/tourism/news/croatia-introduces-tougher-tourism-and-property-rules-curb-coastal-apartment-inflation",
+          "date": "2025-11-25"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Croatian Bureau of Statistics house price index uses Tax Administration transaction data on all dwelling purchases by households, splits new (up to five years old) and existing dwellings, and reports the City of Zagreb, the Adriatic coast and the rest of the country separately using hedonic regressions. From Q1 2026 the index moved to quarterly publication on a 2025 = 100 base, with the series back to 2002 revised, so older vintages are not directly comparable.",
+      "sources": [
+        {
+          "title": "House price indices, first quarter of 2026 (First Release)",
+          "publisher": "Croatian Bureau of Statistics",
+          "url": "https://podaci.dzs.hr/2026/en/121606",
+          "date": "2026-07-02"
+        }
+      ]
+    }
+  ]
+}

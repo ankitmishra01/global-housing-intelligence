@@ -1,0 +1,58 @@
+{
+  "iso3": "FIN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Finnish mortgages are almost entirely Euribor-linked: at the end of January 2026, 95% of the housing loan stock used a Euribor reference rate, 68% of it the 12-month rate, and only about 5% was fixed-rate or tied to banks' own rates. ECB moves therefore reach borrowers at each annual or shorter reset, and the shift of new lending towards 3-month and 6-month Euribor during 2025 shortens that lag further, even as fixed-rate drawdowns edged up to almost 6% of new housing loans in early 2026.",
+      "sources": [
+        { "title": "Average interest rate on housing loans has levelled off", "publisher": "Bank of Finland", "url": "https://www.suomenpankki.fi/en/statistics/statistical-news/mfi-balance-sheet/2026/average-interest-rate-on-housing-loans-has-levelled-off/", "date": "2026-02-27" },
+        { "title": "Interest rates on household loans increased in May 2026", "publisher": "Bank of Finland", "url": "https://www.suomenpankki.fi/en/statistics/statistical-news/mfi-balance-sheet/2026/interest-rates-on-household-loans-increased-in-may-2026/", "date": "2026-06-30" }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Buyers of flats also carry a share of the housing company's own loan, which is serviced through monthly charges, so where both loans are linked to market rates a rate rise lifts both the owner's mortgage payment and the housing company charge. The stock of loans to housing corporations stood at EUR 47.0 billion in September 2026, and the FIN-FSA stresses that buyers must count their share of it in their total debt burden.",
+      "sources": [
+        { "title": "Risks associated with housing company loans", "publisher": "Finanssivalvonta (FIN-FSA)", "url": "https://www.finanssivalvonta.fi/en/consumers/borrowing/risks-associated-with-housing-company-loans/", "date": "2025-06-04" },
+        { "title": "Housing corporations' drawdowns of new loans decreased in September 2026 from the year earlier", "publisher": "Bank of Finland", "url": "https://www.suomenpankki.fi/en/statistics/statistical-news/mfi-balance-sheet/2026/housing-corporations-drawdowns-of-new-loans-decreased-in-september-2026-from-the-year-earlier/", "date": "2026-10-28" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Under a June 2026 amendment to the Credit Institutions Act allowing the cap to be raised to support a housing downturn, the FIN-FSA lifted the maximum loan-to-collateral ratio to 95% for all borrowers from 1 July 2026, up from the statutory 90% for buyers other than first-time buyers, who were already at 95%. The FIN-FSA expects only a minor effect on indebtedness, but the move lowers the deposit hurdle for repeat buyers.",
+      "sources": [
+        { "title": "Notification of other macroprudential measures: Finland", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260630_Othermacroprudentialmeasures_FI~1b35985bf1.en.pdf", "date": "2026-06-30" },
+        { "title": "Housing loans and loan cap", "publisher": "Finanssivalvonta (FIN-FSA)", "url": "https://www.finanssivalvonta.fi/en/consumers/borrowing/housing-loans-and-loan-cap/", "date": "2026" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "Interest on owner-occupier home loans has not been tax deductible since 1 January 2023, while interest on loans to buy rental property remains fully deductible against capital income. Transfer tax is 1.5% on housing company shares, the usual form of flat ownership, and 3% on real estate, so the tax system no longer subsidises owner-occupier leverage but still favours buy-to-let investors.",
+      "sources": [
+        { "title": "Deduction for home loan interest", "publisher": "Finnish Tax Administration (Vero)", "url": "https://www.vero.fi/en/individuals/deductions/what-can-I-deduct/deduction-for-home-loan-interest/", "date": "2026" },
+        { "title": "Transfer tax", "publisher": "Finnish Tax Administration (Vero)", "url": "https://www.vero.fi/en/individuals/property/transfer-tax/", "date": "2026-07-01" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Construction remains depressed: Statistics Finland data show starts of blocks of flats down 18% year on year in January to August 2026, and the government granted less interest-subsidy authorisation for 2026 than in previous years, cutting state-subsidised starts too. A thinner pipeline of new flats limits future supply once demand recovers, although in the near term it mainly reflects weak demand.",
+      "sources": [
+        { "title": "Housing corporations' drawdowns of new loans decreased in September 2026 from the year earlier", "publisher": "Bank of Finland", "url": "https://www.suomenpankki.fi/en/statistics/statistical-news/mfi-balance-sheet/2026/housing-corporations-drawdowns-of-new-loans-decreased-in-september-2026-from-the-year-earlier/", "date": "2026-10-28" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Finland's headline index covers old (existing) dwellings in housing companies, that is flats and terraced units, using the Tax Administration's asset transfer tax data; it is published monthly, with new and old dwellings combined quarterly and annually. Houses owned directly as real estate rather than through housing company shares fall outside the series, so it mainly reflects the flat and terraced-house market.",
+      "sources": [
+        { "title": "Prices of dwellings in housing companies", "publisher": "Statistics Finland", "url": "https://stat.fi/en/statistics/ashi", "date": "2026-10-28" }
+      ]
+    }
+  ]
+}

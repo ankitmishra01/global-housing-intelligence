@@ -1,0 +1,64 @@
+{
+  "iso3": "CHL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Chilean mortgages are denominated in Unidades de Fomento (UF), an inflation-linked unit of account, so their interest rates are real rates priced off long-term UF yields rather than the overnight policy rate. The IMF expects policy-rate cuts to reach housing only gradually as they transmit to lower long-term rates, and notes that housing loan rates stayed broadly unchanged in 2024 even as commercial and consumer loan rates fell.",
+      "sources": [
+        {
+          "title": "Chile: 2024 Article IV Consultation, Staff Report",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2025/02/04/chile-2024-article-iv-consultation-press-release-and-staff-report-561588",
+          "date": "2025-02-05"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Law 21.748 of May 2025 created a mortgage-rate subsidy of up to 60 basis points, granted alongside the state FOGAES guarantee for new homes, for up to 50,000 first sales of new dwellings worth no more than UF 4,000, with 6,000 reserved for first homes up to UF 3,000. Because it lowers financing costs only for new units, it tilts demand towards developers' stock rather than the resale market.",
+      "sources": [
+        {
+          "title": "Ley núm. 21.748: Establece subsidio a la tasa de interés hipotecaria para la adquisición de viviendas nuevas",
+          "publisher": "Diario Oficial de la República de Chile / Ministerio de Hacienda",
+          "url": "https://www.diariooficial.interior.gob.cl/publicaciones/2025/05/29/44160-B/01/2653997.pdf",
+          "date": "2025-05-29"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "With home sales declining while the stock of new homes for sale increased, the IMF found house prices broadly stagnant in its 2024 review, and banks and life insurers carry significant residential real estate exposure. A large unsold inventory caps price growth until sales recover.",
+      "sources": [
+        {
+          "title": "Chile: 2024 Article IV Consultation, Staff Report",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2025/02/04/chile-2024-article-iv-consultation-press-release-and-staff-report-561588",
+          "date": "2025-02-05"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Central Bank of Chile has compiled its House Price Index (IPV) since 2014 from anonymised Internal Revenue Service (SII) records of actual home transactions nationwide, with breakdowns for houses and apartments and by region; the data-cleaning method was updated in 2019 and reviewed in 2021, and the index is part of the bank's experimental statistics. Because it relies on tax records it captures completed sales with a lag.",
+      "sources": [
+        {
+          "title": "Índice de Precios de Vivienda en Chile: Metodología y Resultados (Estudios Económicos Estadísticos No. 107)",
+          "publisher": "Banco Central de Chile",
+          "url": "https://econpapers.repec.org/RePEc:chb:bcchee:107",
+          "date": "2014-06"
+        },
+        {
+          "title": "Valor de mercado de la vivienda y sus componentes de tierra y construcción (Estudios Económicos Estadísticos No. 139)",
+          "publisher": "Banco Central de Chile",
+          "url": "https://econpapers.repec.org/RePEc:chb:bcchee:139",
+          "date": "2023-07"
+        }
+      ]
+    }
+  ]
+}

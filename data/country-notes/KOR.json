@@ -1,0 +1,57 @@
+{
+  "iso3": "KOR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Borrowers have swung back to floating rates: the fixed-rate share of new bank mortgages fell to 37.7% in June 2026, the lowest since February 2014, and to 31.4% of outstanding balances, according to Bank of Korea data, because variable rates sat below fixed ones. Variable loans are benchmarked to COFIX, the banks' cost-of-funds index published by the Korea Federation of Banks, whose new-loan measure rose to 3.43% in September 2026, so policy and funding-cost moves now reach a larger share of borrowers within months.",
+      "sources": [
+        { "title": "Mortgage and Credit Loan Rates Jump Together Before Tightening Cycle Even Begins", "publisher": "The Financial News (citing Bank of Korea)", "url": "https://en.fnnews.com/news/202607280827335271", "date": "2026-07-28" },
+        { "title": "September COFIX rises to 3.43 percent, pressure mounts on floating-rate mortgage borrowers", "publisher": "Digital Today (citing Korea Federation of Banks)", "url": "https://www.digitaltoday.co.kr/en/view/115197/september-cofix-rises-to-3-43-percent-pressure-mounts-on-floating-rate-mortgage-borrowers", "date": "2026-10-15" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 July 2025 the third-stage stressed DSR adds 1.5 percentage points to the rate used to test all household loans across financial sectors, with an upward adjustment for mixed and periodically reset mortgages to steer lending toward fixed rates. From 27 June 2025 new purchase mortgages in the Seoul metropolitan area and speculation-regulated zones were capped at KRW 600 million, owners buying an additional home there face a 0% LTV, maturities are limited to 30 years and buyers must move in within six months.",
+      "sources": [
+        { "title": "FSC Announces Plan to Implement Third-stage Stressed DSR Rule as Scheduled from July 1", "publisher": "Financial Services Commission", "url": "https://fsc.go.kr/eng/pr010101/84620", "date": "2025-05-20" },
+        { "title": "Authorities Introduce Measures to Strengthen Household Debt Management Centered on Seoul Metropolitan Area", "publisher": "Financial Services Commission", "url": "https://fsc.go.kr/eng/pr010101/84828", "date": "2025-06-27" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "The 15 October 2025 package tiered mortgage caps by price in the Seoul metropolitan and speculation-regulated areas (KRW 600 million up to KRW 1.5 billion, 400 million up to 2.5 billion, 200 million above), raised the stress rate there to at least 3.0%, cut LTV to 40% in newly designated regulated areas and, from 29 October 2025, counted jeonse loan interest in homeowners' DSR. The minimum bank mortgage risk weight rose from 15% to 20% from 1 January 2026, which binds hardest on high-priced Seoul apartments.",
+      "sources": [
+        { "title": "Authorities Unveil Measures to Bolster Management over Housing Loan Demand with Aims to Stabilize Housing Market", "publisher": "Financial Services Commission", "url": "https://fsc.go.kr/eng/pr010101/85413", "date": "2025-10-15" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "Under jeonse, tenants pay a large lump-sum deposit instead of monthly rent and recover it at lease end, while landlords often use the deposits to finance purchases, tying the rental market to house prices; the Bank of Korea projected about 1.026 million households at risk of reverse jeonse as of April 2023. The 2020 revision of the Housing Lease Protection Act lets tenants extend a two-year lease by two more years with renewal increases capped at 5%, a regime the Constitutional Court upheld on 28 February 2024.",
+      "sources": [
+        { "title": "Strategies for Refining the Jeonse Deposit Return Guarantee System", "publisher": "Korea Development Institute", "url": "https://www.kdi.re.kr/eng/research/focusView?pub_no=18395", "date": "2023-09-12" },
+        { "title": "Tenant protection law ruled constitutional", "publisher": "The Korea Times", "url": "https://www.koreatimes.co.kr/southkorea/law-crime/20240228/tenant-protection-law-ruled-constitutional", "date": "2024-02-28" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "To address persistent shortages of new housing in the capital region, the authorities announced in September 2025 a plan to build 1.35 million new homes in the Seoul metropolitan area over 2026 to 2030. AMRO finds that repeated credit tightening has had diminishing effects on Seoul prices since 2017, which places more weight on supply delivery to stabilise the market.",
+      "sources": [
+        { "title": "Korea 2025 Annual Consultation Report, Selected Issue 4: Assessing the Effectiveness of Korea's Macroprudential Measures (ACR-2026-03)", "publisher": "ASEAN+3 Macroeconomic Research Office (AMRO)", "url": "https://amro-asia.org/wp-content/uploads/2026/03/Korea-ACV-2025-SI-4.pdf", "date": "2026-03" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "Demand is concentrating in the capital: Seoul metropolitan prices rose sharply in 2025, led by Gangnam, Seocho and Songpa, while prices outside the region declined slightly. AMRO attributes the gap to lower interest rates, strong equity gains, an accelerating buyer preference for Seoul housing and expectations of further appreciation, so national averages understate pressure in core districts.",
+      "sources": [
+        { "title": "Korea 2025 Annual Consultation Report, Selected Issue 4: Assessing the Effectiveness of Korea's Macroprudential Measures (ACR-2026-03)", "publisher": "ASEAN+3 Macroeconomic Research Office (AMRO)", "url": "https://amro-asia.org/wp-content/uploads/2026/03/Korea-ACV-2025-SI-4.pdf", "date": "2026-03" }
+      ]
+    }
+  ]
+}

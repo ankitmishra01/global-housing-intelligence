@@ -1,0 +1,24 @@
+{
+  "iso3": "CHE",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Switzerland targets housing risk with a sectoral countercyclical capital buffer of 2.5% on mortgage loans financing domestic residential property, in place since 2013 apart from a pause from March 2020 to January 2022, and confirmed at 2.5% in February 2026 while the broad Basel III buffer stays at 0%. The buffer raises banks' cost of mortgage lending relative to other credit and so leans against the price and leverage effects of the SNB's low policy rates.",
+      "sources": [{ "title": "Stance of the Basel III countercyclical capital buffer in Switzerland", "publisher": "Swiss National Bank", "url": "https://www.snb.ch/dam/jcr:fbe11aec-d761-403e-a7ef-ae6b8ef4666e/ccyb_20260212_basel_III_countercyclical_capital_buffer.en.pdf", "date": "2026-02-12" }]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "With interest rates falling, the Swiss authorities reported in February 2026 that owner-occupied property prices grew significantly faster than a year earlier and that investment-property prices had more than recovered their 2022 to 2023 declines. Price-to-rent ratios rose slightly in all residential segments and loan-to-income ratios signal elevated affordability risks, which the SNB judges imply an elevated risk of correction if rates rise or incomes weaken.",
+      "sources": [{ "title": "Stance of the Basel III countercyclical capital buffer in Switzerland", "publisher": "Swiss National Bank", "url": "https://www.snb.ch/dam/jcr:fbe11aec-d761-403e-a7ef-ae6b8ef4666e/ccyb_20260212_basel_III_countercyclical_capital_buffer.en.pdf", "date": "2026-02-12" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Federal Statistical Office's residential property price index (IMPI) is a quarterly hedonic index of owner-occupied single-family houses and condominiums, with subindices for five municipality types, starting in 2017. It is built from transactions financed by the largest mortgage lenders, banks and insurers, so cash purchases are not directly observed and multi-family investment buildings are not yet covered, with an index for them planned for the end of 2027.",
+      "sources": [{ "title": "Immobilienpreise: Schweizerischer Wohnimmobilienpreisindex (IMPI)", "publisher": "Bundesamt für Statistik (BFS)", "url": "https://statistik.admin.ch/de/themen/preise/immobilienpreise", "date": "2026-10-27" }]
+    }
+  ]
+}

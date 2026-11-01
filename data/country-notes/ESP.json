@@ -1,0 +1,64 @@
+{
+  "iso3": "ESP",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "New Spanish mortgage lending has shifted away from short reset periods: ECB data show loans floating or fixed for up to one year fell from 19% of new house-purchase lending in June 2022 to about 8% in 2025 and August 2026. New borrowers are therefore increasingly insulated from ECB moves during their initial fixed period, which dampens the immediate pass-through of rate changes to housing demand compared with the pre-2022 market.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Spain (RAI.M.ES.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.ES.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "The Right to Housing Law (Ley 12/2023) lets regional authorities declare stressed residential market zones, where rents on new contracts are tied to the previous contract and, for large landlords owning more than ten urban properties or for homes not let in the previous five years, capped by a state reference price index. Zones must be declared by the competent regional administration, so the controls apply only where a region chooses to act and their effect on rents varies across the country.",
+      "sources": [
+        {
+          "title": "Ley 12/2023, de 24 de mayo, por el derecho a la vivienda",
+          "publisher": "Boletín Oficial del Estado",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2023-12203",
+          "date": "2023-05-24"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "Spain abolished its investor residence visa, including the route based on property purchases, by emptying articles 63 to 67 of Law 14/2013 through Organic Law 1/2025, in force since 3 April 2025. Applications filed before that date are processed under the old rules and existing permits keep their validity, so the effect on foreign buying in coastal and big-city markets is gradual.",
+      "sources": [
+        {
+          "title": "Ley Orgánica 1/2025, de 2 de enero, de medidas en materia de eficiencia del Servicio Público de Justicia (disposición final vigesimoprimera)",
+          "publisher": "Boletín Oficial del Estado",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2025-76",
+          "date": "2025-01-03"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "INE's Housing Price Index (IPV) is a quarterly index of new and second-hand open-market home sales by individuals, built from General Council of Notaries data received about one and a half months after the quarter ends and covering more than 90% of its transactions. It combines stratification with hedonic regression in a chain-linked index, with breakdowns by autonomous community.",
+      "sources": [
+        {
+          "title": "Housing Price Index, Methodology Base 2025",
+          "publisher": "Instituto Nacional de Estadística",
+          "url": "https://www.ine.es/en/daco/daco42/ipv/metodologia2025_en.pdf",
+          "date": "2025"
+        },
+        {
+          "title": "Housing Price Index: methodology",
+          "publisher": "Instituto Nacional de Estadística",
+          "url": "https://www.ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736152838&menu=metodologia&idp=1254735976607",
+          "date": "2026"
+        }
+      ]
+    }
+  ]
+}

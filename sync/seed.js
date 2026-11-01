@@ -5,6 +5,7 @@
 // Dry run:  node sync/seed.js --dry-run   (no writes; validates and writes sync/report.json)
 import fs from 'node:fs';
 import { connect, upsertRows } from '../lib/db.js';
+import { planObservationWrites } from '../lib/write-plan.js';
 import { migrate } from '../db/migrate.js';
 import { loadCountries, iso2Map } from '../lib/registry.js';
 import { fetchBis, fetchBisDwellingTypes, BIS_INDICATORS } from '../lib/sources/bis.js';
@@ -114,14 +115,16 @@ async function main() {
   await upsertRows(db, 'indicators', ['key', 'label', 'unit', 'source', 'frequency'], indicators);
   await upsertRows(db, 'countries', Object.keys(countryRows[0]), countryRows);
   const obs = rows.map(r => ({ ...r, region: r.region || '', dwelling_type: r.dwelling_type || '', status: r.status || 'actual', vintage: VINTAGE, fetched_at: RUN_AT }));
-  // Replace each refreshed series wholesale (per country) so revised or withdrawn points do not
-  // linger, while a source that failed this run keeps its previous rows for other countries.
-  const series = [...new Set(obs.map(r => `${r.country}|${r.indicator}|${r.frequency}`))];
-  const deletes = series.map(s => { const [country, indicator, frequency] = s.split('|'); return { sql: 'DELETE FROM observations WHERE country = ? AND indicator = ? AND frequency = ?', args: [country, indicator, frequency] }; });
+  // Write only new or changed rows, and delete only points withdrawn from a refreshed series,
+  // so revisions land without rewriting the whole table (a source that failed this run keeps
+  // its previous rows). See lib/write-plan.js.
+  const { rows: stored } = await db.execute('SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations');
+  const plan = planObservationWrites(stored, obs);
+  const deletes = plan.deletes.map(r => ({ sql: 'DELETE FROM observations WHERE country = ? AND indicator = ? AND region = ? AND dwelling_type = ? AND period = ? AND frequency = ?', args: [r.country, r.indicator, r.region, r.dwelling_type, r.period, r.frequency] }));
   for (let i = 0; i < deletes.length; i += 200) await db.batch(deletes.slice(i, i + 200), 'write');
   const t = Date.now();
-  await upsertRows(db, 'observations', ['country', 'indicator', 'region', 'dwelling_type', 'period', 'frequency', 'value', 'status', 'source', 'vintage', 'fetched_at'], obs);
-  console.log(`Wrote ${obs.length} observations in ${((Date.now() - t) / 1000).toFixed(1)}s`);
+  await upsertRows(db, 'observations', ['country', 'indicator', 'region', 'dwelling_type', 'period', 'frequency', 'value', 'status', 'source', 'vintage', 'fetched_at'], plan.upserts);
+  console.log(`Observations: ${plan.upserts.length} new or changed, ${plan.deletes.length} withdrawn, ${plan.unchanged} unchanged (${((Date.now() - t) / 1000).toFixed(1)}s)`);
   await upsertRows(db, 'seed_runs', ['run_at', 'observations', 'rejected', 'tier1', 'carried_forward', 'national_failures', 'gate_failures'], [{
     run_at: RUN_AT, observations: obs.length, rejected: rejected.length, tier1: report.tier1,
     carried_forward: JSON.stringify(carriedForward), national_failures: JSON.stringify(national.failures), gate_failures: JSON.stringify(gateFailures),

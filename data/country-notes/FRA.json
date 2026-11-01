@@ -1,0 +1,42 @@
+{
+  "iso3": "FRA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "French home loans are almost entirely long-term fixed rate: ECB data show only about 3% of new house-purchase lending in 2025 and August 2026 was floating or fixed for up to one year, the lowest share among large euro area economies. ECB moves therefore reach existing borrowers barely at all and work mainly through the cost and volume of new credit, so prices adjust through transactions rather than through distressed sales.",
+      "sources": [{ "title": "Share of variable rate loans in total loans for house purchase, France (RAI.M.FR.SVLHPHH.EUR.MIR.Z)", "publisher": "European Central Bank Data Portal", "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.FR.SVLHPHH.EUR.MIR.Z", "date": "2026-08" }]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since January 2022 the Haut Conseil de stabilité financière has made binding a 35% debt-service-to-income cap and a 25-year maturity limit (27 years where there is a construction deferral) on new housing loans. Banks may depart from these criteria for up to 20% of quarterly lending, of which at least 70% must go to primary residences and 30% to first-time buyers since June 2023, which caps buy-to-let leverage and ties borrowing capacity closely to rates.",
+      "sources": [{ "title": "Notification of borrower-based measures: France, Decision D-HCSF-2023-2", "publisher": "European Systemic Risk Board / Haut Conseil de stabilité financière", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification230629_BBMs_FR~3ca74f8443.en.pdf", "date": "2023-06-29" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "From 1 April 2025 the zero-interest loan for first-time buyers (prêt à taux zéro) was extended to all new homes, houses as well as apartments, across the whole country without zoning limits. It can finance 20% to 50% of the price of a new apartment and 10% to 30% of a new house depending on income, a deliberate prop for new-build demand during the construction slump.",
+      "sources": [{ "title": "Le décret sur le Prêt à Taux Zéro (PTZ) publié, une avancée pour les primo-accédants", "publisher": "Ministère de la Transition écologique", "url": "https://www.ecologie.gouv.fr/presse/decret-pret-taux-zero-ptz-publie-avancee-primo-accedants", "date": "2025-03-31" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_rents",
+      "text": "Under the Climate and Resilience law, homes rated G on the energy performance certificate cannot be let under new or renewed leases from 2025, with F-rated homes following in 2028 and E-rated homes in 2034. The schedule forces landlords to renovate or sell older stock, which tightens private rental supply in the near term and widens the price discount on energy-inefficient homes.",
+      "sources": [
+        { "title": "Diagnostic de performance énergétique (DPE)", "publisher": "Ministère de la Transition écologique", "url": "https://www.ecologie.gouv.fr/politiques-publiques/diagnostic-performance-energetique-dpe", "date": "2025-12-19" },
+        { "title": "Ce qui change au 1er janvier 2025 dans le domaine du logement", "publisher": "Ministère de la Transition écologique", "url": "https://www.ecologie.gouv.fr/presse/ce-qui-change-1er-janvier-2025-domaine-du-logement", "date": "2024-12-27" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The Notaires-Insee index is a quarterly hedonic index of existing (not new) dwellings, compiled by notaries from the BIEN database for Ile-de-France and Perval for the rest of France and validated by Insee. Prices are net of transfer duties, notary fees and agency commission, and database coverage became exhaustive only in summer 2021, so the series tracks the resale market rather than new-build prices.",
+      "sources": [
+        { "title": "Les indices Notaires-Insee: la méthode en bref", "publisher": "Insee", "url": "https://www.insee.fr/fr/statistiques/documentation/Methodo_Indices-notaires-Insee-mai2025.pdf", "date": "2025-05" },
+        { "title": "Indice des prix des logements anciens: description", "publisher": "Insee", "url": "https://www.insee.fr/fr/metadonnees/source/indicateur/p1643/description", "date": "2025" }
+      ]
+    }
+  ]
+}

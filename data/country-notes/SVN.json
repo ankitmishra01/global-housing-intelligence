@@ -1,0 +1,58 @@
+{
+  "iso3": "SVN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 July 2023 the Bank of Slovenia has applied a binding debt-service-to-income cap of 50% to new housing and consumer loans, with banks allowed to exceed it for only 3% of new residential real estate agreements each quarter. The tight exemption quota limits how far credit can stretch purchasing power when rates fall, which caps the leverage channel behind price growth.",
+      "sources": [
+        {
+          "title": "Overview of key changes to macroprudential restrictions on consumer lending from 2023",
+          "publisher": "Banka Slovenije",
+          "url": "https://www.bsi.si/en/archive-of-macroprudential-instruments/overview-of-key-changes-to-macroprudential-restrictions-on-consumer-lending-from-2023",
+          "date": "2023-07"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "context",
+      "text": "The loan-to-value limit remains a recommendation rather than a binding rule: 80% for a primary residence and 70% for secondary properties. In Q4 2024 the average LTV was about 67% on primary and 58% on secondary properties, and households spent an average of 34% of income on housing loan repayments, so the market is equity-heavy rather than credit-driven.",
+      "sources": [
+        {
+          "title": "Banka Slovenije's measures mean that credit standards remain adequate despite the many external risks and shocks",
+          "publisher": "Banka Slovenije",
+          "url": "https://www.bsi.si/en/media/posts/banka-slovenije-s-measures-mean-that-credit-standards-remain-adequate-despite-the-many-external-risks-and-shocks",
+          "date": "2025-07-02"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "The new Hospitality Act, applying from the start of 2026, requires short-term rental hosts in buildings of three or more units to obtain consent from owners of more than three-quarters of the units, including every adjoining owner, valid for three years. Caps on rental days apply only in municipalities designated as high risk and not before 1 January 2027, so any shift of units back to long-term letting is likely to be gradual and concentrated in Ljubljana and tourist areas.",
+      "sources": [
+        {
+          "title": "Slovenia introduces new short-term rental rules under the Hospitality Act in 2026",
+          "publisher": "SIBIZ",
+          "url": "https://sibiz.eu/slovenia-introduces-new-short-term-rental-rules-under-the-hospitality-act-in-2026-significant-impact-on-airbnb-and-booking-com-hosts",
+          "date": "2026-01-06"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Slovenia publishes a quarterly house price index for new and existing dwellings from Q1 2007, built with hedonic regressions by dwelling type and municipality that control for age, quality and size. The series is not seasonally adjusted at source, so quarter-on-quarter changes include seasonal effects and year-on-year comparisons are the safer read.",
+      "sources": [
+        {
+          "title": "International House Price Database: Slovenia country note",
+          "publisher": "Federal Reserve Bank of Dallas",
+          "url": "https://www.dallasfed.org/~/media/documents/research/international/houseprice/slovenia.pdf",
+          "date": "2025-10"
+        }
+      ]
+    }
+  ]
+}

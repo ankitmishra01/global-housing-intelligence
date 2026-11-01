@@ -1,0 +1,96 @@
+{
+  "iso3": "LVA",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Latvian loans are mostly variable-rate and linked to Euribor, with nearly 90 percent of household and corporate loans on variable terms at the end of 2024, so changes in ECB policy pass quickly into payments. Even so, outstanding housing loans were just under 13 percent of GDP in 2025, against 17 percent in Lithuania and 31 percent in Estonia, and mortgage rates have run 1 to 2 percentage points above the euro area average since 2014, which Latvijas Banka links to high bank markups and few alternative lenders.",
+      "sources": [
+        {
+          "title": "Financial Stability Report 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fsp/FSP_2025_EN.pdf",
+          "date": "2025"
+        },
+        {
+          "title": "Financing of the Economy 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fpp/FPP_2025_EN.pdf",
+          "date": "2025-10"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "As of 2025 Latvia caps loan-to-value at 90 percent (95 percent with a state guarantee and 70 percent for buy-to-let), debt service at 40 percent of net income, debt at 6 times income and mortgage maturity at 30 years. Since January 2024 looser limits of 45 percent DSTI and 8 times DTI apply to loans for energy-efficient homes, a deliberate tilt toward new and renovated stock.",
+      "sources": [
+        {
+          "title": "Financial Stability Report 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fsp/FSP_2025_EN.pdf",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "State guarantees from the development institution Altum allow high loan-to-value lending, and loans under the state support programme reached 44.3 percent of new housing loans in the second quarter of 2024. Legal changes that cut refinancing costs led to markup reductions on 9,356 mortgages in the first eight months of 2025, about 14 percent of the portfolio, lowering debt service without new lending.",
+      "sources": [
+        {
+          "title": "Financial Stability Report 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fsp/FSP_2025_EN.pdf",
+          "date": "2025"
+        },
+        {
+          "title": "Financing of the Economy 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fpp/FPP_2025_EN.pdf",
+          "date": "2025-10"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_rents",
+      "text": "New housing supply has long been insufficient: the number of new apartments added to the Riga market fell by 35 percent in 2024, and high construction costs and administrative hurdles continue to deter projects. Latvijas Banka warns this may push prices up and notes that rents for new-project apartments in Riga rose 12 to 13 percent in 2024.",
+      "sources": [
+        {
+          "title": "Financial Stability Report 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fsp/FSP_2025_EN.pdf",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "Around 40 percent of Latvians live in overcrowded housing, the second-highest rate in the EU, and roughly 80 percent of dwellings on district heating were built before 2000, most still unrenovated. The Soviet-era stock of small, energy-inefficient flats creates latent demand for larger and newer homes that is held back mainly by financing costs.",
+      "sources": [
+        {
+          "title": "Financing of the Economy 2025",
+          "publisher": "Latvijas Banka",
+          "url": "https://datnes.latvijasbanka.lv/fpp/FPP_2025_EN.pdf",
+          "date": "2025-10"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The official house price index is compiled quarterly by the Central Statistical Bureau from the State Unified Computerised Land Register, covering household purchases of new and existing dwellings with separate sub-indices. It uses hedonic quality adjustment but is published only at national level because transaction numbers are too small for regional series.",
+      "sources": [
+        {
+          "title": "House price index (prc_hpi): national reference metadata, Latvia",
+          "publisher": "Eurostat / Central Statistical Bureau of Latvia",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_lv.htm",
+          "date": "2026-06-16"
+        }
+      ]
+    }
+  ]
+}

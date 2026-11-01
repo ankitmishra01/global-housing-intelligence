@@ -1,0 +1,27 @@
+{
+  "iso3": "AUT",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Austria has moved away from variable-rate lending but retains a sizeable floating share: ECB data show loans floating or fixed for up to one year fell from 38% of new house-purchase lending in June 2022 to about 19% on average in 2025, and stood at 21% in August 2026. That share is above the euro area average of about 17%, so ECB moves still pass to a meaningful part of new borrowers within a year.",
+      "sources": [
+        { "title": "Share of variable rate loans in total loans for house purchase, Austria (RAI.M.AT.SVLHPHH.EUR.MIR.Z)", "publisher": "European Central Bank Data Portal", "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.AT.SVLHPHH.EUR.MIR.Z", "date": "2026-08" },
+        { "title": "Share of variable rate loans in total loans for house purchase, euro area (RAI.M.U2.SVLHPHH.EUR.MIR.Z)", "publisher": "European Central Bank Data Portal", "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.U2.SVLHPHH.EUR.MIR.Z", "date": "2026-08" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Binding borrower-based limits introduced by the FMA in 2022, a 90% loan-to-value cap, a 40% debt-service-to-income cap and a 35-year maximum term with a 20% exemption bucket per bank, expired on 1 July 2025. The Financial Market Stability Board kept the same limits as a non-binding supervisory expectation, citing the marked fall in overvaluation and prices, weaker loan demand and better credit quality, which removes a hard legal constraint on credit as demand recovers.",
+      "sources": [{ "title": "Notification by the Austrian Financial Market Authority on borrower-based measures", "publisher": "European Systemic Risk Board / Finanzmarktaufsicht", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification250226_BBMs_AT~af21e3dcdf.en.pdf", "date": "2025-02-26" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The headline Austrian residential property price index is compiled quarterly by the Oesterreichische Nationalbank with DataScience Service GmbH and the Vienna University of Technology, with separate series for Vienna and the rest of Austria and for single-family houses and new and used condominiums. The OeNB states that it is compiled for statistical purposes, may be revised at any time, and should not be used as a reference value in financial contracts.",
+      "sources": [{ "title": "Residential Property Price Index (table 6.6)", "publisher": "Oesterreichische Nationalbank", "url": "https://www.oenb.at/isawebstat/stabfrage/createReport?lang=EN&report=6.6", "date": "2026-10-14" }]
+    }
+  ]
+}

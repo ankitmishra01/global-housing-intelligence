@@ -1,0 +1,58 @@
+{
+  "iso3": "SWE",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Swedish mortgages are overwhelmingly on variable rates: in Finansinspektionen's 2024 sample as many as 8 in 10 new borrowers chose a variable rate, up almost 15 percentage points on 2023. Because high household debt is largely financed at short fixation, Riksbank moves feed through to household cash flow quickly, and the European Commission ties the recent slump in housing construction directly to the prevalence of variable-rate mortgages.",
+      "sources": [
+        { "title": "The Swedish Mortgage Market: Households need to have margins for an uncertain future", "publisher": "Finansinspektionen", "url": "https://fi.se/en/published/reports/swedish-mortgage-reports/the-swedish-mortgage-market-households-need-to-have-margins-for-an-uncertain-future/", "date": "2025-04-07" },
+        { "title": "2026 Country Report: Sweden, SWD(2026) 227 final", "publisher": "European Commission (via Council of the EU)", "url": "https://data.consilium.europa.eu/doc/document/ST-10144-2026-ADD-1/en/pdf", "date": "2026-06-03" }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "supports_prices",
+      "text": "Since 1 April 2026 borrower-based rules sit in law rather than with the FSA, and they were eased: the loan-to-value cap rose from 85% to 90%, a separate 80% cap applies to equity withdrawal, and the extra 1% amortisation for loans above 4.5 times gross income was abolished. The LTV-based amortisation requirement from 2016 remains, at 1% a year above 50% LTV and 2% above 70%, and the FSA expects the relaxation to lift house prices and credit growth.",
+      "sources": [
+        { "title": "Notification of borrower-based measures: Sweden", "publisher": "European Systemic Risk Board", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260311_Othermacroprudentialmeasures_SE~f46983a0e3.en.pdf", "date": "2026-03-11" },
+        { "title": "2026 Country Report: Sweden, SWD(2026) 227 final", "publisher": "European Commission (via Council of the EU)", "url": "https://data.consilium.europa.eu/doc/document/ST-10144-2026-ADD-1/en/pdf", "date": "2026-06-03" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Mortgage interest is fully deductible in Sweden, unlike in most EU states, and household interest deductions reached SEK 61 billion in 2024, close to 1% of GDP and up from SEK 41 billion. Combined with low recurrent property taxation and capital gains tax that can normally be deferred on moving, the regime keeps the incentive to borrow strong, and the Commission notes no significant reform as of 2026.",
+      "sources": [
+        { "title": "2026 Country Report: Sweden, SWD(2026) 227 final", "publisher": "European Commission (via Council of the EU)", "url": "https://data.consilium.europa.eu/doc/document/ST-10144-2026-ADD-1/en/pdf", "date": "2026-06-03" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_rents",
+      "text": "Sweden has the strictest rent regulation in the OECD: most rents are set through collective bargaining on the size and condition of a unit rather than local demand, with more flexible rules mainly for new builds. The result is long waiting lists in Stockholm and Gothenburg, low mobility and spillover demand into the ownership market, while regulated rents follow inflation with a lag and so rose faster than prices after 2023.",
+      "sources": [
+        { "title": "2026 Country Report: Sweden, SWD(2026) 227 final", "publisher": "European Commission (via Council of the EU)", "url": "https://data.consilium.europa.eu/doc/document/ST-10144-2026-ADD-1/en/pdf", "date": "2026-06-03" },
+        { "title": "OECD Economic Surveys: Sweden 2025", "publisher": "Government Offices of Sweden, Delegation to the OECD", "url": "https://www.swedenabroad.se/en/embassies/oecd-unesco/current/news/oecd-economic-surveys-sweden-2025/", "date": "2025-06-05" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "About 33,400 dwellings were completed in 2025, a third fewer than in 2024, and Boverket's June 2026 forecast puts starts at roughly 28,800 in 2026 before a recovery to about 35,800 in 2027, against an estimated need of around 30,000 a year for 2026 to 2035. Lengthening zoning and permitting lead times push up land costs, so the shortfall is concentrated in the large cities.",
+      "sources": [
+        { "title": "Byggprognos analys juni 2026", "publisher": "Boverket", "url": "https://www.boverket.se/sv/samhallsplanering/bostadsmarknad/bostadsmarknaden/byggprognos/byggprognos-analys-juni-2026/", "date": "2026-06" },
+        { "title": "2026 Country Report: Sweden, SWD(2026) 227 final", "publisher": "European Commission (via Council of the EU)", "url": "https://data.consilium.europa.eu/doc/document/ST-10144-2026-ADD-1/en/pdf", "date": "2026-06-03" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics Sweden's Real Estate Price Index (1981=100) tracks one- or two-dwelling houses from registered title transfers and is published quarterly with preliminary values, reported by the date the buyer takes ownership. Tenant-owned flats (bostadsrätter) sit outside this index and are covered by separate purchase-price statistics, so the headline series leans towards detached and terraced housing.",
+      "sources": [
+        { "title": "Real estate prices and registrations of title", "publisher": "Statistics Sweden (SCB)", "url": "https://www.scb.se/en/finding-statistics/statistics-by-subject-area/housing-construction-and-building/real-estate/real-estate-prices-and-registrations-of-title/", "date": "2026-10-23" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "iso3": "SAU",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "SAMA caps household debt service at 65% of income for borrowers receiving mortgage subsidies and 55% for those without, and in May 2025 introduced a 100 basis point countercyclical capital buffer, effective within one year, to lean against rapid credit growth (as of the IMF's 2025 review).",
+      "sources": [{ "title": "Saudi Arabia: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/223)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/08/02/saudi-arabia-2025-article-iv-consultation-press-release-and-staff-report-569252", "date": "2025-08-04" }]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "restrains_prices",
+      "text": "Mortgage lending, together with corporate credit for giga-projects, has outpaced deposit growth, pushing banks towards subordinated debt and short-term external wholesale funding; the IMF notes mortgage growth has decelerated amid a high loan-to-deposit ratio. Tighter bank funding limits how fast home-loan supply can expand and raises the cost of new mortgages.",
+      "sources": [{ "title": "Saudi Arabia: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/223)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/08/02/saudi-arabia-2025-article-iv-consultation-press-release-and-staff-report-569252", "date": "2025-08-04" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Home purchases and real estate transactions are exempt from VAT and there is no recurrent property tax, while the white land tax on undeveloped and vacant urban plots is designed to push land into housing development rather than raise revenue; the IMF recommends removing the VAT exemptions and introducing a market-value property tax, which would raise holding costs.",
+      "sources": [{ "title": "Saudi Arabia: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/223)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/08/02/saudi-arabia-2025-article-iv-consultation-press-release-and-staff-report-569252", "date": "2025-08-04" }]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_rents",
+      "text": "Housing has been the dominant contributor to Saudi inflation, but rent inflation slowed for a seventh consecutive month to 8% year on year by May 2025, its lowest since February 2023. Rapid labour inflows, including a 24% rise in the construction workforce in 2024 led by non-Saudi workers, add to underlying rental demand.",
+      "sources": [{ "title": "Saudi Arabia: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/223)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/08/02/saudi-arabia-2025-article-iv-consultation-press-release-and-staff-report-569252", "date": "2025-08-04" }]
+    }
+  ]
+}

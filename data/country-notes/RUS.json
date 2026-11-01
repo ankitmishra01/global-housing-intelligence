@@ -1,0 +1,64 @@
+{
+  "iso3": "RUS",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Russian mortgage lending is split between state-subsidised loans and a market segment priced off a very high key rate: in October 2024, with the key rate at 19%, average mortgage rates at the largest banks exceeded 22%. Subsidised schemes made up about 70% of mortgage loans and 96% of new-build loans by Q1 2023, so key-rate moves reach new-build demand mainly through changes to programme terms rather than through market pricing.",
+      "sources": [
+        {
+          "title": "Russia's real estate market rocked by the end of generous mortgage subsidies",
+          "publisher": "The Moscow Times (bne IntelliNews)",
+          "url": "https://www.themoscowtimes.com/2026/01/01/russias-real-estate-market-rocked-by-the-end-of-generous-mortgage-subsidies",
+          "date": "2024-10-18"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "The universal preferential mortgage, which had held subsidised mortgage rates at 8% since 2020, ended in July 2024, and issuance roughly halved that month. Bloomberg Economics estimates cited at the time put new-build price growth at 122% per square metre between April 2020 and September 2024, a subsidy-driven rise that widened the gap between new-build and secondary-market prices.",
+      "sources": [
+        {
+          "title": "Russia's real estate market rocked by the end of generous mortgage subsidies",
+          "publisher": "The Moscow Times (bne IntelliNews)",
+          "url": "https://www.themoscowtimes.com/2026/01/01/russias-real-estate-market-rocked-by-the-end-of-generous-mortgage-subsidies",
+          "date": "2024-10-18"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "The family mortgage, previously a flat 6% with limits of RUB 12 million in Moscow and St Petersburg and RUB 6 million elsewhere, has been narrowed: from February 2026 a family may hold only one subsidised loan, and from 1 October 2026 rates vary with the number of children and region, rising to 10% for one-child families outside the two capitals and 12% within them, while families with five or more children pay 2% to 4%. The Finance Ministry framed the changes as better targeting demographic goals; they cut subsidised purchasing power for one-child families, especially in the two capitals.",
+      "sources": [
+        {
+          "title": "Russia ties family mortgage rates to the number of children; in Moscow the rate for one-child families doubles to 12% on October 1",
+          "publisher": "Meduza",
+          "url": "https://meduza.io/en/news/2026/09/24/russia-ties-family-mortgage-rates-to-the-number-of-children-in-moscow-the-rate-for-one-child-families-doubles-to-12-on-october-1",
+          "date": "2026-09-24"
+        },
+        {
+          "title": "Russia's housing developers brace for prolonged slump after mortgage rule changes",
+          "publisher": "The Moscow Times",
+          "url": "https://www.themoscowtimes.com/2026/06/23/russias-housing-developers-brace-for-prolonged-slump-after-mortgage-rule-changes",
+          "date": "2026-05-25"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Tighter subsidy rules front-loaded mortgage demand into December 2025 and January 2026, after which issuance fell from RUB 811 billion in December to RUB 290 billion in February. In Q1 2026, 73% of developers missed sales targets, new-build prices rose 2.2% against 3% inflation, and the construction industry body warned that one in five developers risked failing to repay project loans for lack of escrow funds, pointing to financial strain on developers and soft new-build pricing.",
+      "sources": [
+        {
+          "title": "Russia's housing developers brace for prolonged slump after mortgage rule changes",
+          "publisher": "The Moscow Times",
+          "url": "https://www.themoscowtimes.com/2026/06/23/russias-housing-developers-brace-for-prolonged-slump-after-mortgage-rule-changes",
+          "date": "2026-05-25"
+        }
+      ]
+    }
+  ]
+}

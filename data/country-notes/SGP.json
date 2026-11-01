@@ -1,0 +1,108 @@
+{
+  "iso3": "SGP",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "HDB concessionary loans carry a rate pegged 0.1 percentage point above the CPF Ordinary Account rate, which has sat at its 2.5% floor, giving 2.6% as of the second quarter of 2026 and insulating many public-housing borrowers from market rate swings. For bank loans, MAS reported that as of the second quarter of 2022 only about 20% of loans on HDB flats and 37% on private homes were on floating packages, with the remainder on board or deposit-linked rates that adjust with a lag, or fixed for the first few years.",
+      "sources": [
+        {
+          "title": "CPF Interest Rates from 1 April to 30 June 2026",
+          "publisher": "Central Provident Fund Board",
+          "url": "https://www.cpf.gov.sg/member/infohub/news/news-releases/cpf-interest-rates-from-1-april-to-30-june-2026",
+          "date": "2026"
+        },
+        {
+          "title": "Reply to Parliamentary Question on borrowers on fixed and floating rate mortgages for HDB and private residential properties",
+          "publisher": "Monetary Authority of Singapore",
+          "url": "https://www.mas.gov.sg/news/parliamentary-replies/2022/reply-to-parliamentary-question-on-borrowers-on-fixed-and-floating-rate-mortgages-for-hdb-and-private-residential-properties",
+          "date": "2022-10-20"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Borrowing is capped by a 55% Total Debt Servicing Ratio (cut from 60% in December 2021), tested at a 4% medium-term rate floor for residential bank loans since September 2022, and loan-to-value limits of 75% for a first bank loan and, after cuts from 90% in 2021, 75% for HDB loans (as of 2026). Additional Buyer's Stamp Duty set on 27 April 2023 charges 60% on foreigners and 65% on entities buying any home, 20% on a citizen's second home and 30% on a third, and 5%, 30% and 35% for permanent residents. Citizens' first purchases, about 90% of transactions, are untouched, so the regime chiefly suppresses leveraged, investor and foreign demand rather than owner-occupier buying.",
+      "sources": [
+        {
+          "title": "Measures To Cool The Property Market",
+          "publisher": "Monetary Authority of Singapore",
+          "url": "https://www.mas.gov.sg/news/media-releases/2021/measures-to-cool-the-property-market",
+          "date": "2021-12-15"
+        },
+        {
+          "title": "Measures to Promote Sustainable Conditions in the Property Market by Ensuring Prudent Borrowing and Moderating Demand",
+          "publisher": "Monetary Authority of Singapore",
+          "url": "https://www.mas.gov.sg/news/media-releases/2022/measures-to-promote-sustainable-conditions-in-the-property-market-by-ensuring-prudent-borrowing-and-moderating-demand",
+          "date": "2022-09-29"
+        },
+        {
+          "title": "Housing Loans for HDB Flat Buyers",
+          "publisher": "Housing & Development Board (MyNiceHome)",
+          "url": "https://mynicehome.gov.sg/get-started/hdb-loans-guide/",
+          "date": "2026-08-23"
+        },
+        {
+          "title": "Measures for a Sustainable Property Market",
+          "publisher": "Monetary Authority of Singapore",
+          "url": "https://www.mas.gov.sg/news/media-releases/2023/measures-for-a-sustainable-property-market",
+          "date": "2023-04-26"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "Public housing dominates the market: 77.2% of resident households lived in HDB flats in 2025, against 17.9% in condominiums and other apartments and 4.7% in landed homes, with a home ownership rate of 91.2%. Because HDB pricing, grants and loan terms are set by the state, policy decisions shape the bulk of housing demand and limit the pass-through of private-market cycles to most households.",
+      "sources": [
+        {
+          "title": "Resident Households: Latest News and Data",
+          "publisher": "Singapore Department of Statistics",
+          "url": "https://www.singstat.gov.sg/find-data/explore-data-themes/households/resident-households/latest-news-data",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_rents",
+      "text": "At end-September 2026 the private pipeline with planning approval held 44,738 units including executive condominiums, of which 20,300 were unsold, and about 57,200 units are expected to complete in coming years, 22,300 of them by 2028. The vacancy rate of completed private homes rose to 7.2% in the third quarter of 2026 from 6.4% a quarter earlier, a cushion that tempers rental pressure.",
+      "sources": [
+        {
+          "title": "Release of 3rd Quarter 2026 real estate statistics",
+          "publisher": "Urban Redevelopment Authority",
+          "url": "https://www.ura.gov.sg/news/media/pr26-73/",
+          "date": "2026-10-23"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "Total population reached 6.21 million at end-June 2026, up 1.6% in a year, against resident growth of only 0.6%, so non-resident inflows drive most population growth. Household formation is outpacing population as average resident household size fell to 3.06 in 2025 from 3.39 in 2015, lifting resident households to 1.49 million even as the resident fertility rate dropped to 0.87.",
+      "sources": [
+        {
+          "title": "Population Trends 2026",
+          "publisher": "Singapore Department of Statistics",
+          "url": "https://www.singstat.gov.sg/publication-resources/population-trends-2026",
+          "date": "2026"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The URA private residential property price index (1Q2009 = 100) is quarterly and since 1Q2015 uses stratified hedonic regression that controls for attributes such as age and unit size, aggregated with five-quarter fixed weights. It draws on caveats lodged at the Singapore Land Authority, IRAS stamp duty data and developer returns, and covers private homes only, not HDB flats.",
+      "sources": [
+        {
+          "title": "Private Residential Property Price Index By Type Of Property, (1st Quarter 2009 = 100), Quarterly",
+          "publisher": "Singapore Department of Statistics via data.gov.sg (source: Urban Redevelopment Authority)",
+          "url": "https://data.gov.sg/datasets/d_da00b36ca8c831322fa0bb2a3378a476/view",
+          "date": "2026-07-24"
+        }
+      ]
+    }
+  ]
+}

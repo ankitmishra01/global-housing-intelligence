@@ -9,3 +9,4 @@ node_modules/
 sync/report.json
 sync/cache/
 .gstack/
+scripts/.q.mjs

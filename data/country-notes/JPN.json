@@ -1,0 +1,58 @@
+{
+  "iso3": "JPN",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Floating-rate loans account for about 80% of Japanese housing loans, with rates tied to banks' short-term prime rates, so each Bank of Japan hike reprices most of the mortgage stock: applied rates on many floating loans rose 0.15 percentage points after July 2024 and a further 0.25 points after January 2025, and now exceed 1%. Payment shock is cushioned by the customary 5-year rule and 125% rule, under which revised instalments over the following five years may not exceed 125% of the previous payment, so higher rates feed into monthly payments with a lag.",
+      "sources": [
+        { "title": "Financial System Report, October 2024", "publisher": "Bank of Japan", "url": "https://www.boj.or.jp/en/research/brp/fsr/data/fsr241024a.pdf", "date": "2024-10-24" },
+        { "title": "Financial System Report, April 2026", "publisher": "Bank of Japan", "url": "https://www.boj.or.jp/en/research/brp/fsr/data/fsr260421a.pdf", "date": "2026-04-21" }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "supports_prices",
+      "text": "Lenders have stretched maturities to keep monthly payments affordable: loans with a maturity at origination above 35 years now make up more than half of new housing loan amounts at regional banks, and those above 40 years more than 10%, with some banks offering 40 to 50 year terms. Longer terms let buyers absorb higher prices, but the Bank of Japan notes rising debt-service ratios and greater exposure to income and rate shocks over the life of the loan.",
+      "sources": [
+        { "title": "Financial System Report, April 2026", "publisher": "Bank of Japan", "url": "https://www.boj.or.jp/en/research/brp/fsr/data/fsr260421a.pdf", "date": "2026-04-21" }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The housing loan tax credit lets borrowers deduct 0.7% of their year-end loan balance from income and resident taxes, for up to 13 years on new homes and 10 years on existing homes as of December 2025, with caps linked to energy performance. The FY2026 Tax Reform Outline approved by the Cabinet on 26 December 2025 extended the scheme's application period from end-2025 to end-2030, sustaining a subsidy to mortgage-financed purchases.",
+      "sources": [
+        { "title": "Japan Mortgage Loan Tax Cut to Be Extended for 5 Yrs", "publisher": "Jiji Press, via Adnkronos", "url": "https://english.adnkronos.com/2025/12/03/japan-mortgage-loan-tax-cut-to-be-extended-for-5-yrs/", "date": "2025-12-03" },
+        { "title": "Key Points of the FY2026 (Reiwa 8) Tax Reform in Japan: Revisions Related to Individual Taxation", "publisher": "HLS Global", "url": "https://hls-global.jp/en/2026/07/13/key-points-of-the-fy2026-reiwa-8-tax-reform-in-japan-2/", "date": "2026-07-13" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "context",
+      "text": "Japan combines a large surplus of existing stock with shrinking new construction: the 2023 Housing and Land Survey counted a record 9.0 million vacant dwellings, a vacancy rate of 13.8%, while housing starts fell 6.5% in 2025 to 740,667 units, a 62-year low, partly because an April 2025 building law revision tied to energy-efficiency rules delayed starts. Jiji also cites weaker sentiment amid rising prices and falling demand from a shrinking population, so a growing vacant stock coexists with fewer new units.",
+      "sources": [
+        { "title": "News Bulletin: 2023 Housing and Land Survey, Basic Tabulation on Dwellings and Households", "publisher": "Statistics Bureau of Japan", "url": "https://www.stat.go.jp/english/info/news/20241030.html", "date": "2024-09-25" },
+        { "title": "Japan Housing Starts Fall to 62-Year Low in 2025", "publisher": "Jiji Press, via Adnkronos", "url": "https://english.adnkronos.com/2026/01/30/japan-housing-starts-fall-to-62-year-low-in-2025/", "date": "2026-01-30" }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "The 2025 census counted 123.05 million people on 1 October 2025, down 3.1 million or 2.5% from 2020, with the rate of decline accelerating. The Japanese population fell by 939,000 in the year to May 2025 while the foreign population rose by 340,000 to 3.65 million, so household formation is increasingly concentrated in large cities and among foreign residents, leaving national demand on a structural downtrend.",
+      "sources": [
+        { "title": "News Bulletin: Preliminary Counts of the 2025 Population Census", "publisher": "Statistics Bureau of Japan", "url": "https://www.stat.go.jp/english/info/news/20260625.html", "date": "2026-06-25" },
+        { "title": "Population Estimates, October 2025 Report", "publisher": "Statistics Bureau of Japan", "url": "https://www.stat.go.jp/data/jinsui/pdf/202510.pdf", "date": "2025-10-20" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "MLIT's Japan Residential Property Price Index is a monthly hedonic (time dummy) index of private transactions in residential land, detached houses and mainly existing condominiums, published nationally and for nine regions, the Tokyo, Nagoya and Osaka metropolitan areas and three prefectures, with base year 2010 equal to 100. Figures lag transactions by about three months and remain preliminary for a further three, and because the condominium component is mainly existing units, it does not capture new-build developer pricing.",
+      "sources": [
+        { "title": "Methodology of JRPPI: Japan Residential Property Price Index", "publisher": "Ministry of Land, Infrastructure, Transport and Tourism", "url": "https://www.mlit.go.jp/common/001360414.pdf", "date": "2020-08" }
+      ]
+    }
+  ]
+}

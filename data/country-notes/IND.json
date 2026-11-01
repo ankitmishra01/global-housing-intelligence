@@ -1,0 +1,90 @@
+{
+  "iso3": "IND",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Since 1 October 2019 Indian banks must link all new floating-rate retail loans, including home loans, to an external benchmark such as the RBI policy repo rate or a Treasury bill yield, and must reset the rate at least once every three months. A repo rate change therefore reaches the instalments of new floating-rate borrowers within one quarter, a shorter lag than under the internal MCLR benchmark it replaced for new loans.",
+      "sources": [
+        {
+          "title": "External Benchmark Based Lending (RBI/2019-20/53)",
+          "publisher": "Reserve Bank of India",
+          "url": "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11677",
+          "date": "2019-09-04"
+        },
+        {
+          "title": "RBI makes External Benchmark Based Interest Rate mandatory for certain categories of loans from October 1, 2019",
+          "publisher": "Reserve Bank of India",
+          "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=48070",
+          "date": "2019-09-04"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "External-benchmark loans made up 64.8 per cent of banks' outstanding floating-rate rupee loans at end-September 2025, up from 62.9 per cent at end-June 2025, while loans still priced off the slower-moving MCLR fell to 32.2 per cent. The steady migration to repo-linked pricing means each easing or tightening cycle now passes through to the existing loan book faster than in earlier cycles.",
+      "sources": [
+        {
+          "title": "Lending and Deposit Rates of Scheduled Commercial Banks, December 2025",
+          "publisher": "Reserve Bank of India",
+          "url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=61932",
+          "date": "2025-12-31"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Under RBI rules set in June 2017, banks may lend up to 90 per cent of property value on individual home loans of up to Rs 30 lakh, 80 per cent on loans of Rs 30 lakh to Rs 75 lakh and 75 per cent above Rs 75 lakh. The tiered caps require larger cash deposits at the upper end of the market, which limits leverage in the metropolitan segments where prices are highest.",
+      "sources": [
+        {
+          "title": "Individual Housing Loans: Rationalisation of Risk-Weights and Loan to Value (LTV) Ratios",
+          "publisher": "Reserve Bank of India",
+          "url": "https://rbi.org.in/SCRIPTs/BS_CircularIndexDisplay.aspx?Id=10995",
+          "date": "2017-06-07"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The Union Cabinet approved Pradhan Mantri Awas Yojana-Urban 2.0 on 9 August 2024 to support one crore urban houses over five years, with an estimated investment of Rs 10 lakh crore and government assistance of Rs 2.3 lakh crore, for households earning up to Rs 9 lakh a year. Its interest subsidy vertical pays 4 per cent on the first Rs 8 lakh of loans up to Rs 25 lakh for homes valued up to Rs 35 lakh, capped at Rs 1.80 lakh, which supports demand and lowers effective borrowing costs in the affordable segment.",
+      "sources": [
+        {
+          "title": "Background Notes on 100 days achievements: Pradhan Mantri Awas Yojana-Urban 2.0",
+          "publisher": "Press Information Bureau, Government of India",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024930405701.pdf",
+          "date": "2024-09-30"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "Only 35.4 per cent of India's population lived in urban areas in 2024, against 58.8 per cent in Indonesia and 76.9 per cent in Malaysia. Continued urbanisation from this low base implies sustained growth in urban household formation, a structural source of housing demand in the major cities.",
+      "sources": [
+        {
+          "title": "Urban population (% of total population), SP.URB.TOTL.IN.ZS",
+          "publisher": "World Bank",
+          "url": "https://api.worldbank.org/v2/country/IND;IDN;PHL;MYS/indicator/SP.URB.TOTL.IN.ZS?format=json&date=2024&per_page=20",
+          "date": "2024"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The RBI all-India House Price Index is a quarterly index built from transaction-level data supplied by property registration authorities in 18 cities, from Mumbai, Delhi and Bengaluru to Kochi and Nagpur, with base 2022-23 = 100. It covers registered transactions in major cities only, so it does not represent smaller towns or rural housing.",
+      "sources": [
+        {
+          "title": "All-India House Price Index (HPI) for Q1:2026-27",
+          "publisher": "Reserve Bank of India",
+          "url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63436",
+          "date": "2026-08-24"
+        }
+      ]
+    }
+  ]
+}

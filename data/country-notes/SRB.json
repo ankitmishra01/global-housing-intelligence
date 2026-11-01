@@ -1,0 +1,76 @@
+{
+  "iso3": "SRB",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Serbian housing loans are commonly euro-indexed, and variable-rate loans are priced as a margin over EURIBOR (the National Bank of Serbia's own 2023 illustration was 6M EURIBOR plus 3%), so ECB rate moves pass directly to borrowers. When EURIBOR rose, the NBS capped rates on first-home variable loans up to EUR 200,000 at 4.08% for loans approved by July 2022, limited new variable-loan margins to 1.1% and fixed rates to 5.03%, from 13 September 2023 to 31 December 2024; those caps have since lapsed.",
+      "sources": [
+        {
+          "title": "Limitations on housing loans interest rates",
+          "publisher": "Karanović & Partners",
+          "url": "https://www.karanovicpartners.com/news/limitations-on-housing-loans-interest-rates/",
+          "date": "2023-09"
+        },
+        {
+          "title": "Narodna banka Srbije: kamatna stopa za stambene kredite privremeno ograničena",
+          "publisher": "Vreme",
+          "url": "https://vreme.com/en/vesti/narodna-banka-srbije-kamatna-stopa-za-stambene-kredite-privremeno-ogranicena/",
+          "date": "2023-09-11"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "context",
+      "text": "To contain risks from the high share of foreign currency-denominated and indexed lending, NBS rules permit only euro indexation for household loans and cap mortgage loans at 80% of the certified property value, rising to 90% for a first home or state-supported groups and 99% under the government programme for young first-time buyers. As of the consolidated text amended in 2024, unindexed dinar loans are exempt from these limits, which gives local-currency lending a regulatory advantage.",
+      "sources": [
+        {
+          "title": "Decision on measures for safeguarding and strengthening stability of the financial system",
+          "publisher": "National Bank of Serbia",
+          "url": "https://nbs.rs/documents-eng/propisi/propisi-fs/measures_fin_system.pdf",
+          "date": "2024-12"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "context",
+      "text": "Serbia completed 36,390 dwellings in 2025, according to the Statistical Office, and the average price of new dwellings sold in urban settlements ranged in the first half of 2024 from RSD 61,013 per square metre in Bujanovac to RSD 520,616 in Belgrade's Savski venac, against a national average of RSD 215,481. The spread shows that new supply and price pressure are concentrated in central Belgrade rather than spread across the country.",
+      "sources": [
+        {
+          "title": "Construction",
+          "publisher": "Statistical Office of the Republic of Serbia",
+          "url": "https://www.stat.gov.rs/en-us/oblasti/gradjevinarstvo/",
+          "date": "2026"
+        },
+        {
+          "title": "Dwellings",
+          "publisher": "Statistical Office of the Republic of Serbia",
+          "url": "https://www.stat.gov.rs/en-us/oblasti/gradjevinarstvo/stanovi/",
+          "date": "2024"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Since 2019 the Statistical Office has computed the average price of newly built dwellings from Republic Geodetic Authority administrative data covering all new dwellings sold in urban settlements, published by half-year as an average price per square metre rather than a quality-adjusted index. The Republic Geodetic Authority separately publishes market reports and its own real estate price index from the national register of property prices, so headline figures depend on which source is used.",
+      "sources": [
+        {
+          "title": "Dwellings",
+          "publisher": "Statistical Office of the Republic of Serbia",
+          "url": "https://www.stat.gov.rs/en-us/oblasti/gradjevinarstvo/stanovi/",
+          "date": "2024"
+        },
+        {
+          "title": "Market reports",
+          "publisher": "Republic Geodetic Authority of Serbia",
+          "url": "https://www.rgz.gov.rs/%D0%B8%D0%B7%D0%B2%D0%B5%D1%88%D1%82%D0%B0%D1%98%D0%B8-%D1%81%D0%B0-%D1%82%D1%80%D0%B6%D0%B8%D1%88%D1%82%D0%B0",
+          "date": "2026"
+        }
+      ]
+    }
+  ]
+}

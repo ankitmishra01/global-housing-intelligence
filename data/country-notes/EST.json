@@ -1,0 +1,96 @@
+{
+  "iso3": "EST",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Estonian housing loans are priced as a margin over Euribor, with the six-month rate serving as the base for the majority of loans, so ECB moves reach monthly payments within months rather than years. Eesti Pank reported in 2026 that the share of borrowers at the 45 to 50 percent DSTI limit rose over the preceding half year, and that loans with a zero down payment, typically secured on additional property, reached 27 percent of new lending in 2025.",
+      "sources": [
+        {
+          "title": "Euribor is rising and interest margins are falling",
+          "publisher": "Eesti Pank",
+          "url": "https://www.eestipank.ee/en/press/euribor-rising-and-interest-margins-are-falling-27102022",
+          "date": "2022-10-27"
+        },
+        {
+          "title": "Financial Stability Review 1/2026",
+          "publisher": "Eesti Pank",
+          "url": "https://haldus.eestipank.ee/sites/default/files/2026-05/fsy1_2026_eng.pdf",
+          "date": "2026-05-26"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since March 2015 Eesti Pank has capped new housing loans at an 85 percent loan-to-value ratio (90 percent with a state guarantee), a 50 percent debt-service-to-income ratio and a 30-year maturity, with up to 15 percent of quarterly lending allowed to breach the limits. From April 2024 the DSTI test uses the higher of the contract rate or 6 percent, replacing an earlier contract-rate-plus-two-points buffer, which modestly raised borrowing capacity while rates were high.",
+      "sources": [
+        {
+          "title": "Requirements for housing loans",
+          "publisher": "Eesti Pank",
+          "url": "https://www.eestipank.ee/en/financial-stability/requirements-housing-loans",
+          "date": "2015-03-01"
+        },
+        {
+          "title": "Eesti Pank is amending the requirements for banks regulating the issuing of new housing loans",
+          "publisher": "Eesti Pank",
+          "url": "https://www.eestipank.ee/en/press/eesti-pank-amending-requirements-banks-regulating-issuing-new-housing-loans-26012024",
+          "date": "2024-01-26"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The 2026 income tax reform removed the so-called tax hump and applied a uniform 700 euro monthly tax-free allowance to everyone of working age, lifting net incomes and therefore the loan size permitted under the DSTI cap. Eesti Pank estimates the change raises the volume of new housing loans by about 6 percent, mostly by bringing lower-income households into the market.",
+      "sources": [
+        {
+          "title": "Financial Stability Review 1/2026",
+          "publisher": "Eesti Pank",
+          "url": "https://haldus.eestipank.ee/sites/default/files/2026-05/fsy1_2026_eng.pdf",
+          "date": "2026-05-26"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Developers have continued to bring substantial new housing to market despite modest demand, and Eesti Pank notes that the resulting stock of completed apartments helps mitigate the risk of excessive price growth. The average Tallinn apartment price has held near 3,000 euros per square metre for several years, while the central bank's model put national overvaluation at 3 to 11 percent in 2025.",
+      "sources": [
+        {
+          "title": "Financial Stability Review 1/2026",
+          "publisher": "Eesti Pank",
+          "url": "https://haldus.eestipank.ee/sites/default/files/2026-05/fsy1_2026_eng.pdf",
+          "date": "2026-05-26"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "context",
+      "text": "Estonia's population reached 1.36 million at the start of 2026, about 50,000 more than in 2015, growth driven by immigration and Ukrainian refugees rather than births, and concentrated in Harju and Tartu counties and Tallinn's satellite towns. Households grew 12 percent over the decade as single-person households rose to 44 percent, but the cohort aged 20 to 29 shrank by about 40,000, thinning the pool of first-time buyers.",
+      "sources": [
+        {
+          "title": "Financial Stability Review 1/2026",
+          "publisher": "Eesti Pank",
+          "url": "https://haldus.eestipank.ee/sites/default/files/2026-05/fsy1_2026_eng.pdf",
+          "date": "2026-05-26"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The official house price index is compiled quarterly by Statistics Estonia from Land Board transaction records, covering both new and existing dwellings bought by households, with land included and VAT included on new dwellings. It is a national, stratified Laspeyres-type index without hedonic adjustment, so shifts in the mix of dwellings sold can move the headline figure.",
+      "sources": [
+        {
+          "title": "House price index (prc_hpi): national reference metadata, Estonia",
+          "publisher": "Eurostat / Statistics Estonia",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_ee.htm",
+          "date": "2026-06-30"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "iso3": "ARE",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "UAE property is bought mostly with cash: Dubai Land Department data show 83.4% of residential transactions in 2024 were non-mortgaged, and 60% of transaction value in Abu Dhabi was non-mortgaged. Direct residential lending was only 4.6% of banks' gross loans in 2024, so the policy rate, which tracks the US Federal Reserve under the dirham peg, has limited direct traction on prices; liquidity and capital inflows matter more.",
+      "sources": [{ "title": "United Arab Emirates: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/327)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/12/08/united-arab-emirates-2025-article-iv-consultation-press-release-staff-report-and-statement-572397", "date": "2025-12-08" }]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Central Bank of the UAE rules cap loan-to-value at 85% for UAE nationals' first homes, 65% for subsequent properties and 50% for off-plan purchases, with higher down payments for expatriates and for homes above AED 5 million; debt-burden ratios are capped at 60% of gross salary for nationals and 50% for expatriates, loans at 8 and 7 years of income respectively, and tenors at 25 years (as described by the IMF in December 2025). The off-plan cap limits bank financing of speculative presales.",
+      "sources": [{ "title": "United Arab Emirates: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/327)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/12/08/united-arab-emirates-2025-article-iv-consultation-press-release-staff-report-and-statement-572397", "date": "2025-12-08" }]
+    },
+    {
+      "topic": "demand",
+      "effect": "supports_prices",
+      "text": "Dubai prices rose 117.6% for villas and 46.2% for apartments between 2020Q1 and 2025Q2, driven by population and non-oil growth, international investors and structural reforms such as golden visas; the IMF estimates real house prices are above trend, with the cycle tracking non-oil GDP and liquidity. In Abu Dhabi, buyers living outside the UAE rose from 4% of sales value in 2019 to 16% in 2024, and 81% of units are renter-occupied, making the market investor-driven.",
+      "sources": [{ "title": "United Arab Emirates: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/327)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/12/08/united-arab-emirates-2025-article-iv-consultation-press-release-staff-report-and-statement-572397", "date": "2025-12-08" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "The UAE grants a five-year golden residence visa to real estate investors with minimum capital of AED 2 million, tying residency to property ownership and sustaining foreign demand for higher-value units.",
+      "sources": [{ "title": "Golden visa", "publisher": "The United Arab Emirates' Government portal (u.ae)", "url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa", "date": "2026" }]
+    },
+    {
+      "topic": "supply",
+      "effect": "restrains_prices",
+      "text": "Dubai's planned completions are expected to jump to about 83,000 units in 2026 and 99,000 in 2027, against 29,000 delivered in 2024, which the IMF says could help balance demand; however, only 62% of units planned for 2025 had been delivered by October 31, 2025, so actual handovers usually fall short of plans. In Abu Dhabi, off-plan projects made up 74% of sales value in 2024.",
+      "sources": [{ "title": "United Arab Emirates: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/327)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/12/08/united-arab-emirates-2025-article-iv-consultation-press-release-staff-report-and-statement-572397", "date": "2025-12-08" }]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "The price series shown is the Dubai Land Department's official quarterly residential sales price index (2020 = 100), which covers Dubai only, not Abu Dhabi or the other emirates, and is published a few quarters in arrears, so it lags registered transactions.",
+      "sources": [{ "title": "Dubai Real Estate Data: DLD residential sales price index", "publisher": "Dubai Real Estate Data, based on Dubai Land Department open data", "url": "https://www.dubairealestatedata.com/", "date": "2026" }]
+    }
+  ]
+}

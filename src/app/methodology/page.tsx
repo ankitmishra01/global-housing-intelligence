@@ -149,6 +149,16 @@ export default async function Methodology() {
         <p className="note">Prices must fall when rates rise; an estimate counts only when it is statistically clear and correctly signed, and the last reliable effect is held forward as a level shift. Rents keep the association, estimated freely: higher rates can push households into renting.</p>
       </section>
 
+      <section className="section" id="analysis">
+        <div className="section-title"><div><p className="eyebrow">Written analysis</p><h2>How each country page explains its numbers</h2></div></div>
+        <div className="prose">
+          <p>The analysis beside each chart is generated from the stored figures, so every number in it can be traced to the database. Three layers give it country-specific reasoning.</p>
+          <p><strong>What drives the projection.</strong> The ridge model&apos;s prediction is additive: an intercept, the average outcome across the pooled history, plus one term per driver, the driver&apos;s standardised distance from the sample mean times its coefficient. Each country page splits its 3- and 10-year projections into these parts (scaled so they sum to the headline percentage) and names the drivers that lift or weigh on the path, measured against the typical market year. These shares describe what the model leans on, not proven causes. Where a driver&apos;s sign runs against intuition, the page says so rather than inventing a mechanism.</p>
+          <p><strong>Price history in phases.</strong> Turning points are found with an 8% reversal rule, so the text describes booms and corrections (with nominal changes where inflation explains a real fall), not annual noise.</p>
+          <p><strong>Market structure and policy.</strong> Curated notes on how mortgages reset, lending rules, housing programmes, supply, demand and what the official index covers. Each note cites the official or reputable source it was checked against, and the sources are listed under the section that uses them. Notes are tagged by how they bear on the outlook (supporting or restraining prices, raising or lowering rate sensitivity), and the outlook weighs that balance against the projection.</p>
+        </div>
+      </section>
+
       <section className="section" id="live">
         <div className="section-title"><div><p className="eyebrow">Live layer</p><h2>Daily adjustments from rates and events</h2></div><p>Every morning a cloud job reads policy rates, mortgage rates, news events, disaster alerts, exchange rates and land-registry sales, then adjusts the stored projections.</p></div>
         <div className="grid-2">

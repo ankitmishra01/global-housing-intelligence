@@ -1,0 +1,42 @@
+{
+  "iso3": "COL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "Colombian mortgages come in two forms: peso loans with a fixed rate and fixed instalment for the life of the loan, where the bank bears inflation risk, and loans denominated in UVR, a unit indexed to consumer prices, whose instalments rise with inflation and shift that risk to the borrower. Neither resets with the policy rate, so monetary policy acts mainly through the pricing of new loans, while high inflation raises payments on the UVR book.",
+      "sources": [{ "title": "Cómo pasar su crédito hipotecario de UVR a tasa fija", "publisher": "La República", "url": "https://www.larepublica.co/finanzas/como-pasar-su-credito-hipotecario-de-uvr-a-tasa-fija-2323256", "date": "2015-11-17" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Under the Pacto por el Crédito, an agreement between the national government and the banking association Asobancaria, banks committed to grow the housing loan portfolio by 40% in nominal terms over 18 months from September 2024; the IMF notes mortgage credit and house prices have trended up since 2024 and called for closer monitoring of mortgage lending.",
+      "sources": [{ "title": "Colombia: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 25/280)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2025/09/29/colombia-2025-article-iv-consultation-press-release-staff-report-and-statement-by-the-570803", "date": "2025-09-29" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "National subsidies underpin demand for new social-interest housing (VIS): Mi Casa Ya grants down-payment subsidies of 20 to 30 monthly minimum wages to households without property, but offered only 10,919 places for all of 2025 (as of May 2025). In October 2026 the new government presented Mi Casa Milagro, with subsidies of up to 30 minimum wages for new VIS and VIP homes allocated first come, first served.",
+      "sources": [
+        { "title": "Mi Casa Ya: Subsidio Familiar de Vivienda Nueva", "publisher": "Ministerio de Vivienda, Ciudad y Territorio", "url": "https://minvivienda.gov.co/viceministerio-de-vivienda/mi-casa-ya", "date": "2025-05-19" },
+        { "title": "En el Congreso de Camacol, MinVivienda convoca a constructores y autoridades territoriales a trabajar juntos para reactivar el sector", "publisher": "Ministerio de Vivienda, Ciudad y Territorio", "url": "https://minvivienda.gov.co/sala-de-prensa/en-el-congreso-de-camacol-minvivienda-convoca-constructores-y-autoridades-territoriales-trabajar-juntos-para-reactivar-el-sector", "date": "2026-10-23" }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "The earthquake of 10 August 2026 damaged 203,301 homes and destroyed 51,778 across 16 departments and 498 municipalities, according to the housing ministry, which has earmarked about COP 1.7 trillion for reconstruction in 2026 and estimates COP 19.7 trillion of housing needs over four years. Replacing lost stock will absorb construction capacity and add to demand for new homes in affected regions.",
+      "sources": [
+        { "title": "En el Congreso de Camacol, MinVivienda convoca a constructores y autoridades territoriales a trabajar juntos para reactivar el sector", "publisher": "Ministerio de Vivienda, Ciudad y Territorio", "url": "https://minvivienda.gov.co/sala-de-prensa/en-el-congreso-de-camacol-minvivienda-convoca-constructores-y-autoridades-territoriales-trabajar-juntos-para-reactivar-el-sector", "date": "2026-10-23" },
+        { "title": "Gobierno destinará $1,7 billones a la reconstrucción de vivienda y proyecta entregar hasta 5.000 casas a familias damnificadas por el terremoto", "publisher": "Ministerio de Vivienda, Ciudad y Territorio", "url": "https://www.minvivienda.gov.co/sala-de-prensa/gobierno-destinara-17-billones-la-reconstruccion-de-vivienda-y-proyecta-entregar-hasta-5000-casas-familias-damnificadas-por-el-terremoto", "date": "2026-10-30" }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Banco de la República's existing-home price index (IPVU) is a weighted repeat-sales index in the Case-Shiller tradition, built from successive appraisals of the same dwellings supplied by major mortgage lenders. Because it relies on appraisals of mortgaged homes it moves more smoothly than other Colombian price indices and does not capture cash purchases.",
+      "sources": [{ "title": "Índice de precios de la vivienda usada en Colombia (IPVU): método de ventas repetidas (Borradores de Economía No. 368)", "publisher": "Banco de la República", "url": "https://ideas.repec.org/p/bdr/borrec/368.html", "date": "2006" }]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "iso3": "ISL",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "lowers_rate_sensitivity",
+      "text": "CPI-indexed loans made up 54 percent of outstanding household debt as of mid-2026, according to the IMF. Because indexed loans carry a lower real rate and spread inflation into the principal rather than the monthly payment, they cushion borrowers from high nominal policy rates and weaken the transmission of Central Bank of Iceland tightening to house prices.",
+      "sources": [
+        {
+          "title": "Iceland: 2026 Article IV Consultation, Press Release and Staff Report (IMF Country Report No. 26/208)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1islea2026001.pdf",
+          "date": "2026-07"
+        }
+      ]
+    },
+    {
+      "topic": "mortgage_market",
+      "effect": "restrains_prices",
+      "text": "A Supreme Court ruling in October 2025 on the legality of interest rate terms in variable-rate mortgages led many lenders to withdraw such loans, tightening financial conditions. As of mid-2026 the IMF reports that the range of mortgage products remains narrower and rates on new indexed mortgages higher than before the ruling.",
+      "sources": [
+        {
+          "title": "Iceland: 2026 Article IV Consultation, Press Release and Staff Report (IMF Country Report No. 26/208)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1islea2026001.pdf",
+          "date": "2026-07"
+        }
+      ]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "Since 1 December 2021 debt service on new consumer mortgages has been capped at 35 percent of net income, or 40 percent for first-time buyers, calculated on an assumed maximum maturity of 30 years for indexed and 40 years for non-indexed loans. In response to the 2025 ruling the central bank eased the regime, raising the first-time buyer loan-to-value limit from 85 to 90 percent and the share of lending allowed to exceed the DSTI cap from 5 to 10 percent, and in December 2025 extended the rules to joint-ownership schemes backed by construction-company funds.",
+      "sources": [
+        {
+          "title": "Notification of a measure: maximum debt service to income ratios for consumer mortgages, Iceland",
+          "publisher": "European Systemic Risk Board / Central Bank of Iceland",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification20211208_DSTI_IS~fbcab60840.eng.pdf",
+          "date": "2021-12-08"
+        },
+        {
+          "title": "Iceland: 2026 Article IV Consultation, Press Release and Staff Report (IMF Country Report No. 26/208)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1islea2026001.pdf",
+          "date": "2026-07"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "restrains_prices",
+      "text": "As of 2026 the government's housing package aims to expand supply through a new residential district in Reykjavik, simpler building regulations and municipal surcharges on vacant urban lots, while curbing speculative demand by narrowing capital-gains exemptions and rental-income credits for multiple-property owners. It also commits to reducing the weight of index-linked loans in an orderly manner, which over time would make household budgets more sensitive to policy rates.",
+      "sources": [
+        {
+          "title": "Iceland: 2026 Article IV Consultation, Press Release and Staff Report (IMF Country Report No. 26/208)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1islea2026001.pdf",
+          "date": "2026-07"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "Nominal house prices rose modestly in 2025, but real prices turned negative in late 2025 and early 2026 as elevated interest rates and slower immigration weighed on demand and rising inventories pressed on prices, particularly for new construction. The IMF judged prices to be broadly in line with fundamentals as of mid-2026, though affordability remains stretched.",
+      "sources": [
+        {
+          "title": "Iceland: 2026 Article IV Consultation, Press Release and Staff Report (IMF Country Report No. 26/208)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/-/media/files/publications/cr/2026/english/1islea2026001.pdf",
+          "date": "2026-07"
+        }
+      ]
+    }
+  ]
+}

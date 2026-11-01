@@ -1,0 +1,36 @@
+{
+  "iso3": "ISR",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Since the 2023 conflict, developers have sold most new homes on presale terms with delivery beyond two years, deposits of often 10% to 20% and bank balloon loans covering a further 30% to 40%, with developers paying the interest until handover; the balloon share of new mortgage origination rose from about 5% in early 2022 to over 20% by late 2024. These loans must be repaid or converted into standard mortgages on completion, shifting interest and refinancing risk onto households at prevailing rates.",
+      "sources": [{ "title": "Israel: 2026 Article IV Consultation, Staff Report (IMF Country Report No. 26/161)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2026/06/30/israel-2026-article-iv-consultation-press-release-staff-report-and-statement-by-the-577389", "date": "2026-07-01" }]
+    },
+    {
+      "topic": "macroprudential",
+      "effect": "restrains_prices",
+      "text": "On top of long-standing limits on loan-to-value, payment-to-income, maturity and the adjustable-rate share of mortgages, the Bank of Israel in April 2025 capped balloon loans at 10% of quarterly mortgage origination and imposed a 150% risk weight on projects where more than 25% of units are presold with reduced deposits, alongside a 1% capital surcharge on housing loans and a 22% cap on exposure to construction and real estate. The IMF reports these steps reduced subsidised presales and slowed balloon lending.",
+      "sources": [{ "title": "Israel: 2026 Article IV Consultation, Staff Report (IMF Country Report No. 26/161)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2026/06/30/israel-2026-article-iv-consultation-press-release-staff-report-and-statement-by-the-577389", "date": "2026-07-01" }]
+    },
+    {
+      "topic": "supply",
+      "effect": "supports_prices",
+      "text": "Israel's long-standing supply constraints intensified after October 2023 because Palestinian workers, about a third of the pre-conflict construction workforce, were replaced only slowly by Israeli and foreign labour, creating project backlogs and delayed completions. The IMF also points to fiscal disincentives for residential construction at the local-authority level as a structural brake on supply.",
+      "sources": [{ "title": "Israel: 2026 Article IV Consultation, Staff Report (IMF Country Report No. 26/161)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2026/06/30/israel-2026-article-iv-consultation-press-release-staff-report-and-statement-by-the-577389", "date": "2026-07-01" }]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "After prices rose by nearly 8% in 2024 on developer incentives, security-driven shifts in preferences and renewed investor and foreign demand, the market began to cool after the April 2025 measures, with slower price growth and transactions and a rising inventory of new units for sale, as of the IMF's 2026 assessment.",
+      "sources": [{ "title": "Israel: 2026 Article IV Consultation, Staff Report (IMF Country Report No. 26/161)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2026/06/30/israel-2026-article-iv-consultation-press-release-staff-report-and-statement-by-the-577389", "date": "2026-07-01" }]
+    },
+    {
+      "topic": "policy",
+      "effect": "context",
+      "text": "Bank credit to real estate exceeded half of total bank credit as of October 2025, which makes housing a central financial-stability channel; the IMF has cautioned against a government proposal to subsidise existing mortgages, arguing it would weaken monetary transmission, be regressive and raise moral hazard while delinquencies remain low.",
+      "sources": [{ "title": "Israel: 2026 Article IV Consultation, Staff Report (IMF Country Report No. 26/161)", "publisher": "International Monetary Fund", "url": "https://www.imf.org/en/publications/cr/issues/2026/06/30/israel-2026-article-iv-consultation-press-release-staff-report-and-statement-by-the-577389", "date": "2026-07-01" }]
+    }
+  ]
+}

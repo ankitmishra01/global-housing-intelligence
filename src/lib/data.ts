@@ -1,4 +1,5 @@
 import "server-only";
+import notesFallback from "../../data/derived/country-notes.json";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { connect } from "../../lib/db.js";
@@ -325,4 +326,18 @@ export const citySummaries = cache(async (iso3: string): Promise<CitySummary[]> 
     });
   }
   return out.sort((a, b) => a.name.localeCompare(b.name));
+});
+
+// ── Country notes: curated, sourced context (Turso table country_notes; the combined file in
+// the repo stands in while the table is empty, e.g. when database writes were blocked) ──
+export type NoteSource = { title: string; publisher?: string; url: string; date?: string };
+export type CountryNote = { topic: string; effect: string; text: string; sources: NoteSource[] };
+export const countryNotes = cache(async (iso3: string): Promise<{ asOf: string | null; notes: CountryNote[] }> => {
+  const code = iso3.toUpperCase();
+  try {
+    const list = await rows<{ topic: string; effect: string; text: string; sources: string; as_of: string | null }>("SELECT topic, effect, text, sources, as_of FROM country_notes WHERE country = ? ORDER BY idx", [code]);
+    if (list.length) return { asOf: list[0].as_of, notes: list.map((r) => ({ topic: r.topic, effect: r.effect, text: r.text, sources: JSON.parse(r.sources) })) };
+  } catch { /* table not created yet */ }
+  const file = (notesFallback as Record<string, { asOf: string; notes: CountryNote[] }>)[code];
+  return file ? { asOf: file.asOf, notes: file.notes } : { asOf: null, notes: [] };
 });

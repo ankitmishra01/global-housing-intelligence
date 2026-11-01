@@ -1,0 +1,58 @@
+{
+  "iso3": "ZAF",
+  "asOf": "2026-11-01",
+  "notes": [
+    {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "Most South African mortgages carry variable rates, so changes in the repo rate pass through directly to household instalments; as rates fell, the household debt-service-to-disposable-income ratio declined to 8.5% in 2025Q3, close to its pre-pandemic average and well below the 17% peer average. Residential mortgages account for close to a quarter of bank loans, which makes the housing market an important channel of monetary transmission.",
+      "sources": [
+        {
+          "title": "South Africa: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 26/34)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2026/02/10/south-africa-2025-article-iv-consultation-press-release-staff-report-and-statement-by-the-573842",
+          "date": "2026-02-11"
+        }
+      ]
+    },
+    {
+      "topic": "demand",
+      "effect": "restrains_prices",
+      "text": "The South African Reserve Bank describes the residential market as resilient on price and market-strength indicators, but residential mortgage defaults have kept trending upwards since the start of 2023 despite policy-rate cuts, signalling ongoing household financial strain (as of November 2025). Weak household finances cap how far lower rates can revive buyer demand.",
+      "sources": [
+        {
+          "title": "Financial Stability Review, Second Edition 2025",
+          "publisher": "South African Reserve Bank",
+          "url": "https://www.resbank.co.za/content/dam/sarb/publications/reviews/finstab-review/2025/second-edition/Second%20Edition%202025%20Financial%20Stability%20Review.pdf",
+          "date": "2025-11"
+        }
+      ]
+    },
+    {
+      "topic": "supply",
+      "effect": "context",
+      "text": "The legacy of spatial inequality keeps much low-income housing far from jobs, with transport costs absorbing 40% to 85% of labour income for affected households; the IMF recommends rental subsidies and mortgage assistance, incentives for affordable housing in well-located urban areas, zoning reform, strategic land release and faster permitting.",
+      "sources": [
+        {
+          "title": "South Africa: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 26/34)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2026/02/10/south-africa-2025-article-iv-consultation-press-release-staff-report-and-statement-by-the-573842",
+          "date": "2026-02-11"
+        }
+      ]
+    },
+    {
+      "topic": "data",
+      "effect": "context",
+      "text": "Statistics South Africa has been establishing a new official residential property price index with IMF technical assistance through AFRITAC South, first disseminated in preliminary form in March 2023, so the official series is short and still maturing.",
+      "sources": [
+        {
+          "title": "South Africa: 2025 Article IV Consultation, Staff Report (IMF Country Report No. 26/34)",
+          "publisher": "International Monetary Fund",
+          "url": "https://www.imf.org/en/publications/cr/issues/2026/02/10/south-africa-2025-article-iv-consultation-press-release-staff-report-and-statement-by-the-573842",
+          "date": "2026-02-11"
+        }
+      ]
+    }
+  ]
+}
