@@ -77,6 +77,14 @@ Where a source publishes prices by dwelling type, each type gets its own history
 
 ![Buyer index league table](docs/screenshots/indexes.png)
 
+### Scenarios: rates, unemployment, wages and growth together
+
+![Scenario builder for Canada](docs/screenshots/scenario.png)
+
+### Live adjustments from rates and events
+
+![Live page: rate moves, detected events and the event library](docs/screenshots/live.png)
+
 | Route | What you get |
 |---|---|
 | `/` | World map of projected 10-year real price change, strongest and weakest outlooks, persona leaders, risk register |
