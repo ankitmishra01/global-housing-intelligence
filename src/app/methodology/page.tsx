@@ -22,6 +22,14 @@ const SOURCES: { name: string; series: string; provides: string; url: string }[]
   { name: "Zillow Research", series: "ZHVI, ZORI", provides: "US typical home values for condos/co-ops and single-family homes, and typical market rents.", url: "https://www.zillow.com/research/data/" },
   { name: "HM Land Registry UK House Price Index", series: "UK HPI", provides: "UK and nation-level average prices by type: detached, semi-detached, terraced, flats.", url: "https://landregistry.data.gov.uk/app/ukhpi" },
   { name: "Australian Bureau of Statistics", series: "RES_DWELL_ST", provides: "Mean price of residential dwellings, national and by state.", url: "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/total-value-dwellings" },
+  { name: "ECB MFI interest rate statistics", series: "MIR", provides: "Rates on new loans to households for house purchase, by euro-area country. Used as the mortgage rate for 21 euro members.", url: "https://data.ecb.europa.eu/" },
+  { name: "Bank of England database", series: "IUMBV34", provides: "Quoted 2-year fixed mortgage rate at 75% loan-to-value (UK mortgage rate).", url: "https://www.bankofengland.co.uk/boeapps/database/" },
+  { name: "OECD household sector accounts and Statistics Canada", series: "DSD_NASEC10, 11-10-0190", provides: "Household disposable income (OECD mean per household) and Canadian median income, used for price-to-income and mortgage-to-income. The GDP-per-head proxy is used only where neither exists, and every figure is labelled with its basis.", url: "https://data-explorer.oecd.org/" },
+  { name: "OECD labour force statistics and BIS debt service ratios", series: "DSD_LFS, AV_AN_WAGE, WS_DSR", provides: "Monthly unemployment (Sahm-style trigger), real wages and household debt-service ratios for mortgage stress.", url: "https://data-explorer.oecd.org/" },
+  { name: "INSEE, INE, CSO, CBS, SCB, SSB, BCB", series: "IPLA-IPLNA, 80270, HPM09/HPM05, 85773NED/85792NED, FastpiPSRegKv, 07221, SGS 21340", provides: "National agencies of France, Spain, Ireland, the Netherlands, Sweden, Norway and Brazil: regional and dwelling-type price indexes, sales volumes and prices.", url: "https://www.insee.fr/" },
+  { name: "Dubai Real Estate Data (DLD open data, CC BY 4.0)", series: "market, rents, yields", provides: "Dubai registered sales, median AED per sq ft, the DLD price index, new-contract rents and gross yields. Credit: Dubai Real Estate Data (dubairealestatedata.com), based on Dubai Land Department open data.", url: "https://www.dubairealestatedata.com/" },
+  { name: "GDELT, GDACS and ECB reference rates", series: "GDELT 1.0 events, GDACS alerts, Frankfurter", provides: "Daily inputs to the live layer: conflict news intensity, disaster alerts and exchange-rate moves.", url: "https://www.gdeltproject.org/" },
+  { name: "Jarociński–Karadi monetary policy shocks", series: "Fed and ECB shock series", provides: "Identified monetary-policy shocks for the causal rate estimate (Jarociński and Karadi, 2020, AEJ: Macroeconomics).", url: "https://github.com/marekjarocinski" },
 ];
 
 const TARGET_NAMES: Record<string, string> = { real_price: "Real house prices", real_rent: "Real rents", type_price: "Prices by dwelling type" };
@@ -65,10 +73,10 @@ export default async function Methodology() {
           </div>
           <div className="panel">
             <h3 style={{ marginTop: 0 }}>Baselines and the honesty rule</h3>
-            <p>Two baselines compete with the model: <strong>no real change</strong>, and the country&apos;s <strong>historical real trend</strong> (mean annual growth over up to 20 prior years).</p>
+            <p>Three baselines compete with the model: <strong>no real change</strong>, the country&apos;s <strong>historical real trend</strong> (up to 20 prior years), and a <strong>long-run anchor</strong> (up to 30 years of real growth, shrunk toward the cross-country mean). A <strong>blend</strong> of model and anchor, and a shorter-horizon model <strong>held flat</strong> beyond its horizon, are also candidates.</p>
             <p>Rolling-origin backtests run from 1995. At each test year the model is trained only on outcomes already observed by then. The method is chosen on the earlier half of the test years and its error is quoted on the later half it never saw.</p>
             <ul>
-              <li>The model is kept only if it beats the better baseline on both halves.</li>
+              <li>A model candidate is kept only if it wins on the earlier half and beats every baseline by at least 2% on the held-out half.</li>
               <li>Otherwise the better baseline is shown, labelled &quot;no model skill, showing baseline&quot;.</li>
               <li>A trend baseline that loses to no-change on the held-out years falls back to no-change.</li>
             </ul>
@@ -139,6 +147,33 @@ export default async function Methodology() {
           );
         })()}
         <p className="note">Prices must fall when rates rise; an estimate counts only when it is statistically clear and correctly signed, and the last reliable effect is held forward as a level shift. Rents keep the association, estimated freely: higher rates can push households into renting.</p>
+      </section>
+
+      <section className="section" id="live">
+        <div className="section-title"><div><p className="eyebrow">Live layer</p><h2>Daily adjustments from rates and events</h2></div><p>Every morning a cloud job reads policy rates, mortgage rates, news events, disaster alerts, exchange rates and land-registry sales, then adjusts the stored projections.</p></div>
+        <div className="grid-2">
+          <div className="panel">
+            <h3 style={{ marginTop: 0 }}>Rates</h3>
+            <p>The change in each country&apos;s policy rate since its projection origin year is applied through the same sensitivity as the rate toggle. Gulf currencies pegged to the US dollar use the US policy rate, labelled as a proxy.</p>
+            <h3>Events</h3>
+            <p>Armed conflict escalations, regional conflict spillovers, Red-alert natural disasters, currency crises and sales slumps are detected automatically. An event moves a projection only if past episodes of its class show a statistically clear effect (at least 1.64 standard errors) relative to what the model expected; otherwise it is shown without an adjustment. Long-running wars already in the training data apply no extra shift.</p>
+          </div>
+          <div className="panel">
+            <h3 style={{ marginTop: 0 }}>Sales slumps</h3>
+            <p>A slump is registered sales over three months at least 25% below a year earlier, and at least 10% below two years earlier so tax-holiday reversals are not counted. Calibrated on {(run?.summary as unknown as { slumpEpisodes?: unknown[] })?.slumpEpisodes?.length ?? "past"} episodes in the UK, the Netherlands and Ireland; the effect is listed on the <a href="/live">live page</a>.</p>
+            <h3>Scenarios</h3>
+            <p>The <a href="/scenario">scenario builder</a> combines the rate sensitivity with pooled sensitivities to unemployment, real wages and real GDP growth. Only statistically clear effects count; the others are set to zero and listed. These are model-implied associations, not causal forecasts.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="affordability">
+        <div className="section-title"><div><p className="eyebrow">Affordability</p><h2>Income ratios and mortgage stress</h2></div></div>
+        <div className="panel">
+          <p>Price-to-income uses a national price level divided by household income: a national median where one is published (Canada, United States), otherwise OECD household disposable income per household, otherwise GDP per head × 2.5. Each figure states its basis. Mortgage-to-income assumes an 80% loan over 25 years at the country&apos;s mortgage rate (ECB, Bank of England, Bank of Canada, Freddie Mac; elsewhere the policy rate plus 2pp, labelled).</p>
+          <p>The mortgage stress index (0–100, higher is more stress) ranks five components across economies: mortgage-to-income (or price-to-income against history), household debt service against its 15-year average, the 12-month change in unemployment, three-year real wage growth (lower is worse) and household debt. It needs at least half its weight. Stress or fast-rising unemployment downgrades the buyer and investor signals and raises the seller signal.</p>
+          <p>The <a href="/track-record">track record</a> page shows how the model&apos;s past backtest predictions compared with what happened, and will score published projections as they come due.</p>
+        </div>
       </section>
 
       <section className="section" id="flags">

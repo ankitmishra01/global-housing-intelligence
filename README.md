@@ -4,18 +4,18 @@
 
 [**Live site → global-housing-intelligence.vercel.app**](https://global-housing-intelligence.vercel.app)
 
-[![Live site](https://img.shields.io/badge/live-global--housing--intelligence.vercel.app-2f6a57)](https://global-housing-intelligence.vercel.app)
+[![Live site](https://img.shields.io/badge/live-global--housing--intelligence.vercel.app-047857)](https://global-housing-intelligence.vercel.app)
 [![CI](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/ci.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/ci.yml)
 [![Monthly data refresh](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/refresh.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/refresh.yml)
 [![Production probe](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/probe.yml/badge.svg)](https://github.com/ankitmishra01/global-housing-intelligence/actions/workflows/probe.yml)
-[![Data quality](https://img.shields.io/badge/data%20quality-live%20checks-b5502d)](https://global-housing-intelligence.vercel.app/quality)
+[![Data quality](https://img.shields.io/badge/data%20quality-live%20checks-1e40af)](https://global-housing-intelligence.vercel.app/quality)
 [![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
 ![Overview: world map of projected 10-year real house price change](docs/screenshots/overview.png)
 
-Global Housing Intelligence pulls official house price, rent, credit and interest-rate data from international institutions and national housing agencies into one database. It projects **house prices and rents 10 years ahead** and lets you **move interest rates to see what changes**. It scores every market for **investors, buyers, renters and sellers**.
+Global Housing Intelligence pulls official house price, rent, credit and interest-rate data from international institutions and national housing agencies into one database. It projects **house prices and rents 10 years ahead**, **adjusts them every day** for rate moves, conflicts, disasters, currency crises and sales slumps, and lets you **move interest rates, unemployment, wages and growth to see what changes**. It scores every market for **investors, buyers, renters and sellers**, with a published track record and a public API and MCP server.
 
-It is the sibling of [global-economic-intelligence](https://github.com/ankitmishra01/global-economic-intelligence) and follows the same rule. Statistical code produces every number and the browser renders it. An LLM may explain the numbers, but it never makes one up. A model that cannot beat a simple baseline on history is not shown as skilled. The page shows the baseline instead and says so.
+It is the sibling of [global-economic-intelligence](https://github.com/ankitmishra01/global-economic-intelligence) ([live](https://g20-gamma.vercel.app)). It shares that app's brand and layout and follows the same rule. Statistical code produces every number and the browser renders it. An LLM may explain the numbers, but it never makes one up. A model that cannot beat a simple baseline on history is not shown as skilled. The page shows the baseline instead and says so.
 
 ---
 
@@ -28,8 +28,11 @@ It is the sibling of [global-economic-intelligence](https://github.com/ankitmish
 - [The interest-rate toggle](#the-interest-rate-toggle)
 - [Persona indexes](#persona-indexes)
 - [Risk flags](#risk-flags)
+- [Live adjustments](#live-adjustments)
+- [Affordability, stress and signals](#affordability-stress-and-signals)
+- [Scenarios and track record](#scenarios-and-track-record)
 - [Ask AI](#ask-ai)
-- [Public API](#public-api)
+- [Public API and MCP server](#public-api-and-mcp-server)
 - [Architecture](#architecture)
 - [Project structure](#project-structure)
 - [Run it yourself](#run-it-yourself)
@@ -80,7 +83,13 @@ Where a source publishes prices by dwelling type, each type gets its own history
 | `/countries` | All 217 economies, filterable by region, tier, rent coverage and national data |
 | `/countries/[iso3]` | Rate toggle, buy and rent fan charts, dwelling types, buy-vs-rent calculator, persona scores, national agency data (Canada includes 9 cities), housing drivers |
 | `/indexes` | League tables for each persona, with every component's percentile |
+| `/countries/[iso3]/[region]` | City and region pages (Toronto, Paris, Dubai, Scotland, Amsterdam…), descriptive |
+| `/countries/[iso3]/brief` | One-page brief to print or save as PDF; social cards for link previews |
+| `/live` | Today's rate moves and detected events, what they changed, the event library |
 | `/compare?c=CAN,AUS,GBR` | Two to four countries side by side under one rate scenario |
+| `/scenario?c=CAN` | Move rates, unemployment, wages and growth together; presets such as Recession |
+| `/track-record` | Pseudo-out-of-sample backtest record and the live forecast scorecard |
+| `/api-docs` | Public JSON API, MCP server for Claude/ChatGPT, RSS feeds |
 | `/methodology` | Sources, the **live** backtest table, rate sensitivities, flag thresholds, index weights, limits |
 | `/quality` | Automated data quality checks (coverage, freshness, validity, cross-source consistency, projection integrity) — see [docs/DATA_QUALITY.md](docs/DATA_QUALITY.md) |
 | `/ask` | Ask AI, grounded in the database, with a numeric guardrail |
@@ -88,7 +97,7 @@ Where a source publishes prices by dwelling type, each type gets its own history
 
 ## What is in the data
 
-Everything lives in **Turso**. About 190,000 observations are refreshed monthly by a cloud job, and nothing depends on a local machine.
+Everything lives in **Turso**. About 270,000 observations are refreshed monthly by a cloud job (live inputs daily), and nothing depends on a local machine.
 
 | Source | What it gives | Coverage |
 |---|---|---|
@@ -106,6 +115,11 @@ Everything lives in **Turso**. About 190,000 observations are refreshed monthly 
 | **HM Land Registry** | Average price by detached / semi-detached / terraced / flat, UK and four nations | United Kingdom |
 | **Dubai Real Estate Data** (DLD open data, CC BY 4.0) | Monthly registered sales and median AED per sq ft, the official DLD price index, new-contract rents, gross yields; drives the Dubai sales-slump signal | Dubai (UAE) |
 | **Australian Bureau of Statistics** | Mean dwelling price, national and by state | Australia |
+| **INSEE, INE, CSO, CBS, SCB, SSB, BCB** | Regional and dwelling-type price indexes, sales volumes and prices | France, Spain, Ireland, Netherlands, Sweden, Norway, Brazil |
+| **ECB MIR, Bank of England** | Mortgage rates on new housing loans | 21 euro members, United Kingdom |
+| **OECD household accounts, Statistics Canada, US Census** | Household income for price-to-income and mortgage-to-income | ~40 economies (labelled basis) |
+| **OECD labour statistics, BIS debt service** | Monthly unemployment, real wages, household debt-service ratios | ~40 |
+| **GDELT, GDACS, ECB reference rates** | Conflict news intensity, disaster alerts, exchange rates (live layer) | global |
 
 **Coverage tiers**
 
@@ -132,7 +146,7 @@ Code: [`lib/engine/projections.js`](lib/engine/projections.js), run by [`sync/tr
    - population growth and real GDP growth
    - cross momentum: rents for prices, prices for rents
    - dwelling-type indicators, in the type model only
-3. **The baselines it must beat.** "No real change", and the country's own historical real trend.
+3. **The baselines it must beat.** "No real change", the country's own historical real trend, and a long-run anchor (up to 30 years of real growth, shrunk toward the cross-country mean). A blend of model and anchor is also a candidate; it ships at 3, 5 and 7 years for prices and at 1 year for rents because it won on held-out years.
 4. **Carry-forward.** At long horizons, a fourth candidate is the longest skilled shorter-horizon model held flat afterwards. Example: "the 7-year projection, then no further real change". It is backtested like everything else, so a path never snaps back to zero just because the 10-year fit is weak.
 5. **Honesty rules**
    - **Rolling-origin backtests from 1995.** A model is only trained on outcomes that were already known at each test date.
@@ -143,7 +157,8 @@ Code: [`lib/engine/projections.js`](lib/engine/projections.js), run by [`sync/tr
 
 ## The interest-rate toggle
 
-- **Estimating the sensitivity.** For each target and horizon, the trainer stores how much cumulative real growth changes per +1 percentage point sustained rate move. That is the sum of the model coefficients on the real policy rate and its change. Each sensitivity has a cluster-bootstrap standard error, stored in the `rate_sensitivity` table.
+- **Estimating the sensitivity.** For each target and horizon, the trainer stores how much cumulative real growth changes per +1 percentage point sustained rate move (the model coefficients on the real policy rate and its change, with a cluster-bootstrap standard error). Which horizons count is decided once on the pooled estimate: an estimate must be clear and, for prices, negative; beyond the last reliable horizon the effect is held as a level shift. Household-debt scaling is used only where the interaction is statistically clear (currently rents, not prices).
+- **A causal cross-check.** Local projections on Jarociński–Karadi monetary-policy shocks (US and euro area) are stored next to the model estimate. They agree in direction for the US but are not statistically clear, so the toggle keeps the model estimate; it switches automatically once the causal estimate becomes clear.
 - **Applying it in the browser.**
   - New path = base path + sensitivity × Δrate.
   - The band widens with the sensitivity's uncertainty × |Δrate|.
@@ -153,6 +168,8 @@ Code: [`lib/engine/projections.js`](lib/engine/projections.js), run by [`sync/tr
 - **Buy vs rent.** The calculator compares the monthly mortgage payment (principal and interest, with your down payment and amortisation) against projected rent, at the chosen rate.
   - **Canada:** Bank of Canada 5-year posted rate.
   - **United States:** Freddie Mac 30-year fixed.
+  - **Euro area and UK:** ECB new housing loans rate; Bank of England 2-year fixed (75% LTV).
+  - **Gulf states pegged to the dollar:** the US policy rate as a labelled proxy.
   - **Elsewhere:** the policy rate plus an assumed 2.0pp spread, labelled on the page.
 
 ## Persona indexes
@@ -177,6 +194,21 @@ Code: [`lib/engine/flags.js`](lib/engine/flags.js). A flag is raised when:
 - the credit-to-GDP gap is above 10 percentage points
 - real rents outgrew real GDP per head three years running
 
+## Live adjustments
+
+A daily Vercel cron reads central-bank policy rates, mortgage rates, GDELT news events, GDACS disaster alerts, exchange rates and land-registry sales, then adjusts every Tier 1 projection:
+- **Rates:** the move since each projection's origin, through the rate sensitivity.
+- **Events:** armed-conflict escalations, regional spillovers, Red-alert disasters, currency crises and sales slumps. An event shifts a projection only if past episodes of its class show a statistically clear effect against what the model expected (the event library on `/live`). Sales slumps are calibrated on eight episodes in the UK, Netherlands and Ireland (about −14% on real prices over three years); currency crises about −15%; disasters and ongoing wars are shown without a shift.
+
+## Affordability, stress and signals
+
+Price-to-income, mortgage-to-income and rent-to-income use national median income where published, otherwise OECD household income, otherwise a labelled GDP proxy. A mortgage stress index combines affordability, household debt service against its own history, the change in unemployment (with a Sahm-style trigger), three-year real wage growth and household debt. Each country gets market-level signals per persona (for example Buyer: Wait, Seller: Good time to sell) with the reasons behind them.
+
+## Scenarios and track record
+
+- **`/scenario`** moves the policy rate, unemployment, real wages and real GDP growth together. Effects come from the backtested model's sensitivities; unclear effects are set to zero and listed.
+- **`/track-record`** shows the model's pseudo-out-of-sample predictions against what happened, and scores published projections as their target years arrive.
+
 ## Ask AI
 
 `/ask` answers questions about a country or the global picture.
@@ -185,7 +217,11 @@ Code: [`lib/engine/flags.js`](lib/engine/flags.js). A flag is raised when:
 - **Model.** Set it with `AI_MODEL`; the default is `anthropic/claude-sonnet-5.5`.
 - **Status.** The Vercel AI Gateway free tier does not serve Claude models. Ask AI needs gateway credits, or a bring-your-own Anthropic key configured in the gateway. Until then it returns a clear "unavailable" message, and the rest of the site is unaffected.
 
-## Public API
+## Public API and MCP server
+
+An MCP server at `/api/mcp` (streamable HTTP, read-only, no sign-up) lets Claude, ChatGPT and other tools query the data: `list_countries`, `country_outlook`, `rate_scenario`, `compare`, `persona_rankings`, `affordability`, `live_events`. Add it in Claude Code with `claude mcp add --transport http global-housing https://global-housing-intelligence.vercel.app/api/mcp`. Requests are limited to 60 per 10 minutes per user. RSS feeds: `/feed.xml` and `/countries/{ISO3}/feed.xml`. Details on [`/api-docs`](https://global-housing-intelligence.vercel.app/api-docs).
+
+### JSON API
 
 Cached JSON (1-hour CDN cache). Index values are relative to the projection origin year (= 100).
 
@@ -321,8 +357,9 @@ A failing national adapter is logged and skipped. It never blocks the internatio
 
 - Official price indexes exist for about 58 economies and rent indexes for about 43. Tier 2 economies get drivers only.
 - Ten-year backtests rest on far fewer independent test dates than one-year backtests. Check `n_origins` on `/methodology`.
-- At present, rents show no model skill beyond the no-change baseline. Real rent paths are therefore flat, and nominal rents follow inflation. The site says so on every rent chart.
-- Rate sensitivity is pooled across countries. It is a model-implied association, not a causal estimate.
+- Rent projections have modest skill: the model (blended with the long-run anchor) wins at 1 year, and longer horizons carry that projection forward. Rents are annual OECD data, so they update less often than prices.
+- The price rate sensitivity is pooled across countries and is a model-implied association; the causal cross-check from monetary-policy shocks is not yet statistically clear. Event effects rest on few episodes (5 to 14 per class), so they are shrunk toward zero and applied only when clear.
+- Email alerts are not offered yet (no sending domain); follow countries through RSS or the JSON API.
 - Dwelling-type coverage is uneven and depends on what each source publishes.
 - The buy-vs-rent calculator ignores taxes, fees, maintenance and the return on a down payment.
 - **Projections are statistical estimates with published error rates, not financial advice.**
