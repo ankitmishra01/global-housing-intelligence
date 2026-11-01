@@ -33,14 +33,31 @@ async function step(label, fn) {
 // own retries, reuse the rows already in Turso for its indicators so a refresh never fails or
 // silently drops a series. The report lists the source as carried forward.
 const carriedForward = [];
+async function storedRows(indicators) {
+  const db = connect();
+  const { rows } = await db.execute({ sql: `SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE indicator IN (${indicators.map(() => '?').join(',')})`, args: indicators });
+  return rows.map(r => ({ ...r, value: Number(r.value) }));
+}
 async function stepOrCarry(label, fn, indicators) {
-  try { return await step(label, fn); }
-  catch (error) {
+  try {
+    const out = await step(label, fn);
+    // Some sources swallow upstream errors and return nothing for a series: carry those forward too.
+    const present = new Set(out.map(r => r.indicator));
+    const missing = indicators.filter(k => !present.has(k));
+    if (missing.length) {
+      const stored = await storedRows(missing);
+      if (stored.length) {
+        console.log(`  ${label}: no rows for ${missing.join(', ')}; carrying forward ${stored.length} stored rows`);
+        carriedForward.push({ source: label, error: `empty: ${missing.join(', ')}`, rows: stored.length });
+        for (const r of stored) out.push(r);
+      }
+    }
+    return out;
+  } catch (error) {
     console.log(`  ${label} FAILED (${error.message}); carrying forward stored rows`);
-    const db = connect();
-    const { rows } = await db.execute({ sql: `SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE indicator IN (${indicators.map(() => '?').join(',')})`, args: indicators });
-    carriedForward.push({ source: label, error: String(error.message), rows: rows.length });
-    return rows.map(r => ({ ...r, value: Number(r.value) }));
+    const stored = await storedRows(indicators);
+    carriedForward.push({ source: label, error: String(error.message), rows: stored.length });
+    return stored;
   }
 }
 
@@ -62,7 +79,7 @@ async function main() {
   ];
   console.log('National housing agencies:');
   const national = await fetchNational();
-  raw.push(...national.rows);
+  for (const r of national.rows) raw.push(r); // large city panels: no spread
 
   const { rows, rejected } = validateRows(raw.filter(r => validIso3.has(r.country)));
   const coverage = coverageReport(rows);

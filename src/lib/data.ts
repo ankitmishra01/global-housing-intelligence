@@ -268,3 +268,57 @@ export const allBacktestPoints = cache(async (target: string, horizon: number) =
 // Latest live-layer runs (when the live page last updated, and by what).
 export type LiveRun = { run_at: string; trigger: string; ok: number; countries: number | null; events: number | null; log_entries: number | null; seconds: number | null; error: string | null };
 export const liveRuns = cache(() => rows<LiveRun>("SELECT * FROM live_runs ORDER BY run_at DESC LIMIT 10"));
+
+// ── Cities: one summary row per city or region of a country (read-only) ──
+// BIS city series carry aggregate labels ("7 cities", "whole country excluding ..."); those are
+// not places and are left out of city listings. Names like "all dwellings. Rome" are cleaned.
+const NOT_A_PLACE = /(^|\s)(cities|city area|whole country|excluding|rest of|non-urban|discontinued|big cities|capital area)(\s|$)|^\d+\s+cities$|^metropolitan area$|^cities$/i;
+export const cleanPlaceName = (name: string) => name.replace(/^all dwellings\.\s*/i, "").trim();
+
+export type CityMetric = { indicator: string; dwellingType: string; value: number; period: string; change1y: number | null; change5y: number | null; kind: "level" | "index" | "rate" | "count" };
+export type CitySummary = { name: string; slug: string; price: CityMetric | null; rent: CityMetric | null; vacancy: CityMetric | null; sales: CityMetric | null; indicators: string[]; sources: string[] };
+
+const PRICE_ORDER: [string, string, CityMetric["kind"]][] = [["AVG_PRICE", "", "level"], ["MEDIAN_PRICE", "", "level"], ["MEDIAN_PRICE", "house", "level"], ["TYPE_PRICE_LEVEL", "house", "level"], ["REGION_PRICE_INDEX", "", "index"], ["CASE_SHILLER_INDEX", "", "index"], ["CITY_PRICE", "", "index"], ["NEW_HOUSING_PRICE", "", "index"], ["TYPE_PRICE_INDEX", "house", "index"]];
+const RENT_ORDER: [string, string][] = [["AVG_RENT", ""], ["AVG_RENT_2BR", ""], ["AVG_RENT", "condo"]];
+
+export const citySummaries = cache(async (iso3: string): Promise<CitySummary[]> => {
+  const code = iso3.toUpperCase();
+  // Annual rows from 2014 are enough for latest, one-year and five-year changes and stay small.
+  const [data, srcs] = await Promise.all([
+    rows<{ region: string; indicator: string; dwelling_type: string; period: string; value: number }>(
+      "SELECT region, indicator, dwelling_type, period, value FROM observations WHERE country = ? AND region != '' AND frequency = 'A' AND status = 'actual' AND period >= '2014' ORDER BY region, indicator, dwelling_type, period", [code]),
+    rows<{ region: string; source: string }>("SELECT region, source FROM observations WHERE country = ? AND region != '' GROUP BY region, source", [code]),
+  ]);
+  const series = new Map<string, Map<string, { period: string; value: number }[]>>();
+  for (const r of data) {
+    const byKey = series.get(r.region) || series.set(r.region, new Map()).get(r.region)!;
+    const key = `${r.indicator}|${r.dwelling_type}`;
+    (byKey.get(key) || byKey.set(key, []).get(key)!).push({ period: String(r.period), value: Number(r.value) });
+  }
+  const metric = (byKey: Map<string, { period: string; value: number }[]>, indicator: string, type: string, kind: CityMetric["kind"]): CityMetric | null => {
+    const pts = byKey.get(`${indicator}|${type}`);
+    if (!pts?.length) return null;
+    const last = pts.at(-1)!;
+    const back = (n: number) => pts.find((p) => Number(p.period) === Number(last.period) - n);
+    const pct = (b?: { value: number }) => (b && b.value ? 100 * (last.value / b.value - 1) : null);
+    const diff = (b?: { value: number }) => (b ? last.value - b.value : null);
+    return { indicator, dwellingType: type, value: last.value, period: last.period, change1y: kind === "rate" ? diff(back(1)) : pct(back(1)), change5y: kind === "rate" ? diff(back(5)) : pct(back(5)), kind };
+  };
+  const sourceBy = new Map<string, Set<string>>();
+  for (const s of srcs) (sourceBy.get(s.region) || sourceBy.set(s.region, new Set()).get(s.region)!).add(s.source.replace(/\s*\(.*$/, "").replace(/,.*$/, ""));
+  const out: CitySummary[] = [];
+  for (const [region, byKey] of series) {
+    const name = cleanPlaceName(region);
+    if (NOT_A_PLACE.test(name)) continue;
+    const price = PRICE_ORDER.map(([i, t, k]) => metric(byKey, i, t, k)).find(Boolean) ?? null;
+    const rent = RENT_ORDER.map(([i, t]) => metric(byKey, i, t, "level")).find(Boolean) ?? null;
+    out.push({
+      name, slug: slugify(region), price, rent,
+      vacancy: metric(byKey, "VACANCY_RATE", "", "rate"),
+      sales: metric(byKey, "SALES_COUNT", "", "count"),
+      indicators: [...new Set([...byKey.keys()].map((k) => k.split("|")[0]))],
+      sources: [...(sourceBy.get(region) ?? [])].sort(),
+    });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
+});

@@ -94,10 +94,10 @@ test('Canada parsers: two-bedroom rents, vacancy, complete-year starts, NHPI', (
     '2024,"Kentville, Nova Scotia",Row and apartment structures of three units and over,Two bedroom units,1200',
     '1987,"Toronto, Ontario",Row and apartment structures of three units and over,Two bedroom units,',
   ].join('\n');
-  assert.deepEqual(parseCanadaRents(rents).map(r => [r.region, r.period, r.value]), [['Toronto', '2024', 2100]]);
+  assert.deepEqual(parseCanadaRents(rents).map(r => [r.indicator, r.region, r.period, r.value]), [['AVG_RENT_2BR', 'Toronto', '2024', 2100], ['AVG_RENT_1BR', 'Toronto', '2024', 1800], ['AVG_RENT_2BR', 'Kentville', '2024', 1200]]);
 
   const vac = ['REF_DATE,GEO,VALUE', '2024,Census metropolitan areas,2.2', '2024,"Vancouver, British Columbia",1.6', '2024,"Barrie, Ontario",3'].join('\n');
-  assert.deepEqual(parseCanadaVacancy(vac).map(r => [r.region, r.value]), [['', 2.2], ['Vancouver', 1.6]]);
+  assert.deepEqual(parseCanadaVacancy(vac).map(r => [r.region, r.value]), [['', 2.2], ['Vancouver', 1.6], ['Barrie', 3]]);
 
   const starts = ['REF_DATE,GEO,Housing estimates,Type of unit,Seasonal adjustment,VALUE'];
   for (let m = 1; m <= 12; m++) starts.push(`2024-${String(m).padStart(2, '0')},Canada,Housing starts,Total units,Unadjusted,1000`);
