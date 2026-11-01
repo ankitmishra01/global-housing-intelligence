@@ -121,6 +121,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
           {ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Price data to {ctx.origin_year}</span> : null}
           {ctx && run && ctx.rent_origin_year != null && ctx.rent_origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Rent data to {ctx.rent_origin_year}</span> : null}
         </div>
+        <HeroStats explorer={explorer} ctx={ctx} live={live} latest={latest} />
       </header>
 
       <nav className="country-tools" aria-label="Share and follow">
@@ -289,5 +290,36 @@ function AffordabilitySection({ ctx, disclaimer }: { ctx: Ctx; disclaimer?: stri
         </div>
       ) : null}
     </section>
+  );
+}
+
+// Key figures inside the dark hero, as on the economic app's country pages.
+function HeroStats({ explorer, ctx, live, latest }: { explorer: ExplorerProps | null; ctx: Ctx | undefined; live: Awaited<ReturnType<typeof liveState>>; latest: (indicator: string) => { value: number; period: string } | undefined }) {
+  const at = (rows: Band[] | undefined, h: number) => rows?.find((r) => r.horizon === h)?.median;
+  const chg = (v: number | undefined) => (v == null ? "–" : `${v >= 100 ? "+" : ""}${(v - 100).toFixed(1)}%`);
+  const a = (ctx?.details.affordability ?? {}) as Record<string, number | string | boolean | null>;
+  const cells: { label: string; value: string; note?: string; tone?: "pos" | "warn" | "neg" }[] = explorer
+    ? [
+        { label: "Real price, 10y", value: chg(at(explorer.bands.real_price, 10)), note: `3y ${chg(at(explorer.bands.real_price, 3))}` },
+        { label: "Real rent, 10y", value: explorer.bands.real_rent.length ? chg(at(explorer.bands.real_rent, 10)) : "–", note: explorer.bands.real_rent.length ? "after inflation" : "no rent index" },
+        { label: "Policy rate", value: ctx?.policy_rate != null ? `${ctx.policy_rate.toFixed(2)}%` : "–", note: live?.rate_delta != null ? `${live.rate_delta > 0 ? "▲" : "▼"} ${Math.abs(live.rate_delta).toFixed(2)} since ${ctx?.origin_year}` : ctx?.policy_rate_as_of ?? undefined, tone: live?.rate_delta != null && live.rate_delta > 0 ? "warn" : "pos" },
+        { label: "Mortgage rate", value: ctx?.mortgage_rate != null ? `${ctx.mortgage_rate.toFixed(2)}%` : "–", note: ctx?.mortgage_rate_source?.startsWith("policy") ? "policy + 2.0pp proxy" : "national series" },
+        { label: "Unemployment", value: typeof a.unemployment === "number" ? `${a.unemployment.toFixed(1)}%` : "–", note: typeof a.unemploymentChange12m === "number" ? `${a.unemploymentChange12m > 0 ? "+" : ""}${a.unemploymentChange12m.toFixed(1)}pp in 12m` : undefined, tone: a.unemploymentRising ? "neg" : "pos" },
+        { label: "Mortgage stress", value: ctx?.details.stress ? `${ctx.details.stress.score.toFixed(0)}/100` : "–", note: ctx?.details.stress ? `rank ${ctx.details.stress.rank}` : "not enough data", tone: (ctx?.details.stress?.score ?? 0) >= 75 ? "neg" : (ctx?.details.stress?.score ?? 0) >= 60 ? "warn" : "pos" },
+      ]
+    : [
+        { label: "Population growth", value: latest("POP_GROWTH") ? `${latest("POP_GROWTH")!.value.toFixed(1)}%` : "–", note: latest("POP_GROWTH")?.period },
+        { label: "Urban population growth", value: latest("URBAN_GROWTH") ? `${latest("URBAN_GROWTH")!.value.toFixed(1)}%` : "–", note: latest("URBAN_GROWTH")?.period },
+        { label: "Inflation", value: latest("INFLATION") ? `${latest("INFLATION")!.value.toFixed(1)}%` : "–", note: latest("INFLATION")?.period },
+        { label: "GDP per head", value: latest("GDP_PC_USD") ? `$${Math.round(latest("GDP_PC_USD")!.value).toLocaleString("en")}` : "–", note: latest("GDP_PC_USD")?.period },
+        { label: "Lending rate", value: latest("LENDING_RATE") ? `${latest("LENDING_RATE")!.value.toFixed(1)}%` : "–", note: latest("LENDING_RATE")?.period },
+        { label: "Private credit", value: latest("PRIVATE_CREDIT") ? `${latest("PRIVATE_CREDIT")!.value.toFixed(0)}% GDP` : "–", note: latest("PRIVATE_CREDIT")?.period },
+      ];
+  return (
+    <div className="hero-stats">
+      {cells.map((c) => (
+        <div key={c.label}><span>{c.label}</span><strong className="num">{c.value}</strong>{c.note ? <small className={c.tone === "neg" ? "neg-on-ink" : c.tone === "warn" ? "warn-on-ink" : undefined}>{c.note}</small> : null}</div>
+      ))}
+    </div>
   );
 }
