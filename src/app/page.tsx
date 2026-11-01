@@ -5,13 +5,6 @@ import { flagEmoji, pct, PERSONA_ORDER } from "@/lib/labels";
 
 export const revalidate = 86400;
 
-// Scale the map to the data: the 90th percentile of absolute changes, rounded up to 10.
-function mapScale(values: number[]) {
-  const a = values.map(Math.abs).sort((x, y) => x - y);
-  const p90 = a.length ? a[Math.floor(a.length * 0.9)] : 40;
-  return Math.max(10, Math.ceil(p90 / 10) * 10);
-}
-
 export default async function Overview() {
   const [run, list, rawProj, allFlags, personas, shifts, events, states, log] = await Promise.all([latestRun(), countries(), projections(), flags(), personaRows(), liveShifts(), activeEvents(), liveStates(), liveLog()]);
   // Every number on this page includes today's live adjustments (rates and detected events).
@@ -70,7 +63,7 @@ export default async function Overview() {
 
       <section className="section">
         <div className="section-title"><div><p className="eyebrow">10-year outlook</p><h2>Projected real house price change</h2></div><p>Median projection after inflation. Select a country for its fan chart, rents, dwelling types and the rate toggle.</p></div>
-        <div className="panel"><WorldMap values={mapValues} names={names} maxAbs={mapScale(Object.values(mapValues))} label="Map of projected 10-year real house price change by country" /></div>
+        <div className="panel"><WorldMap values={mapValues} names={names} label="Map of projected 10-year real house price change by country" /></div>
       </section>
 
 

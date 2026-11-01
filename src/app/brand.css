@@ -265,3 +265,11 @@ tbody tr:hover { background: var(--bg-2); }
 .drivers-chart__value { text-align: right; font-variant-numeric: tabular-nums; }
 .drivers-chart__total { margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--rule); font-weight: 650; }
 @media (max-width: 560px) { .drivers-chart li { grid-template-columns: 1fr 48px; } .drivers-chart__track { grid-column: 1 / -1; grid-row: 2; } }
+
+/* Map classes: a stepped amber-to-navy scale for rises, red for falls */
+:root { --map-fall: #b91c1c; --map-1: #f2d27b; --map-2: #b5d48c; --map-3: #5bb3a3; --map-4: #2f7db8; --map-5: #1e3a8a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --map-fall: #f87171; --map-1: #c9a646; --map-2: #8fb86a; --map-3: #3fa293; --map-4: #4a8fd0; --map-5: #8aa8ff; } }
+:root[data-theme="dark"] { --map-fall: #f87171; --map-1: #c9a646; --map-2: #8fb86a; --map-3: #3fa293; --map-4: #4a8fd0; --map-5: #8aa8ff; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font: 11px var(--font-mono); color: var(--muted, #52525b); }
+.map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.map-legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .08); }

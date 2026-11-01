@@ -5,19 +5,41 @@ import countries from "i18n-iso-countries";
 import world from "world-atlas/countries-110m.json";
 import Link from "next/link";
 
-// Server-rendered choropleth. Values are % changes: rises shade toward deep cobalt, falls
-// toward crimson, clamped at ±maxAbs. Countries without data stay grey.
-export function WorldMap({ values, names, maxAbs = 40, label }: { values: Record<string, number>; names: Record<string, string>; maxAbs?: number; label: string }) {
+// Server-rendered choropleth in stepped classes. The breaks follow the spread of the data
+// (evenly spaced across the middle 80% of rises, in round steps) so the map separates markets even when every
+// projection is positive; any projected fall gets its own red class. Countries without data stay grey.
+export function mapClasses(values: number[]) {
+  const rises = values.filter((v) => v >= 0).sort((a, b) => a - b);
+  const q = (p: number) => rises[Math.min(rises.length - 1, Math.floor(p * rises.length))];
+  // Four evenly spaced breaks across the 10th to 90th percentile, in round steps of 5 or 10.
+  let breaks = [10, 20, 30, 40];
+  if (rises.length >= 5) {
+    const lo = q(0.1), hi = q(0.9);
+    const step = Math.max(5, Math.round((hi - lo) / 4 / 5) * 5);
+    const start = Math.max(step, Math.round(lo / step) * step);
+    breaks = [0, 1, 2, 3].map((i) => start + i * step);
+  }
+  const classes: { from: number | null; to: number | null; color: string; label: string }[] = [];
+  if (values.some((v) => v < 0)) classes.push({ from: null, to: 0, color: "var(--map-fall)", label: "Fall" });
+  const edges = [0, ...breaks];
+  edges.forEach((from, i) => {
+    const to = edges[i + 1] ?? null;
+    classes.push({ from, to, color: `var(--map-${i + 1})`, label: to == null ? `+${from}% or more` : `+${from} to ${to}%` });
+  });
+  return classes;
+}
+
+export function WorldMap({ values, names, label }: { values: Record<string, number>; names: Record<string, string>; label: string }) {
   const topo = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
   const fc = feature(topo, topo.objects.countries);
   const projection = geoEqualEarth().fitSize([960, 470], fc);
   // One decimal is sub-pixel at this viewBox and cuts the path data (HTML and RSC payload) by about half.
   const path = geoPath(projection).digits(1);
+  const classes = mapClasses(Object.values(values));
   const color = (v: number | undefined) => {
     if (v == null) return "var(--map-empty)";
-    const t = Math.max(-1, Math.min(1, v / maxAbs));
-    const pctMix = Math.round(Math.abs(t) * 100);
-    return `color-mix(in oklab, ${t < 0 ? "var(--map-lo)" : "var(--map-hi)"} ${pctMix}%, var(--map-mid))`;
+    const c = classes.find((k) => (k.from == null || v >= k.from) && (k.to == null || v < k.to));
+    return c?.color ?? "var(--map-empty)";
   };
   return (
     <figure className="map" style={{ margin: 0 }}>
@@ -34,7 +56,10 @@ export function WorldMap({ values, names, maxAbs = 40, label }: { values: Record
           );
         })}
       </svg>
-      <figcaption className="map-scale"><span>{-maxAbs}% or lower</span><i /><span>+{maxAbs}% or higher</span><span style={{ marginLeft: 12 }}>Grey: no official price index</span></figcaption>
+      <figcaption className="map-legend">
+        {classes.map((k) => <span key={k.label}><i style={{ background: k.color }} />{k.label}</span>)}
+        <span><i style={{ background: "var(--map-empty)" }} />No official price index</span>
+      </figcaption>
     </figure>
   );
 }
