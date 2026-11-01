@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { countries as allCountries } from "@/lib/data";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CountryExplorer, type ExplorerProps } from "@/components/country-explorer";
@@ -8,6 +9,12 @@ import { EVENT_LABELS, flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
 export const revalidate = 86400;
+
+// Prerender every Tier 1 country at build time; others (and lowercase codes) render on
+// first request and are then cached the same way. The daily live cron revalidates all of them.
+export async function generateStaticParams() {
+  return (await allCountries()).filter((c) => c.tier === 1).map((c) => ({ iso3: c.iso3 }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ iso3: string }> }): Promise<Metadata> {
   const c = await country((await params).iso3);

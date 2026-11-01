@@ -11,7 +11,8 @@ export function WorldMap({ values, names, maxAbs = 40, label }: { values: Record
   const topo = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
   const fc = feature(topo, topo.objects.countries);
   const projection = geoEqualEarth().fitSize([960, 470], fc);
-  const path = geoPath(projection);
+  // One decimal is sub-pixel at this viewBox and cuts the path data (HTML and RSC payload) by about half.
+  const path = geoPath(projection).digits(1);
   const color = (v: number | undefined) => {
     if (v == null) return "var(--map-empty)";
     const t = Math.max(-1, Math.min(1, v / maxAbs));

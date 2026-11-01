@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { connect } from "../../../../../lib/db.js";
 import { runLive } from "../../../../../sync/live.js";
 
@@ -16,6 +16,8 @@ export async function GET(request: Request) {
   const lines: string[] = [];
   try {
     const result = await runLive({ db: connect(), log: (line: string) => lines.push(line) });
+    // Fresh Turso reads first, then every page (including prerendered country pages).
+    revalidateTag("turso", { expire: 0 });
     revalidatePath("/", "layout");
     return NextResponse.json({ ok: true, ...result, log: lines });
   } catch (error) {

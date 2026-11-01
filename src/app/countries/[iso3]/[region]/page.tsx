@@ -7,6 +7,11 @@ import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 
 export const revalidate = 86400;
 
+// No pages are built ahead of time, but each one is cached after its first request (ISR).
+export async function generateStaticParams() {
+  return [];
+}
+
 type Params = { params: Promise<{ iso3: string; region: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

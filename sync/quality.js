@@ -9,11 +9,11 @@ import { connect, upsertRows } from '../lib/db.js';
 import { migrate } from '../db/migrate.js';
 import { buildPanel, lastYear, logGrowth, HYPERINFLATION_PCT } from '../lib/engine/panel.js';
 import { RANGES, COVERAGE_GATES } from '../lib/validate.js';
-import { finite, mean } from '../lib/engine/stats.js';
+import { finite, mean, median } from '../lib/engine/stats.js';
 
 const KEEP_RUNS = 30;
 const check = (id, category, severity, summary, details = {}) => ({ id, category, severity, summary, details });
-const worst = list => (list.some(s => s === 'fail') ? 'fail' : list.some(s => s === 'warn') ? 'warn' : 'pass');
+const worst = list => (list.some(s => s === 'fail') ? 'fail' : list.some(s => s === 'warn') ? 'warn' : 'pass'); // 'info' never raises severity
 
 // ── Pure helpers (tested) ──
 
@@ -99,6 +99,75 @@ export function tierMismatches(countries, priceYears) {
     .map(c => ({ iso3: c.iso3, tier: Number(c.tier), priceYears: priceYears[c.iso3] || 0 }));
 }
 
+
+// ── New-source checks (pure, tested) ──
+
+// Mortgage-rate series by source; each country's latest monthly value.
+export const MORTGAGE_SOURCES = [
+  { id: 'ecb', label: 'ECB MIR', match: s => /^ECB/.test(s) },
+  { id: 'boe', label: 'Bank of England', match: s => /Bank of England/.test(s) },
+  { id: 'boc', label: 'Bank of Canada', match: s => /Bank of Canada/.test(s) },
+  { id: 'fred', label: 'Freddie Mac', match: s => /Freddie Mac/.test(s) },
+];
+export const MORTGAGE_MAX_MONTHS = 3;
+export const MORTGAGE_RANGE = [0.5, 15];
+
+export function mortgageSourceSummary(rows, now = new Date()) {
+  const latest = new Map();
+  for (const r of rows) { const cur = latest.get(r.country); if (!cur || r.period > cur.period) latest.set(r.country, r); }
+  return MORTGAGE_SOURCES.map(src => {
+    const items = [...latest.values()].filter(r => src.match(String(r.source || '')));
+    const newest = items.map(r => r.period).sort().at(-1) ?? null;
+    const stale = items.filter(r => monthsOld(r.period, now) > MORTGAGE_MAX_MONTHS).map(r => `${r.country} ${r.period}`);
+    const implausible = items.filter(r => !(Number(r.value) >= MORTGAGE_RANGE[0] && Number(r.value) <= MORTGAGE_RANGE[1])).map(r => `${r.country} ${Number(r.value)}`);
+    return { ...src, match: undefined, countries: items.length, newest, newestAgeMonths: newest ? monthsOld(newest, now) : null, stale, implausible };
+  });
+}
+
+// Household income basis behind the affordability ratios.
+export function incomeBasisCounts(contexts) {
+  const out = { national: 0, oecd: 0, proxy: 0, none: 0 };
+  for (const ctx of contexts) {
+    const b = String(ctx.details?.affordability?.incomeBasis || '');
+    if (!b) out.none++;
+    else if (/median/i.test(b)) out.national++;
+    else if (/OECD/.test(b)) out.oecd++;
+    else out.proxy++;
+  }
+  return out;
+}
+
+// National adapter freshness: the freshest series among each country's agency rows.
+export const ADAPTER_COUNTRIES = ['FRA', 'ESP', 'IRL', 'NLD', 'SWE', 'NOR', 'BRA', 'CAN', 'USA', 'GBR', 'AUS', 'ARE'];
+export const ADAPTER_MAX_MONTHS = 15;
+export function adapterFreshness(groups, now = new Date()) {
+  return ADAPTER_COUNTRIES.map(iso3 => {
+    const mine = groups.filter(g => g.country === iso3);
+    const rows = mine.reduce((n, g) => n + Number(g.n), 0);
+    const ages = mine.map(g => monthsOld(g.latest, now));
+    const freshest = ages.length ? Math.min(...ages) : null;
+    return { iso3, rows, series: mine.length, freshestMonths: freshest, stale: freshest == null || freshest > ADAPTER_MAX_MONTHS };
+  });
+}
+
+// National agency price series (annual, national) vs BIS nominal prices: growth correlation.
+export const NATIONAL_PRICE_INDICATORS = ['NATIONAL_PRICE_INDEX', 'REGION_PRICE_INDEX', 'AVG_PRICE', 'MEDIAN_PRICE', 'NEW_HOUSING_PRICE'];
+export function nationalVsBis(rows, countries = ADAPTER_COUNTRIES) {
+  const out = [];
+  for (const iso3 of countries) {
+    const bis = {};
+    for (const r of rows) if (r.country === iso3 && r.indicator === 'NOMINAL_PRICE' && r.frequency === 'A') bis[Number(r.period)] = Number(r.value);
+    if (Object.keys(bis).length < 8) continue;
+    for (const ind of NATIONAL_PRICE_INDICATORS) {
+      const s = {};
+      for (const r of rows) if (r.country === iso3 && r.indicator === ind && r.frequency === 'A' && !r.region && !r.dwelling_type && !/^BIS/.test(String(r.source || ''))) s[Number(r.period)] = Number(r.value);
+      const c = growthCorrelation(s, bis);
+      if (c && c.r != null) { out.push({ iso3, indicator: ind, r: +c.r.toFixed(2), years: c.n, meanGapPct: c.meanGapPct }); break; }
+    }
+  }
+  return out;
+}
+
 // ── Loader ──
 
 async function all(db, sql, args = []) {
@@ -122,6 +191,12 @@ async function loadState(db, { live = false } = {}) {
   state.projections = run ? (await all(db, 'SELECT country, target, horizon, p10, p25, median, p75, p90 FROM projections WHERE run_id = ?', [run.id])).map(r => ({ ...r, horizon: Number(r.horizon), p10: Number(r.p10), p25: Number(r.p25), median: Number(r.median), p75: Number(r.p75), p90: Number(r.p90) })) : [];
   state.contexts = run ? (await all(db, 'SELECT * FROM country_context WHERE run_id = ?', [run.id])).map(r => ({ ...r, details: JSON.parse(r.details) })) : [];
   state.personas = run ? await all(db, 'SELECT country, persona, score FROM persona_indexes WHERE run_id = ?', [run.id]) : [];
+  state.mortgage = await all(db, "SELECT country, period, value, source FROM observations WHERE indicator = 'MORTGAGE_RATE' AND frequency = 'M' AND region = '' AND period >= ?", [`${new Date().getUTCFullYear() - 2}-01`]);
+  state.adapterGroups = await all(db, `SELECT country, indicator, frequency, MAX(period) AS latest, COUNT(*) AS n FROM observations
+    WHERE country IN (${ADAPTER_COUNTRIES.map(() => '?').join(',')}) AND status = 'actual' AND source NOT LIKE 'BIS%' AND source NOT LIKE 'OECD%' AND source NOT LIKE 'IMF%' AND source NOT LIKE 'World Bank%' AND source NOT LIKE 'ECB%'
+      AND indicator NOT IN ('POLICY_RATE', 'INFLATION', 'GDP_GROWTH', 'UNEMPLOYMENT', 'UNEMPLOYMENT_M', 'REAL_WAGE', 'DSR_HH', 'HH_INCOME_OECD')
+    GROUP BY country, indicator, frequency`, ADAPTER_COUNTRIES);
+  state.seedRun = (await all(db, 'SELECT * FROM seed_runs ORDER BY run_at DESC LIMIT 1'))[0] ?? null;
   return state;
 }
 
@@ -304,6 +379,33 @@ function fullChecks(s, now) {
     if (finite(a.rentToIncome) && (a.rentToIncome < 5 || a.rentToIncome > 80)) aff.push({ iso3: ctx.country, metric: 'rentToIncome', value: +a.rentToIncome.toFixed(1), basis: a.rentToIncomeBasis });
   }
   out.push(check('indexes.affordability', 'Indexes', aff.length ? 'warn' : 'pass', aff.length ? `${aff.length} affordability ratios outside plausible bounds` : 'Affordability ratios within plausible bounds', { implausible: aff }));
+  for (const m of mortgageSourceSummary(s.mortgage, now)) {
+    const sev = m.implausible.length ? 'fail' : m.countries === 0 || m.stale.length ? 'warn' : 'pass';
+    out.push(check(`sources.mortgage.${m.id}`, 'New sources', sev,
+      m.countries ? `${m.label}: ${m.countries} ${m.countries === 1 ? 'country' : 'countries'}, latest ${m.newest} (${m.newestAgeMonths} months old)${m.stale.length ? `; ${m.stale.length} older than ${MORTGAGE_MAX_MONTHS} months` : ''}${m.implausible.length ? `; ${m.implausible.length} outside ${MORTGAGE_RANGE[0]}–${MORTGAGE_RANGE[1]}%` : ''}` : `${m.label}: no mortgage-rate rows`,
+      { stale: m.stale, implausible: m.implausible }));
+  }
+  const inc = incomeBasisCounts(s.contexts);
+  out.push(check('sources.income_basis', 'New sources', 'info',
+    `Household income basis: national median ${inc.national}, OECD household income ${inc.oecd}, GDP-per-head proxy ${inc.proxy}${inc.none ? `, none ${inc.none}` : ''}`, inc));
+  const adapters = adapterFreshness(s.adapterGroups, now);
+  const staleAdapters = adapters.filter(f => f.stale);
+  out.push(check('sources.national_adapters', 'New sources', staleAdapters.length ? 'warn' : 'pass',
+    `${adapters.length - staleAdapters.length} of ${adapters.length} national adapters have data within ${ADAPTER_MAX_MONTHS} months${staleAdapters.length ? `; stale: ${staleAdapters.map(f => `${f.iso3}${f.freshestMonths == null ? ' (no rows)' : ` (${f.freshestMonths} mo)`}`).join(', ')}` : ''}`,
+    { adapters }));
+  const natCorr = nationalVsBis(s.rows);
+  const weak = natCorr.filter(c => c.r < 0.7);
+  out.push(check('sources.national_vs_bis', 'New sources', weak.length ? 'warn' : 'pass',
+    natCorr.length ? `National agency prices vs BIS: ${natCorr.length} compared, median r ${median(natCorr.map(c => c.r)).toFixed(2)}${weak.length ? `; below 0.7: ${weak.map(c => `${c.iso3} ${c.indicator} ${c.r}`).join(', ')}` : ''}` : 'No national agency price series overlap BIS for 8+ years',
+    { comparisons: natCorr }));
+  if (s.seedRun) {
+    const cf = JSON.parse(s.seedRun.carried_forward || '[]'), nf = JSON.parse(s.seedRun.national_failures || '[]'), gf = JSON.parse(s.seedRun.gate_failures || '[]');
+    out.push(check('sources.last_seed', 'New sources', gf.length ? 'fail' : cf.length || nf.length ? 'warn' : 'pass',
+      `Last seed ${String(s.seedRun.run_at).slice(0, 16)}: ${s.seedRun.observations} observations${cf.length ? `; carried forward: ${cf.map(c => c.source).join(', ')}` : ''}${nf.length ? `; adapters failed: ${nf.map(f => f.iso3).join(', ')}` : ''}${gf.length ? `; coverage gates failed: ${gf.length}` : ''}`,
+      { carriedForward: cf, nationalFailures: nf, gateFailures: gf }));
+  } else {
+    out.push(check('sources.last_seed', 'New sources', 'info', 'No seed run recorded yet (seed_runs fills from the next refresh)', {}));
+  }
   out.push(check('indexes.stress', 'Indexes', stressCount < 20 ? 'warn' : 'pass', `Mortgage stress index scored for ${stressCount} of ${s.contexts.length} projected economies (needs half its weight; debt-service data covers 17)`, { scored: stressCount }));
   return out;
 }

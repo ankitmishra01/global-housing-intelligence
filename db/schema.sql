@@ -271,3 +271,14 @@ CREATE TABLE IF NOT EXISTS feature_sensitivity (
   note    TEXT,
   PRIMARY KEY (run_id, target, feature, horizon)
 );
+
+-- One row per seed run: the summary the quality checks need (sync/report.json stays local).
+CREATE TABLE IF NOT EXISTS seed_runs (
+  run_at            TEXT PRIMARY KEY,
+  observations      INTEGER NOT NULL,
+  rejected          INTEGER NOT NULL,
+  tier1             INTEGER NOT NULL,
+  carried_forward   TEXT NOT NULL,   -- JSON [{source, error, rows}]
+  national_failures TEXT NOT NULL,   -- JSON [{iso3, error}]
+  gate_failures     TEXT NOT NULL    -- JSON [string]
+);

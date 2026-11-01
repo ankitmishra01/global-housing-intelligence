@@ -105,6 +105,10 @@ async function main() {
   const t = Date.now();
   await upsertRows(db, 'observations', ['country', 'indicator', 'region', 'dwelling_type', 'period', 'frequency', 'value', 'status', 'source', 'vintage', 'fetched_at'], obs);
   console.log(`Wrote ${obs.length} observations in ${((Date.now() - t) / 1000).toFixed(1)}s`);
+  await upsertRows(db, 'seed_runs', ['run_at', 'observations', 'rejected', 'tier1', 'carried_forward', 'national_failures', 'gate_failures'], [{
+    run_at: RUN_AT, observations: obs.length, rejected: rejected.length, tier1: report.tier1,
+    carried_forward: JSON.stringify(carriedForward), national_failures: JSON.stringify(national.failures), gate_failures: JSON.stringify(gateFailures),
+  }]);
 }
 
 main().catch(error => { console.error(error.stack || error); process.exit(1); });

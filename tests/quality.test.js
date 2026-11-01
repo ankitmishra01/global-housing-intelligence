@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { annualGaps, bigJumps, growthCorrelation, monthsOld, bandIntegrity, bandNarrowing, tierMismatches } from '../sync/quality.js';
+import { annualGaps, bigJumps, growthCorrelation, monthsOld, bandIntegrity, bandNarrowing, tierMismatches, mortgageSourceSummary, incomeBasisCounts, adapterFreshness, nationalVsBis, MORTGAGE_MAX_MONTHS } from '../sync/quality.js';
 import { annualAverage } from '../lib/sources/util.js';
 import { deriveSeries } from '../lib/engine/panel.js';
 import { fitRidge } from '../lib/engine/stats.js';
@@ -85,4 +85,57 @@ test('trailingGap compares with the previous 20 years only', () => {
   for (let y = 1990; y <= 2025; y++) s[y] = y < 2025 ? 100 : 120;
   assert.equal(Math.round(trailingGap(s, 2025)), 20);
   assert.equal(trailingGap({ 2024: 1, 2025: 1 }, 2025), null);
+});
+
+// ── New-source checks ──
+
+test('mortgageSourceSummary groups by source, flags stale and implausible latest values', () => {
+  const now = new Date('2026-11-01T00:00:00Z');
+  const rows = [
+    { country: 'DEU', period: '2026-08', value: 4.01, source: 'ECB MFI interest rate statistics' },
+    { country: 'DEU', period: '2026-07', value: 4.1, source: 'ECB MFI interest rate statistics' },
+    { country: 'FRA', period: '2026-05', value: 3.2, source: 'ECB MFI interest rate statistics' },
+    { country: 'GBR', period: '2026-09', value: 25, source: 'Bank of England, quoted 2-year fixed' },
+  ];
+  const [ecb, boe, boc] = mortgageSourceSummary(rows, now);
+  assert.equal(ecb.countries, 2);
+  assert.equal(ecb.newest, '2026-08');
+  assert.deepEqual(ecb.stale, ['FRA 2026-05']);
+  assert.ok(MORTGAGE_MAX_MONTHS === 3);
+  assert.deepEqual(boe.implausible, ['GBR 25']);
+  assert.equal(boc.countries, 0);
+});
+
+test('incomeBasisCounts classifies income bases', () => {
+  const ctx = b => ({ details: { affordability: { incomeBasis: b } } });
+  assert.deepEqual(incomeBasisCounts([ctx('national median household income, 2024'), ctx('OECD household disposable income per household, 2023'), ctx('GDP per head × 2.5 (household income proxy)'), { details: {} }]),
+    { national: 1, oecd: 1, proxy: 1, none: 1 });
+});
+
+test('adapterFreshness takes the freshest series per country and flags missing or stale adapters', () => {
+  const now = new Date('2026-11-01T00:00:00Z');
+  const out = adapterFreshness([
+    { country: 'FRA', indicator: 'REGION_PRICE_INDEX', frequency: 'Q', latest: '2026-Q2', n: 100 },
+    { country: 'FRA', indicator: 'TYPE_PRICE_INDEX', frequency: 'A', latest: '2024', n: 10 },
+    { country: 'ESP', indicator: 'REGION_PRICE_INDEX', frequency: 'Q', latest: '2024-Q4', n: 50 },
+  ], now);
+  const fra = out.find(a => a.iso3 === 'FRA'), esp = out.find(a => a.iso3 === 'ESP'), bra = out.find(a => a.iso3 === 'BRA');
+  assert.equal(fra.rows, 110);
+  assert.equal(fra.stale, false);
+  assert.equal(esp.stale, true);
+  assert.equal(bra.stale, true);
+  assert.equal(bra.freshestMonths, null);
+});
+
+test('nationalVsBis correlates a national agency series with BIS nominal prices and skips BIS-sourced rows', () => {
+  const rows = [];
+  for (let y = 2000; y <= 2020; y++) {
+    const v = 100 * 1.04 ** (y - 2000) * (1 + 0.05 * Math.sin(y));
+    rows.push({ country: 'NLD', indicator: 'NOMINAL_PRICE', frequency: 'A', period: String(y), value: v, region: '', dwelling_type: '', source: 'BIS' });
+    rows.push({ country: 'NLD', indicator: 'AVG_PRICE', frequency: 'A', period: String(y), value: v * 2500, region: '', dwelling_type: '', source: 'CBS' });
+  }
+  const [c] = nationalVsBis(rows, ['NLD']);
+  assert.equal(c.indicator, 'AVG_PRICE');
+  assert.ok(c.r > 0.99);
+  assert.equal(nationalVsBis(rows.filter(r => r.indicator !== 'AVG_PRICE'), ['NLD']).length, 0);
 });

@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Data quality" };
 
 type Freshness = { indicator: string; frequency: string; latest: string; monthsOld: number; stale: boolean };
 const FREQ: Record<string, string> = { A: "Annual", Q: "Quarterly", M: "Monthly" };
-const badge = (s: QualityCheck["severity"]) => <span className={`badge ${s === "pass" ? "badge--t1" : s === "warn" ? "badge--warn" : "badge--flag"}`}>{s}</span>;
+const badge = (s: QualityCheck["severity"]) => <span className={`badge ${s === "pass" ? "badge--t1" : s === "warn" ? "badge--warn" : s === "info" ? "" : "badge--flag"}`}>{s}</span>;
 
 export default async function QualityPage() {
   const { runAt, liveRunAt, checks } = await qualityChecks();

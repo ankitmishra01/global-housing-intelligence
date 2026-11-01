@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { connect } from "../../lib/db.js";
 import { buildPanel } from "../../lib/engine/panel.js";
 
@@ -18,7 +19,7 @@ export type Observation = { country: string; indicator: string; region: string; 
 
 const db = cache(() => connect());
 
-async function rows<T>(sql: string, args: (string | number)[] = []): Promise<T[]> {
+async function query<T>(sql: string, args: (string | number)[] = []): Promise<T[]> {
   try {
     const result = await db().execute({ sql, args });
     return result.rows.map((r) => ({ ...r })) as T[];
@@ -27,6 +28,17 @@ async function rows<T>(sql: string, args: (string | number)[] = []): Promise<T[]
     if (String(error).includes("no such table")) return [];
     throw error;
   }
+}
+
+// Every read here is read-only, so results are shared across requests for up to an hour
+// (keyed by SQL + args). The daily live cron invalidates the "turso" tag after writing.
+// unstable_cache is kept over "use cache" because Cache Components would change every
+// route's revalidate semantics; the data is identical either way.
+export const TURSO_CACHE_TAG = "turso";
+const cachedQuery = unstable_cache(query, ["turso-rows-v1"], { revalidate: 3600, tags: [TURSO_CACHE_TAG] });
+
+async function rows<T>(sql: string, args: (string | number)[] = []): Promise<T[]> {
+  return (await cachedQuery(sql, args)) as T[];
 }
 
 export const latestRun = cache(async (): Promise<Run | null> => {
@@ -64,8 +76,10 @@ export const contexts = cache(async () => {
   return list.map((r) => ({ ...r, details: JSON.parse(r.details) })) as Context[];
 });
 
+// Not data-cached: the largest countries (NLD, FRA) exceed the 2 MB cache-item limit, and the
+// pages that read this are prerendered with ISR anyway.
 export const observations = cache((iso3: string) =>
-  rows<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? ORDER BY indicator, region, dwelling_type, period", [iso3]),
+  query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? ORDER BY indicator, region, dwelling_type, period", [iso3]),
 );
 
 export const indicatorLabels = cache(async () => {
@@ -147,7 +161,7 @@ export function applyLive<T extends { horizon: number; p10: number; p25: number;
 }
 
 // ── Data quality ──
-export type QualityCheck = { run_at: string; check_id: string; category: string; severity: "pass" | "warn" | "fail"; summary: string; details: Record<string, unknown> };
+export type QualityCheck = { run_at: string; check_id: string; category: string; severity: "pass" | "warn" | "fail" | "info"; summary: string; details: Record<string, unknown> };
 export const qualityChecks = cache(async () => {
   const [latest] = await rows<{ run_at: string }>("SELECT run_at FROM data_quality WHERE check_id = 'coverage.tiers' ORDER BY run_at DESC LIMIT 1");
   if (!latest?.run_at) return { runAt: null as string | null, checks: [] as QualityCheck[], liveRunAt: null as string | null };
