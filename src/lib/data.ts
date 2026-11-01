@@ -82,6 +82,12 @@ export const observations = cache((iso3: string) =>
   query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? ORDER BY indicator, region, dwelling_type, period", [iso3]),
 );
 
+// National rows only. Country pages use this: city panels can run to 140,000 rows (US metros),
+// and city detail lives on /countries/[iso3]/cities and the region pages.
+export const nationalObservations = cache((iso3: string) =>
+  query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? AND region = '' ORDER BY indicator, dwelling_type, period", [iso3]),
+);
+
 export const indicatorLabels = cache(async () => {
   const list = await rows<{ key: string; label: string; unit: string; source: string }>("SELECT key, label, unit, source FROM indicators");
   return Object.fromEntries(list.map((i) => [i.key, i]));
@@ -95,14 +101,14 @@ export function rebased(series: Record<string, number> | undefined, origin: numb
 }
 
 export async function countryPanel(iso3: string) {
-  const obs = await observations(iso3);
+  const obs = await nationalObservations(iso3);
   const built = buildPanel(obs.map((o) => ({ ...o, value: Number(o.value) }))) as unknown as { panel: Record<string, unknown>; monthly: Record<string, unknown> };
   const { panel, monthly } = built;
   return { panel: (panel[iso3] ?? {}) as Record<string, Record<string, number>> & { TYPE_REAL?: Record<string, Record<string, number>>; PRICE_SOURCE?: string }, monthly: (monthly[iso3] ?? {}) as Record<string, Record<string, number>>, observations: obs };
 }
 
 export async function latestValue(iso3: string, indicator: string) {
-  const obs = (await observations(iso3)).filter((o) => o.indicator === indicator && !o.region && !o.dwelling_type && o.frequency === "A" && o.status === "actual");
+  const obs = (await nationalObservations(iso3)).filter((o) => o.indicator === indicator && !o.dwelling_type && o.frequency === "A" && o.status === "actual");
   return obs.at(-1) ?? null;
 }
 
@@ -231,17 +237,15 @@ export const slugify = (name: string) =>
 
 // Distinct regions with observations for one country, with their slugs and series counts.
 export const regionsFor = cache(async (iso3: string) => {
-  const obs = (await observations(iso3)).filter((o) => o.region);
-  const by = new Map<string, Set<string>>();
-  for (const o of obs) (by.get(o.region) || by.set(o.region, new Set()).get(o.region)!).add(o.indicator);
-  return [...by].map(([name, set]) => ({ name, slug: slugify(name), indicators: [...set] })).sort((a, b) => a.name.localeCompare(b.name));
+  const list = await query<{ region: string; indicators: string }>("SELECT region, group_concat(DISTINCT indicator) AS indicators FROM observations WHERE country = ? AND region != '' GROUP BY region", [iso3]);
+  return list.map((r) => ({ name: r.region, slug: slugify(r.region), indicators: String(r.indicators).split(",") })).sort((a, b) => a.name.localeCompare(b.name));
 });
 
 // All observations for one region, plus the national rows of the same indicators for comparison.
 export const regionData = cache(async (iso3: string, slug: string) => {
-  const obs = await observations(iso3);
-  const region = [...new Set(obs.filter((o) => o.region).map((o) => o.region))].find((r) => slugify(r) === slug);
+  const region = (await regionsFor(iso3)).find((r) => r.slug === slug)?.name;
   if (!region) return null;
+  const obs = await query<Observation>("SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations WHERE country = ? AND region IN (?, '') ORDER BY indicator, region, dwelling_type, period", [iso3, region]);
   const rows = obs.filter((o) => o.region === region).map((o) => ({ ...o, value: Number(o.value) }));
   const indicators = new Set(rows.map((r) => r.indicator));
   const national = obs.filter((o) => !o.region && indicators.has(o.indicator)).map((o) => ({ ...o, value: Number(o.value) }));

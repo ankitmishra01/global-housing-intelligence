@@ -7,7 +7,7 @@ import { PredictedActualLine } from "@/components/track-record-chart";
 import { NarrativeProse } from "@/components/narrative-prose";
 import { buildNarrativeInput } from "@/lib/narrative-input";
 import { buildCountryNarrative } from "../../../../lib/engine/narrative.js";
-import { applyLive, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
+import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
 import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
@@ -57,7 +57,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   if (!c) notFound();
   const [run, proj, sens, allFlags, personas, ctxs, { panel, observations }, labels, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels(), liveState(iso3), liveShifts(iso3)]);
   const shifts = shiftsAll[iso3];
-  const [record, regionList] = await Promise.all([countryTrackRecord(iso3), regionsFor(iso3)]);
+  const [record, regionList, cities] = await Promise.all([countryTrackRecord(iso3), regionsFor(iso3), citySummaries(iso3)]);
   const ctx = ctxs.find((x) => x.country === iso3);
   const myFlags = allFlags.filter((f) => f.country === iso3);
 
@@ -159,7 +159,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         <Link className="chip" href={`/countries/${iso3}/brief`}>Share or print brief</Link>
         <a className="chip" href={`/countries/${iso3}/feed.xml`}>Follow changes (RSS)</a>
         <a className="chip" href={`/api/v1/countries/${iso3}`}>Data as JSON</a>
-        {regionList.length ? <a className="chip" href="#regions">{regionList.length} {regionList.length === 1 ? "region" : "cities and regions"}</a> : null}
+        {cities.length ? <Link className="chip" href={`/countries/${iso3}/cities`}>{cities.length} {cities.length === 1 ? "region" : "cities and regions"}</Link> : null}
       </nav>
 
       <section className="brief-card" aria-label="Country brief">
@@ -227,24 +227,28 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
               ))}</tbody>
             </table>
           </div> : null}
-          {cityRows.length ? (
-            <div className="table-wrap" style={{ marginTop: 16 }}>
-              <table>
-                <thead><tr><th>City / region</th><th>Measure</th><th className="r">Latest</th><th>Year</th><th>Source</th></tr></thead>
-                <tbody>{cityRows.sort((a, b) => a.region.localeCompare(b.region) || a.indicator.localeCompare(b.indicator)).map((o) => (
-                  <tr key={`${o.region}|${o.indicator}|${o.dwelling_type}`}><td>{o.region}</td><td>{labels[o.indicator]?.label ?? o.indicator}{o.dwelling_type ? ` · ${TYPE_LABELS[o.dwelling_type]}` : ""}</td>
-                    <td className="r">{o.value > 1000 ? money(o.value) : fmt(o.value, o.indicator === "VACANCY_RATE" ? 1 : 0)}</td><td className="mono">{o.period}</td><td className="note">{o.source}</td></tr>
-                ))}</tbody>
-              </table>
-            </div>
-          ) : null}
         </section>
       ) : null}
 
-      {regionList.length ? (
+      {cities.length ? (
         <section className="section" id="regions">
-          <div className="section-title"><div><h2>Cities and regions</h2></div><p>Published by national agencies; each page shows the history and compares it with the national figure.</p></div>
-          <div className="chips">{regionList.map((r) => <Link key={r.slug} className="chip" href={`/countries/${iso3}/${r.slug}`}>{r.name}</Link>)}</div>
+          <div className="section-title"><div><p className="eyebrow">Cities and regions</p><h2>{cities.length} {cities.length === 1 ? "city or region" : "cities and regions"} with their own data</h2></div><p>Published by national agencies and research providers. <Link className="link" href={`/countries/${iso3}/cities`}>See all {cities.length}, sortable</Link></p></div>
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>City or region</th><th className="r">Price</th><th className="r">1y change</th><th className="r">5y change</th><th className="r">Rent</th><th className="r">Vacancy</th></tr></thead>
+              <tbody>{topCities(cities).map((c) => (
+                <tr key={c.slug}>
+                  <td><Link href={`/countries/${iso3}/${c.slug}`}>{c.name}</Link></td>
+                  <td className="r">{c.price ? (c.price.kind === "level" ? money(c.price.value) : fmt(c.price.value, 1)) : "–"}</td>
+                  <td className="r">{c.price?.change1y != null ? `${c.price.change1y > 0 ? "+" : ""}${c.price.change1y.toFixed(1)}%` : "–"}</td>
+                  <td className="r">{c.price?.change5y != null ? `${c.price.change5y > 0 ? "+" : ""}${c.price.change5y.toFixed(1)}%` : "–"}</td>
+                  <td className="r">{c.rent ? money(c.rent.value) : "–"}</td>
+                  <td className="r">{c.vacancy ? `${c.vacancy.value.toFixed(1)}%` : "–"}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          {cities.length > 12 ? <p className="note"><Link className="link" href={`/countries/${iso3}/cities`}>All {cities.length} cities and regions</Link></p> : null}
         </section>
       ) : null}
 
@@ -338,4 +342,10 @@ function HeroStats({ explorer, ctx, live, latest }: { explorer: ExplorerProps | 
       ))}
     </div>
   );
+}
+
+// Preview on the country page: the 12 cities with the richest data (price, rent and vacancy first), then alphabetical.
+function topCities<T extends { name: string; price: unknown; rent: unknown; vacancy: unknown; indicators: string[] }>(list: T[]) {
+  const score = (c: T) => (c.price ? 4 : 0) + (c.rent ? 2 : 0) + (c.vacancy ? 1 : 0) + c.indicators.length / 100;
+  return [...list].sort((a, b) => score(b) - score(a) || a.name.localeCompare(b.name)).slice(0, 12);
 }
