@@ -9,15 +9,34 @@ import { buildPanel, lastYear, latestMonthly, logGrowth } from '../lib/engine/pa
 import { trainEngine, validateEngineOutput, FEATURES, MODEL_VERSION } from '../lib/engine/projections.js';
 import { computeFlags, quarterlyYoY, FLAG_RULES } from '../lib/engine/flags.js';
 import { scoreAll, annuityFactor, PERSONAS } from '../lib/engine/indexes.js';
+import { affordabilityMetrics, stressAll, STRESS_COMPONENTS } from '../lib/engine/affordability.js';
+import { computeSignals, SIGNAL_LABELS, SIGNAL_DISCLAIMER } from '../lib/engine/signals.js';
 import { finite, mean } from '../lib/engine/stats.js';
+import { estimateEventLibrary, EVENT_CLASSES } from '../lib/engine/events.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 export const MORTGAGE_SPREAD = 2.0; // assumed mortgage spread over the policy rate where no national series exists
 
 export async function loadRows(db) {
   const { rows } = await db.execute(`SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations
-    WHERE region = '' AND (frequency = 'A' OR indicator IN ('POLICY_RATE', 'MORTGAGE_RATE', 'REAL_PRICE', 'NOMINAL_PRICE'))`);
+    WHERE region = '' AND (frequency = 'A' OR indicator IN ('POLICY_RATE', 'MORTGAGE_RATE', 'REAL_PRICE', 'NOMINAL_PRICE', 'UNEMPLOYMENT_M', 'DSR_HH'))`);
   return rows.map(r => ({ ...r, value: Number(r.value) }));
+}
+
+// National levels the panel drops (it keeps national rows only): Canada's rent is the median
+// of the latest CMHC two-bedroom rents across the tracked metros.
+export async function loadNationalExtras(db) {
+  const { rows } = await db.execute(`SELECT country, region, period, value FROM observations WHERE indicator = 'AVG_RENT_2BR' AND frequency = 'A' AND region != ''`);
+  const byCountry = {};
+  for (const r of rows) {
+    const c = (byCountry[r.country] ||= {});
+    if (!c.year || r.period > c.year) { c.year = r.period; c.values = []; }
+    if (r.period === c.year) c.values.push(Number(r.value));
+  }
+  return Object.fromEntries(Object.entries(byCountry).map(([iso3, c]) => {
+    const v = [...c.values].sort((a, b) => a - b);
+    return [iso3, { rent: v[Math.floor(v.length / 2)], rentBasis: `median two-bedroom rent across ${v.length} CMHC metros, ${c.year}` }];
+  }));
 }
 
 const annualMean = (monthly, year) => {
@@ -49,14 +68,18 @@ export function countryComponents(iso3, c, monthly, ctx, flags) {
   };
 }
 
-export function buildRun(rows, now = new Date()) {
+export function buildRun(rows, now = new Date(), { national = {} } = {}) {
   const built = buildPanel(rows);
   const engine = trainEngine(built);
   validateEngineOutput(engine);
   const flags = [], components = {}, contexts = [];
+  // Affordability and mortgage stress first: stress ranks need every country's metrics.
+  const metrics = Object.fromEntries(Object.keys(engine.contexts).map(iso3 => [iso3, affordabilityMetrics(built.panel[iso3], built.monthly[iso3] || {}, national[iso3] || {})]));
+  const stress = stressAll(metrics);
+  const stressBy = Object.fromEntries(stress.rows.map(r => [r.country, r]));
   for (const [iso3, ctx] of Object.entries(engine.contexts)) {
     const c = built.panel[iso3], monthly = built.monthly[iso3] || {};
-    const f = computeFlags(iso3, c, monthly);
+    const f = computeFlags(iso3, c, monthly, { ...metrics[iso3], stressScore: stressBy[iso3]?.score ?? null });
     flags.push(...f);
     components[iso3] = countryComponents(iso3, c, monthly, ctx, f);
     const policy = latestMonthly(monthly.POLICY_RATE), mortgage = latestMonthly(monthly.MORTGAGE_RATE);
@@ -65,15 +88,28 @@ export function buildRun(rows, now = new Date()) {
       policy_rate: policy?.value ?? null, policy_rate_as_of: policy?.period ?? null,
       mortgage_rate: mortgage ? mortgage.value : policy ? Math.max(0.1, policy.value + MORTGAGE_SPREAD) : null,
       mortgage_rate_source: mortgage ? (iso3 === 'CAN' ? 'Bank of Canada 5-year conventional mortgage' : iso3 === 'USA' ? 'Freddie Mac 30-year fixed' : 'national series') : policy ? `policy rate + ${MORTGAGE_SPREAD.toFixed(1)}pp assumed spread` : null,
-      details: JSON.stringify({ components: components[iso3], inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
+      details: JSON.stringify({ components: components[iso3], rateSens: ctx.rateSens ?? null, affordability: metrics[iso3], stress: stressBy[iso3] ?? null, inflation: ctx.inflation, priceSource: ctx.priceSource, types: Object.fromEntries(Object.entries(ctx.types || {}).map(([t, v]) => [t, { origin: v.origin, source: v.source }])) }),
     });
   }
   const { rows: indexRows, distributions } = scoreAll(components);
+  // Market signals per persona, from index scores, stress and flags; stored in details.
+  for (const ctx of contexts) {
+    const mine = indexRows.filter(r => r.country === ctx.country);
+    const signals = computeSignals({
+      scores: Object.fromEntries(mine.map(r => [r.persona, r.score])),
+      components: Object.fromEntries(mine.map(r => [r.persona, r.components])),
+      flags: flags.filter(f => f.country === ctx.country).map(f => f.flag),
+      stress: stressBy[ctx.country] ?? null,
+    });
+    ctx.details = JSON.stringify({ ...JSON.parse(ctx.details), signals });
+  }
+  const eventLibrary = estimateEventLibrary({ records: engine.backtestRecords });
   const id = `run_${now.toISOString().slice(0, 16).replace(/[-:T]/g, '')}`;
   const dataVintage = rows.reduce((m, r) => (r.frequency === 'A' && r.status !== 'forecast' && r.period > m ? r.period : m), '');
   const summary = {
     modelVersion: MODEL_VERSION, latestYear: engine.latestYear, units: engine.units, features: FEATURES, flagRules: FLAG_RULES,
-    personas: PERSONAS, distributions, mortgageSpread: MORTGAGE_SPREAD,
+    personas: PERSONAS, distributions, mortgageSpread: MORTGAGE_SPREAD, eventClasses: EVENT_CLASSES,
+    stressComponents: STRESS_COMPONENTS, stressDistributions: stress.distributions, signalLabels: SIGNAL_LABELS, signalDisclaimer: SIGNAL_DISCLAIMER,
     uncertainty: 'Empirical rolling-origin residual quantiles per horizon, held non-decreasing with distance. p25-p75 is the 50% band, p10-p90 the 80% band.',
     limits: [
       'Tier 1 covers about 58 economies with official house price indexes; rents exist for about 43.',
@@ -84,19 +120,22 @@ export function buildRun(rows, now = new Date()) {
       'Projections are not financial advice.',
     ],
   };
-  return { id, dataVintage, engine, flags, contexts, indexRows, summary };
+  return { id, dataVintage, engine, flags, contexts, indexRows, eventLibrary, summary };
 }
 
 async function main() {
   const db = connect();
   await migrate(db);
   const rows = await loadRows(db);
+  const national = await loadNationalExtras(db);
   console.log(`Loaded ${rows.length} observations`);
-  const run = buildRun(rows);
+  const run = buildRun(rows, new Date(), { national });
   console.log('\nTarget        H  Method                          MAE   Zero MAE  Skill   80% cov  Origins');
   for (const b of run.engine.backtests) console.log(`${b.target.padEnd(12)} ${String(b.horizon).padStart(2)}  ${b.method.padEnd(30)} ${String(b.mae).padStart(6)}  ${String(b.baseline_mae).padStart(8)}  ${String(b.skill_pct).padStart(5)}%  ${String(b.coverage80).padStart(6)}%  ${b.n_origins}`);
   console.log('\nRate sensitivity per +1pp (log points x100):');
   for (const s of run.engine.sensitivities.filter(s => [1, 3, 5, 10].includes(s.horizon))) console.log(`  ${s.target.padEnd(12)} h${String(s.horizon).padEnd(2)} ${String(s.coef).padStart(8)} ± ${s.se}  ${s.valid ? '' : 'DISABLED'}`);
+  console.log('\nEvent library (x100 log points vs model, shrunk):');
+  for (const e of run.eventLibrary) console.log(`  ${e.class.padEnd(18)} ${e.target.padEnd(10)} h${e.horizon} ${String(e.effect).padStart(8)} ± ${String(e.se).padEnd(6)} n=${e.n_episodes}${e.pooled ? ' (pooled fallback)' : ''}`);
   console.log(`\n${new Set(run.engine.projections.map(p => p.country)).size} countries projected, ${run.flags.length} flags, ${run.indexRows.length} index scores`);
   if (DRY_RUN) return;
 
@@ -114,6 +153,7 @@ async function main() {
   await upsertRows(db, 'risk_flags', ['run_id', 'country', 'flag', 'value', 'threshold', 'as_of'], withRun(run.flags));
   await upsertRows(db, 'persona_indexes', ['run_id', 'country', 'persona', 'score', 'rank', 'components'], withRun(run.indexRows.map(r => ({ ...r, components: JSON.stringify(r.components) }))));
   await upsertRows(db, 'country_context', ['run_id', 'country', 'origin_year', 'rent_origin_year', 'policy_rate', 'policy_rate_as_of', 'mortgage_rate', 'mortgage_rate_source', 'details'], withRun(run.contexts));
+  await upsertRows(db, 'event_library', ['run_id', 'class', 'target', 'horizon', 'effect', 'se', 'n_episodes', 'episodes'], withRun(run.eventLibrary));
   console.log(`Wrote ${run.id}`);
 }
 

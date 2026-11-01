@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { WorldMap } from "@/components/world-map";
-import { countries, flags, latestRun, personaRows, projections } from "@/lib/data";
-import { flagEmoji, pct, PERSONA_ORDER } from "@/lib/labels";
+import { activeEvents, applyLive, countries, flags, latestRun, liveShifts, liveStates, personaRows, projections } from "@/lib/data";
+import { EVENT_LABELS, flagEmoji, pct, PERSONA_ORDER } from "@/lib/labels";
 
 export const revalidate = 86400;
 
 export default async function Overview() {
-  const [run, list, proj, allFlags, personas] = await Promise.all([latestRun(), countries(), projections(), flags(), personaRows()]);
+  const [run, list, rawProj, allFlags, personas, shifts, events, states] = await Promise.all([latestRun(), countries(), projections(), flags(), personaRows(), liveShifts(), activeEvents(), liveStates()]);
+  // Every number on this page includes today's live adjustments (rates and detected events).
+  const proj = rawProj.map((p) => applyLive([p], shifts[p.country]?.[p.target])[0]);
+  const asOf = states[0]?.as_of;
+  const rateMoves = states.filter((s) => s.rate_delta != null && Math.abs(s.rate_delta) >= 0.25);
   if (!run) return <div className="page"><div className="empty"><p className="eyebrow">No data yet</p><h2>The first data refresh has not run</h2><p>Run the seed and training pipeline to populate the database.</p></div></div>;
 
   const byIso = Object.fromEntries(list.map((c) => [c.iso3, c]));
@@ -33,6 +37,19 @@ export default async function Overview() {
         <div><span>Median 10-year real rent change</span><strong className="num">{pct(medianOf(Object.values(rent10).map((p) => p.median - 100)))}</strong><small>{Object.keys(rent10).length} economies with rent indexes</small></div>
         <div><span>Active risk flags</span><strong className="num">{allFlags.length}</strong><small>across {new Set(allFlags.map((f) => f.country)).size} economies</small></div>
       </div>
+
+      {asOf ? (
+        <section className="section live-banner" aria-label="Live layer">
+          <div className="live-banner__head">
+            <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live · {asOf}</p>
+            <Link className="link" href="/live">Live page →</Link>
+          </div>
+          <ul>
+            <li><strong>{events.length}</strong> active event{events.length === 1 ? "" : "s"}{events.length ? ": " + events.slice(0, 6).map((e) => `${byIso[e.country]?.name ?? e.country} (${(EVENT_LABELS[e.class] ?? e.class).toLowerCase()})`).join(", ") : ""}</li>
+            <li><strong>{rateMoves.length}</strong> economies where the policy rate has moved at least 0.25pp since the projection origin; their paths are adjusted automatically.</li>
+          </ul>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="section-title"><div><p className="eyebrow">10-year outlook</p><h2>Projected real house price change</h2></div><p>Median projection after inflation. Select a country for its fan chart, rents, dwelling types and the rate toggle.</p></div>

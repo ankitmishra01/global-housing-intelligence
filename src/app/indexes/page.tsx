@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { IndexTable } from "@/components/index-table";
-import { countries, latestRun, personaRows } from "@/lib/data";
+import { countries, latestRun, livePersonaRows, personaRows } from "@/lib/data";
 
 export const revalidate = 86400;
 export const metadata: Metadata = { title: "Indexes" };
 
 export default async function IndexesPage({ searchParams }: { searchParams: Promise<{ persona?: string }> }) {
-  const [run, rows, list, sp] = await Promise.all([latestRun(), personaRows(), countries(), searchParams]);
+  const [run, baseRows, live, list, sp] = await Promise.all([latestRun(), personaRows(), livePersonaRows(), countries(), searchParams]);
+  // Live scores include today's rate moves and detected events; fall back to the run's scores.
+  const rows = live?.rows.length ? live.rows : baseRows;
   const names = Object.fromEntries(list.map((c) => [c.iso3, { name: c.name, iso2: c.iso2 }]));
   return (
     <div className="page">

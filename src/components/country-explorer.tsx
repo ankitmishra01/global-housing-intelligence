@@ -15,6 +15,7 @@ export type ExplorerProps = {
   methods: { price10: string; rent10: string };
   sens: { real_price?: SensMap; real_rent?: SensMap; type_price?: SensMap };
   sensNotes: { price: string; rent: string; priceValid: boolean };
+  sensScope?: string;
   rates: { policy: number | null; policyAsOf: string | null; mortgage: number | null; mortgageSource: string | null };
   personas: { specs: Record<string, PersonaSpec>; components: Record<string, number | null>; distributions: Record<string, number[]>; base: Record<string, number | null> };
   calculator: { price: number | null; priceLabel: string | null; rent: number | null; rentLabel: string | null };
@@ -69,6 +70,11 @@ export function CountryExplorer(p: ExplorerProps) {
   });
 
   const p10 = at(priceBands, 10), r10 = at(rentBands, 10), p3 = at(priceBands, 3);
+  // The same horizons at current rates, to show what the toggle changed.
+  const base = (rows: Band[], h: number) => at(rows, h)?.median;
+  const bp10 = base(nominal ? p.bands.nominal_price : p.bands.real_price, 10), bp3 = base(nominal ? p.bands.nominal_price : p.bands.real_price, 3);
+  const br10 = base(nominal ? p.bands.nominal_rent : p.bands.real_rent, 10);
+  const moved = (now?: number, was?: number) => (delta && now != null && was != null ? <span className={`delta-chip ${now - was < 0 ? "neg" : "pos"}`}>{now - was > 0 ? "+" : ""}{(now - was).toFixed(1)} pts vs current rates</span> : null);
   const unit = nominal ? "nominal" : "real (after inflation)";
 
   return (
@@ -97,7 +103,7 @@ export function CountryExplorer(p: ExplorerProps) {
               <button className="chip" aria-pressed={!nominal} onClick={() => setNominal(false)}>Real (after inflation)</button>
               <button className="chip" aria-pressed={nominal} onClick={() => setNominal(true)}>Nominal</button>
             </div>
-            <span className="note">A sustained move of this size from today, applied to the model-implied sensitivity. Bands widen with the sensitivity's uncertainty.</span>
+            <span className="note">A sustained move of this size from today, applied to this country&apos;s model-implied sensitivity. {p.sensScope} Bands widen with the sensitivity&apos;s uncertainty.</span>
           </div>
           {!p.sensNotes.priceValid ? <p className="disabled-note" style={{ marginTop: 12 }}>The rate effect on prices is switched off this run: {p.sensNotes.price}</p> : null}
         </div>
@@ -107,7 +113,7 @@ export function CountryExplorer(p: ExplorerProps) {
         <div className="panel">
           <p className="eyebrow">Buy</p>
           <h3 style={{ margin: "4px 0 2px", font: "400 22px var(--font-display)" }}>House prices, 10-year outlook</h3>
-          <p className="note">10-year {unit} change: <strong className={p10 && p10.median >= 100 ? "pos" : "neg"}>{pct(p10 ? p10.median - 100 : null)}</strong> (80% range {pct(p10 ? p10.p10 - 100 : null)} to {pct(p10 ? p10.p90 - 100 : null)}) · 3-year {pct(p3 ? p3.median - 100 : null)}</p>
+          <p className="note">10-year {unit} change: <strong className={p10 && p10.median >= 100 ? "pos" : "neg"}>{pct(p10 ? p10.median - 100 : null)}</strong> {moved(p10?.median, bp10)} (80% range {pct(p10 ? p10.p10 - 100 : null)} to {pct(p10 ? p10.p90 - 100 : null)}) · 3-year {pct(p3 ? p3.median - 100 : null)} {moved(p3?.median, bp3)}</p>
           {priceBands.length ? <FanChart history={p.history.price} bands={priceBands} color="price" label={`${p.name} house price projection`} /> : <p className="empty">No price projection.</p>}
           <p className="note">10-year method: {p.methods.price10}</p>
         </div>
@@ -116,7 +122,7 @@ export function CountryExplorer(p: ExplorerProps) {
           <h3 style={{ margin: "4px 0 2px", font: "400 22px var(--font-display)" }}>Rents, 10-year outlook</h3>
           {rentBands.length ? (
             <>
-              <p className="note">10-year {unit} change: <strong>{pct(r10 ? r10.median - 100 : null)}</strong> (80% range {pct(r10 ? r10.p10 - 100 : null)} to {pct(r10 ? r10.p90 - 100 : null)})</p>
+              <p className="note">10-year {unit} change: <strong>{pct(r10 ? r10.median - 100 : null)}</strong> {moved(r10?.median, br10)} (80% range {pct(r10 ? r10.p10 - 100 : null)} to {pct(r10 ? r10.p90 - 100 : null)})</p>
               <FanChart history={p.history.rent} bands={rentBands} color="rent" label={`${p.name} rent projection`} />
               <p className="note">10-year method: {p.methods.rent10}. {p.sensNotes.rent}</p>
             </>

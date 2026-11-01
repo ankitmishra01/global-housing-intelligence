@@ -30,3 +30,10 @@ export const money = (v: number | null | undefined) =>
 
 export const flagEmoji = (iso2: string | null | undefined) =>
   iso2 && /^[A-Z]{2}$/.test(iso2) ? String.fromCodePoint(...[...iso2].map((c) => 127397 + c.charCodeAt(0))) : "";
+
+export const EVENT_LABELS: Record<string, string> = {
+  armed_conflict: "Armed conflict",
+  regional_conflict: "Regional conflict spillover",
+  natural_disaster: "Natural disaster",
+  currency_crisis: "Currency crisis",
+};

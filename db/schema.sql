@@ -119,3 +119,91 @@ CREATE TABLE IF NOT EXISTS country_context (
   details         TEXT NOT NULL,   -- JSON
   PRIMARY KEY (run_id, country)
 );
+
+-- ── Live layer (daily): current rates, detected events, and the shifts they apply ──
+
+-- Daily signal history per country (conflict mention counts, FX, policy rate) for baselines.
+CREATE TABLE IF NOT EXISTS live_signals (
+  country TEXT NOT NULL,
+  signal  TEXT NOT NULL,      -- conflict_mentions, fx_usd, policy_rate
+  date    TEXT NOT NULL,      -- YYYY-MM-DD
+  value   REAL NOT NULL,
+  PRIMARY KEY (country, signal, date)
+);
+
+-- Detected events. Applied automatically while status = 'active'.
+CREATE TABLE IF NOT EXISTS events (
+  id         TEXT PRIMARY KEY,          -- <iso3>:<class>:<onset>
+  country    TEXT NOT NULL,
+  class      TEXT NOT NULL,             -- armed_conflict, regional_conflict, natural_disaster, currency_crisis
+  status     TEXT NOT NULL,             -- active, expired
+  onset      TEXT NOT NULL,
+  last_seen  TEXT NOT NULL,
+  intensity  REAL NOT NULL,             -- z-score or alert level, see metric
+  metric     TEXT NOT NULL,
+  evidence   TEXT NOT NULL,             -- JSON: what triggered it (counts, alert names, FX move)
+  source     TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS events_status ON events (status, country);
+
+-- Historical event study per training run: how far real prices/rents moved vs the model
+-- after past episodes of each class (x100 log points), shrunk toward zero for small n.
+CREATE TABLE IF NOT EXISTS event_library (
+  run_id     TEXT NOT NULL,
+  class      TEXT NOT NULL,
+  target     TEXT NOT NULL,             -- real_price, real_rent
+  horizon    INTEGER NOT NULL,          -- 1, 2, 3
+  effect     REAL NOT NULL,
+  se         REAL NOT NULL,
+  n_episodes INTEGER NOT NULL,
+  episodes   TEXT NOT NULL,             -- JSON [{country, year, residual}]
+  PRIMARY KEY (run_id, class, target, horizon)
+);
+
+-- Shifts applied on top of the latest projection run (x100 log points on the cumulative path).
+CREATE TABLE IF NOT EXISTS live_adjustments (
+  as_of    TEXT NOT NULL,
+  country  TEXT NOT NULL,
+  target   TEXT NOT NULL,               -- same targets as projections (incl. real_price:<type>)
+  horizon  INTEGER NOT NULL,
+  shift    REAL NOT NULL,
+  extra_se REAL NOT NULL,
+  PRIMARY KEY (as_of, country, target, horizon)
+);
+
+-- One row per country: what the live layer applied and why.
+CREATE TABLE IF NOT EXISTS live_state (
+  country            TEXT PRIMARY KEY,
+  as_of              TEXT NOT NULL,
+  run_id             TEXT NOT NULL,
+  policy_rate_now    REAL,
+  policy_rate_date   TEXT,
+  policy_rate_origin REAL,
+  rate_delta         REAL,
+  events             TEXT NOT NULL,     -- JSON [{id, class, onset, intensity, metric, effect3, n_episodes}]
+  shift10_price      REAL,
+  shift10_rent       REAL,
+  explanation        TEXT NOT NULL      -- JSON lines shown on the page
+);
+
+CREATE TABLE IF NOT EXISTS persona_indexes_live (
+  as_of      TEXT NOT NULL,
+  country    TEXT NOT NULL,
+  persona    TEXT NOT NULL,
+  score      REAL NOT NULL,
+  rank       INTEGER NOT NULL,
+  components TEXT NOT NULL,
+  PRIMARY KEY (as_of, country, persona)
+);
+
+-- Human-readable change log for the /live page.
+CREATE TABLE IF NOT EXISTS live_log (
+  id      INTEGER PRIMARY KEY AUTOINCREMENT,
+  date    TEXT NOT NULL,
+  country TEXT NOT NULL,
+  kind    TEXT NOT NULL,                -- rate_change, event_start, event_end, adjustment
+  message TEXT NOT NULL,
+  delta10 REAL
+);
+CREATE INDEX IF NOT EXISTS live_log_date ON live_log (date);

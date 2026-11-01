@@ -25,14 +25,25 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <span className="brand__mark">GHI</span>
             <span><strong>Global Housing Intelligence</strong><small>prices · rents · 10-year outlook</small></span>
           </Link>
-          <Nav />
+          <span className="masthead__live"><i aria-hidden="true" />Live layer updates daily</span>
         </header>
+        <div className="shell">
+          <aside className="rail">
+            <Nav />
+            <div className="rail__foot">
+              <p>217 economies · BIS, OECD, IMF, World Bank and national housing agencies.</p>
+              <p>Projections are estimates with published error rates, not advice.</p>
+            </div>
+          </aside>
+          <div className="shell__main">
         <main id="main">{children}</main>
         <footer className="foot">
           Sources: BIS, OECD, IMF World Economic Outlook, World Bank, CMHC and Statistics Canada, Bank of Canada, US Census Bureau, BLS and Freddie Mac via FRED,
           Zillow Research, HM Land Registry, Australian Bureau of Statistics. Projections are statistical estimates with published error rates, not financial advice.{" "}
           <Link className="link" href="/methodology">Methodology</Link>
         </footer>
+          </div>
+        </div>
       </body>
     </html>
   );

@@ -11,6 +11,7 @@ import { fetchBis, fetchBisDwellingTypes, BIS_INDICATORS } from '../lib/sources/
 import { fetchOecd, OECD_INDICATORS } from '../lib/sources/oecd.js';
 import { fetchWorldBank, WB_INDICATORS } from '../lib/sources/worldbank.js';
 import { fetchImf, IMF_INDICATORS } from '../lib/sources/imf.js';
+import { fetchStress, STRESS_INDICATORS } from '../lib/sources/stress.js';
 import { fetchNational, NATIONAL_ADAPTERS, NATIONAL_INDICATORS } from '../lib/sources/national/index.js';
 import { validateRows, coverageReport, typeCoverage, COVERAGE_GATES } from '../lib/validate.js';
 
@@ -37,6 +38,7 @@ async function main() {
     ...await step('OECD analytical house prices', () => fetchOecd(validIso3)),
     ...await step('IMF World Economic Outlook', () => fetchImf(validIso3)),
     ...await step('World Bank housing drivers', () => fetchWorldBank(validIso3)),
+    ...await step('OECD unemployment and wages, BIS debt service', () => fetchStress(validIso3, byIso2)),
   ];
   console.log('National housing agencies:');
   const national = await fetchNational();
@@ -46,9 +48,10 @@ async function main() {
   const coverage = coverageReport(rows);
   const gateFailures = Object.entries(COVERAGE_GATES).filter(([key, min]) => (coverage[key]?.countries || 0) < min).map(([key, min]) => `${key}: ${coverage[key]?.countries || 0} countries < ${min}`);
 
+  const report_types = typeCoverage(rows);
   const has = (iso3, indicator) => coverage[indicator]?.list.includes(iso3);
   const countryRows = countries.map(c => {
-    const hasPrice = has(c.iso3, 'REAL_PRICE') || has(c.iso3, 'OECD_REAL_PRICE');
+    const hasPrice = has(c.iso3, 'REAL_PRICE') || has(c.iso3, 'OECD_REAL_PRICE') || (report_types.all || []).includes(c.iso3);
     return { iso3: c.iso3, iso2: c.iso2, name: c.name, region: c.region, income_group: c.incomeGroup, tier: hasPrice ? 1 : 2, has_price: hasPrice ? 1 : 0,
       has_rent: has(c.iso3, 'RENT') ? 1 : 0, has_national: NATIONAL_ADAPTERS.some(a => a.iso3 === c.iso3) ? 1 : 0, updated_at: RUN_AT };
   });
@@ -68,7 +71,7 @@ async function main() {
 
   const db = connect();
   await migrate(db);
-  const indicators = [...BIS_INDICATORS, ...OECD_INDICATORS, ...IMF_INDICATORS, ...WB_INDICATORS, ...NATIONAL_INDICATORS];
+  const indicators = [...BIS_INDICATORS, ...OECD_INDICATORS, ...IMF_INDICATORS, ...WB_INDICATORS, ...STRESS_INDICATORS, ...NATIONAL_INDICATORS];
   await upsertRows(db, 'indicators', ['key', 'label', 'unit', 'source', 'frequency'], indicators);
   await upsertRows(db, 'countries', Object.keys(countryRows[0]), countryRows);
   const obs = rows.map(r => ({ ...r, region: r.region || '', dwelling_type: r.dwelling_type || '', status: r.status || 'actual', vintage: VINTAGE, fetched_at: RUN_AT }));

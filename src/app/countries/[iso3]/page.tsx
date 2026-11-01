@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CountryExplorer, type ExplorerProps } from "@/components/country-explorer";
-import { country, countryPanel, contexts, flags, latestRun, personaRows, projections, rebased, sensitivities, indicatorLabels, type Projection, type Sensitivity } from "@/lib/data";
-import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
+import { applyLive, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
+import { EVENT_LABELS, flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
 export const revalidate = 86400;
@@ -16,17 +16,36 @@ export async function generateMetadata({ params }: { params: Promise<{ iso3: str
 const DRIVERS = ["POP_GROWTH", "URBAN_GROWTH", "URBAN_SHARE", "GDP_PC_GROWTH", "GDP_PC_USD", "INFLATION", "LENDING_RATE", "REAL_RATE", "PRIVATE_CREDIT", "HH_CREDIT", "CREDIT_GAP", "PTI_AVG", "PTR_AVG"];
 const NATIONAL = ["AVG_PRICE", "MEDIAN_PRICE", "AVG_RENT", "AVG_RENT_2BR", "VACANCY_RATE", "HOUSING_STARTS", "NEW_HOUSING_PRICE", "MORTGAGE_RATE", "RENT_CPI", "TYPE_PRICE_LEVEL"];
 
-const bands = (list: Projection[], target: string): Band[] => list.filter((p) => p.target === target).map((p) => ({ horizon: p.horizon, year: p.year, p10: p.p10, p25: p.p25, median: p.median, p75: p.p75, p90: p.p90 }));
+const bands = (list: Projection[], target: string, live?: Record<string, Record<number, LiveShift>>): Band[] =>
+  applyLive(list.filter((p) => p.target === target).map((p) => ({ horizon: p.horizon, year: p.year, p10: p.p10, p25: p.p25, median: p.median, p75: p.p75, p90: p.p90 })), live?.[target]);
 const sensMap = (list: Sensitivity[], target: string): SensMap | undefined => {
   const rows = list.filter((s) => s.target === target);
   return rows.length ? Object.fromEntries(rows.map((s) => [s.horizon, { coef: s.coef, se: s.se, valid: !!s.valid }])) : undefined;
 };
 
+// Live shifts move the projection-based index components the same way they move the charts.
+function liveComponents(base: Record<string, number | null>, shifts?: Record<string, Record<number, LiveShift>>) {
+  if (!shifts) return base;
+  const add = (v: number | null, s?: LiveShift) => (v == null || !s ? v : v + s.shift);
+  return { ...base, proj3Price: add(base.proj3Price, shifts.real_price?.[3]), proj10Price: add(base.proj10Price, shifts.real_price?.[10]), proj10Rent: add(base.proj10Rent, shifts.real_rent?.[10]) };
+}
+
+type RateSens = { householdCreditShare?: number; imputed?: boolean } & Record<string, Record<string, { coef: number; se: number; valid: number }> | number | boolean | undefined>;
+function countrySens(rs: RateSens | null | undefined) {
+  if (!rs) return null;
+  const pick = (t: string): SensMap | undefined => {
+    const m = rs[t];
+    return m && typeof m === "object" ? Object.fromEntries(Object.entries(m).map(([h, v]) => [Number(h), { coef: v.coef, se: v.se, valid: !!v.valid }])) : undefined;
+  };
+  return { real_price: pick("real_price"), real_rent: pick("real_rent"), type_price: pick("type_price") };
+}
+
 export default async function CountryPage({ params }: { params: Promise<{ iso3: string }> }) {
   const iso3 = (await params).iso3.toUpperCase();
   const c = await country(iso3);
   if (!c) notFound();
-  const [run, proj, sens, allFlags, personas, ctxs, { panel, observations }, labels] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels()]);
+  const [run, proj, sens, allFlags, personas, ctxs, { panel, observations }, labels, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels(), liveState(iso3), liveShifts(iso3)]);
+  const shifts = shiftsAll[iso3];
   const ctx = ctxs.find((x) => x.country === iso3);
   const myFlags = allFlags.filter((f) => f.country === iso3);
 
@@ -54,15 +73,16 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         types: Object.fromEntries(typeKeys.map((t) => [t, rebased(panel.TYPE_REAL?.[t], ctx.details.types[t].origin)])),
       },
       bands: {
-        real_price: bands(proj, "real_price"), nominal_price: bands(proj, "nominal_price"), real_rent: bands(proj, "real_rent"), nominal_rent: bands(proj, "nominal_rent"),
-        types: Object.fromEntries(typeKeys.map((t) => [t, bands(proj, `real_price:${t}`)]).filter(([, b]) => b.length)),
+        real_price: bands(proj, "real_price", shifts), nominal_price: bands(proj, "nominal_price", shifts), real_rent: bands(proj, "real_rent", shifts), nominal_rent: bands(proj, "nominal_rent", shifts),
+        types: Object.fromEntries(typeKeys.map((t) => [t, bands(proj, `real_price:${t}`, shifts)]).filter(([, b]) => b.length)),
       },
       methods: { price10: proj.find((p) => p.target === "real_price" && p.horizon === 10)?.method ?? "–", rent10: proj.find((p) => p.target === "real_rent" && p.horizon === 10)?.method ?? "–" },
-      sens: { real_price: sensMap(sens, "real_price"), real_rent: sensMap(sens, "real_rent"), type_price: sensMap(sens, "type_price") },
-      sensNotes: { price: priceSens[0]?.note ?? "", rent: rentSens?.note ? `Rate effect on rents: ${rentSens.note}.` : "", priceValid: priceSens.length > 0 && !!priceSens[0].valid },
+      sens: countrySens(ctx.details.rateSens) ?? { real_price: sensMap(sens, "real_price"), real_rent: sensMap(sens, "real_rent"), type_price: sensMap(sens, "type_price") },
+      sensScope: ctx.details.rateSens ? `Rate effects scale with household credit of ${Math.round((ctx.details.rateSens.householdCreditShare ?? 0) * 100)}% of GDP${ctx.details.rateSens.imputed ? " (median used: no BIS household credit series)" : ""}.` : "Pooled rate effects.",
+      sensNotes: { price: priceSens[0]?.note ?? "", rent: rentSens?.note ? "Higher rates can push would-be buyers into renting, so the rent effect's sign is estimated, not assumed." : "", priceValid: priceSens.length > 0 && !!priceSens[0].valid },
       rates: { policy: ctx.policy_rate, policyAsOf: ctx.policy_rate_as_of, mortgage: ctx.mortgage_rate, mortgageSource: ctx.mortgage_rate_source },
       personas: {
-        specs: run.summary.personas, components: ctx.details.components, distributions: run.summary.distributions,
+        specs: run.summary.personas, components: liveComponents(ctx.details.components, shifts), distributions: run.summary.distributions,
         base: Object.fromEntries(["investor", "buyer", "renter", "seller"].map((k) => [k, personas.find((r) => r.country === iso3 && r.persona === k)?.score ?? null])),
       },
       calculator: {
@@ -91,6 +111,18 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         </div>
       </header>
 
+      {live && live.explanation.length ? (
+        <section className="section live-banner" aria-label="Live adjustments">
+          <div className="live-banner__head">
+            <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live adjustments · {live.as_of}</p>
+            <Link className="link" href="/live">What changed today →</Link>
+          </div>
+          <ul>{live.explanation.map((e, i) => <li key={i}><span className={`badge ${e.kind === "event" ? "badge--flag" : ""}`}>{e.kind === "event" ? "Event" : e.kind === "rate" ? "Rates" : e.kind}</span> {e.text}</li>)}</ul>
+          {live.events.length ? <p className="note">Active: {live.events.map((ev) => `${EVENT_LABELS[ev.class] ?? ev.class} since ${ev.onset}`).join(" · ")}. Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>
+            : <p className="note">Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>}
+        </section>
+      ) : null}
+
       {myFlags.length ? (
         <section className="section">
           <div className="grid-3">
@@ -106,6 +138,8 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
       ) : null}
 
       {explorer ? <CountryExplorer {...explorer} /> : null}
+
+      {ctx?.details.affordability || ctx?.details.signals ? <AffordabilitySection ctx={ctx} disclaimer={run?.summary && (run.summary as unknown as { signalDisclaimer?: string }).signalDisclaimer} /> : null}
 
       {nationalTop.length ? (
         <section className="section">
@@ -147,5 +181,72 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         ) : <p className="note">No driver data loaded yet.</p>}
       </section>
     </div>
+  );
+}
+
+type Ctx = NonNullable<Awaited<ReturnType<typeof contexts>>[number]>;
+const STRESS_NAMES: Record<string, string> = { mortgageToIncome: "Mortgage / income", ptiVsHistory: "Price-to-income vs history", debtServiceGap: "Debt service vs average", unemploymentChange12m: "Unemployment change, 12m", realWageGrowth3y: "Real wage growth, 3y", hhDebt: "Household debt % GDP" };
+const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
+
+function AffordabilitySection({ ctx, disclaimer }: { ctx: Ctx; disclaimer?: string }) {
+  const a = (ctx.details.affordability ?? {}) as Record<string, number | string | boolean | null>;
+  const stress = ctx.details.stress;
+  const signals = ctx.details.signals ?? {};
+  const tiles: { label: string; value: string; note?: string | null; warn?: boolean }[] = [
+    { label: "House price to income", value: num(a.priceToIncome) != null ? `${num(a.priceToIncome)!.toFixed(1)}×` : "–", note: (a.priceToIncomeBasis as string) ?? "No national price level to compare with income" },
+    { label: "Price-to-income vs history", value: num(a.ptiVsHistory) != null ? `${num(a.ptiVsHistory)! > 0 ? "+" : ""}${num(a.ptiVsHistory)!.toFixed(0)}%` : "–", note: "OECD ratio vs its long-run average", warn: (num(a.ptiVsHistory) ?? 0) > 20 },
+    { label: "Mortgage payment / income", value: num(a.mortgageToIncome) != null ? `${num(a.mortgageToIncome)!.toFixed(0)}%` : "–", note: (a.mortgageToIncomeBasis as string) ?? null, warn: (num(a.mortgageToIncome) ?? 0) > 30 },
+    { label: "Rent / income", value: num(a.rentToIncome) != null ? `${num(a.rentToIncome)!.toFixed(0)}%` : "–", note: (a.rentToIncomeBasis as string) ?? null, warn: (num(a.rentToIncome) ?? 0) > 30 },
+    { label: "Household debt service", value: num(a.debtService) != null ? `${num(a.debtService)!.toFixed(1)}% of income` : "–", note: num(a.debtServiceGap) != null ? `${num(a.debtServiceGap)! > 0 ? "+" : ""}${num(a.debtServiceGap)!.toFixed(1)}pp vs 15-year average (BIS, ${a.debtServiceAsOf})` : "BIS debt service ratio", warn: (num(a.debtServiceGap) ?? 0) >= 2 },
+    { label: "Unemployment", value: num(a.unemployment) != null ? `${num(a.unemployment)!.toFixed(1)}%` : "–", note: num(a.unemploymentChange12m) != null ? `${num(a.unemploymentChange12m)! > 0 ? "+" : ""}${num(a.unemploymentChange12m)!.toFixed(1)}pp over 12 months${a.unemploymentRising ? " · rising fast" : ""} (${a.unemploymentAsOf})` : null, warn: !!a.unemploymentRising },
+    { label: "Real wage growth (3y avg)", value: num(a.realWageGrowth3y) != null ? `${num(a.realWageGrowth3y)! > 0 ? "+" : ""}${num(a.realWageGrowth3y)!.toFixed(1)}%` : "–", note: a.wageStagnation ? "Stagnant: 0.5% a year or less (OECD)" : "OECD average annual wages, constant prices", warn: !!a.wageStagnation },
+    { label: "Household debt", value: num(a.hhDebt) != null ? `${num(a.hhDebt)!.toFixed(0)}% of GDP` : "–", note: "BIS credit to households" },
+  ];
+  return (
+    <section className="section">
+      <div className="section-title">
+        <div><p className="eyebrow">Affordability and mortgage stress</p><h2>Can households carry it?</h2></div>
+        <p>Income ratios, debt service, unemployment and wages. Rising unemployment, stagnant wages and high debt service raise mortgage stress and pull the buyer and investor signals down.</p>
+      </div>
+      <div className="grid-4">
+        {tiles.map((t) => (
+          <div key={t.label} className="persona-card" style={t.warn ? { borderColor: "var(--neg)" } : undefined}>
+            <h3>{t.label}</h3>
+            <div className="score num" style={{ fontSize: 28 }}>{t.value}</div>
+            {t.note ? <p>{t.note}</p> : null}
+          </div>
+        ))}
+      </div>
+      {stress ? (
+        <div className="panel" style={{ marginTop: 16 }}>
+          <p className="eyebrow">Mortgage stress index</p>
+          <p style={{ margin: "4px 0" }}><strong className="num" style={{ font: "400 34px var(--font-display)" }}>{stress.score.toFixed(0)}</strong><span className="note"> / 100 · rank {stress.rank} of the economies with enough data (higher is more stress)</span></p>
+          <div className="meter"><i style={{ width: `${stress.score}%`, background: stress.score >= 75 ? "var(--neg)" : "var(--accent)" }} /></div>
+          <p className="note">{stress.components.filter((c) => c.percentile != null).map((c) => `${STRESS_NAMES[c.basis] ?? c.basis}: ${c.value} (${Math.round(c.percentile!)}th percentile)`).join(" · ")}</p>
+        </div>
+      ) : null}
+      {Object.keys(signals).length ? (
+        <div style={{ marginTop: 16 }}>
+          <div className="grid-4">
+            {(["buyer", "seller", "investor", "renter"] as const).map((k) => {
+              const sg = signals[k];
+              if (!sg) return null;
+              return (
+                <article key={k} className="persona-card">
+                  <h3>{k[0].toUpperCase() + k.slice(1)} signal</h3>
+                  <div className={`score ${sg.level > 0 ? "pos" : sg.level < 0 ? "neg" : ""}`} style={{ fontSize: 26 }}>{sg.label}</div>
+                  {sg.adjusted ? <p className="delta" style={{ color: "var(--gold)" }}>Adjusted for labour-market and mortgage stress</p> : null}
+                  <ul style={{ margin: "8px 0 0", paddingLeft: 16, fontSize: 12.5 }}>
+                    {sg.support.map((r) => <li key={r}>{r}</li>)}
+                    {sg.oppose.map((r) => <li key={r} style={{ color: "var(--muted)" }}>But: {r}</li>)}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+          <p className="note">{disclaimer ?? "Market-level signal from public data and statistical projections. Not personal financial advice."}</p>
+        </div>
+      ) : null}
+    </section>
   );
 }

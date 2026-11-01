@@ -45,10 +45,18 @@ button, input, select { font: inherit; color: inherit; }
 .brand__mark { display: grid; place-items: center; width: 38px; height: 38px; flex: none; background: var(--ink); color: var(--sheet); font: 500 12px var(--font-mono); letter-spacing: .06em; }
 .brand strong { display: block; font: 500 15px var(--font-sans); white-space: nowrap; }
 .brand small { display: block; color: var(--muted); font: 11px var(--font-mono); }
-.nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
-.nav a { padding: 8px 12px; color: var(--muted); font-size: 14px; white-space: nowrap; border-bottom: 2px solid transparent; }
-.nav a:hover { color: var(--ink); }
-.nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+.masthead__live { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font: 10.5px var(--font-mono); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+.masthead__live i { width: 7px; height: 7px; border-radius: 50%; background: var(--moss); box-shadow: 0 0 0 4px color-mix(in oklab, var(--moss) 20%, transparent); }
+.shell { display: grid; grid-template-columns: 216px minmax(0, 1fr); }
+.shell__main { min-width: 0; }
+.rail { position: sticky; top: 72px; height: calc(100vh - 72px); display: flex; flex-direction: column; justify-content: space-between; padding: 24px 14px; border-right: 1px solid var(--rule); background: var(--sheet); }
+.nav { display: grid; gap: 2px; }
+.nav a { display: grid; grid-template-columns: 26px 1fr; align-items: center; padding: 9px 10px; color: var(--muted); font-size: 14px; border-left: 2px solid transparent; }
+.nav a span { color: var(--faint); font: 10px var(--font-mono); }
+.nav a:hover { color: var(--ink); background: var(--wash); }
+.nav a[aria-current="page"] { color: var(--ink); border-left-color: var(--accent); background: var(--paper); }
+.rail__foot { padding: 8px 10px; color: var(--muted); font: 10px/1.6 var(--font-mono); }
+.rail__foot p { margin: 0 0 10px; }
 main { min-width: 0; }
 .page { max-width: 1320px; margin: 0 auto; padding: 44px clamp(16px, 4vw, 56px) 96px; }
 .foot { max-width: 1320px; margin: 0 auto; padding: 28px clamp(16px, 4vw, 56px) 48px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--rule); }
@@ -134,8 +142,14 @@ tbody tr:hover { background: var(--wash); }
 @media (max-width: 960px) {
   .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid-3 { grid-template-columns: minmax(0, 1fr); }
-  .masthead { height: auto; flex-wrap: wrap; padding-top: 10px; padding-bottom: 6px; }
-  .nav { width: 100%; }
+  .masthead { height: 60px; }
+  .masthead__live { display: none; }
+  .shell { display: block; }
+  .rail { position: sticky; top: 60px; z-index: 9; height: auto; padding: 4px 8px; border-right: 0; border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; }
+  .nav { display: flex; min-width: max-content; }
+  .nav a { display: block; padding: 9px 11px; border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .nav a[aria-current="page"] { border-bottom-color: var(--accent); background: transparent; }
+  .nav a span, .rail__foot { display: none; }
 }
 @media (max-width: 720px) {
   .page-head { display: block; }
@@ -149,3 +163,15 @@ tbody tr:hover { background: var(--wash); }
   .grid-4 { grid-template-columns: minmax(0, 1fr); }
   .chart { height: 260px; }
 }
+
+/* live layer */
+.live-dot { display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--moss); box-shadow: 0 0 0 4px color-mix(in oklab, var(--moss) 20%, transparent); vertical-align: 1px; }
+.live-banner { border: 1px solid var(--moss); background: var(--sheet); padding: 16px 20px; }
+.live-banner__head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.live-banner ul { margin: 10px 0 6px; padding: 0; list-style: none; display: grid; gap: 6px; }
+.live-banner li { font-size: 14px; }
+@media (max-width: 720px) {
+  .section-title { display: block; }
+  .section-title p { margin-top: 6px; }
+}
+.delta-chip { display: inline-block; margin: 0 4px; padding: 1px 6px; border: 1px solid currentColor; font: 10.5px var(--font-mono); white-space: nowrap; }
