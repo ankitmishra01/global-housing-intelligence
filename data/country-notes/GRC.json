@@ -44,7 +44,7 @@
     {
       "topic": "policy",
       "effect": "restrains_rents",
-      "text": "Since January 2025 the authorities have stopped issuing new short-term rental registration numbers in Athens' first, second and third municipal districts, and in June 2025 the freeze was extended to at least the end of 2026 on the grounds that affordable long-term housing in the centre is scarce. Existing registrations continue, so the measure caps further conversion of central flats to tourist use rather than returning stock to the long-term market.",
+      "text": "Since January 2025 the authorities have stopped issuing new short-term rental registration numbers in Athens' first, second and third municipal districts, and in June 2025 the freeze was extended to at least the end of 2026 on the grounds that affordable long-term housing in the centre is scarce. The freeze applies to new registrations only, so it caps further conversion of central flats to tourist use rather than returning existing short-term lets to the long-term market.",
       "sources": [
         {
           "title": "Athens extends ban on new short-term rentals in city center until 2026",
@@ -56,14 +56,20 @@
     },
     {
       "topic": "policy",
-      "effect": "supports_prices",
-      "text": "The Spiti mou II programme, funded with EUR 2 billion from the Recovery and Resilience Facility through the Hellenic Development Bank, finances first-home purchases for households within set income limits; by November 2025 over 11,000 people had been housed and income ceilings were raised to EUR 25,000 for single applicants. Loan contracts had to be signed by 31 August 2026, so the demand boost to the lower end of the market is likely to fade unless the scheme is renewed.",
+      "effect": "context",
+      "text": "The Spiti mou II programme, funded with EUR 2 billion from the Recovery and Resilience Facility through the Hellenic Development Bank, finances first-home purchases for households within set income limits; by November 2025 over 11,000 people had been housed and income ceilings were raised to EUR 25,000 for single applicants. New applications closed on 31 May 2026 and approved beneficiaries had to sign loan contracts by 31 August 2026, with no further extension announced as of late May 2026, so the demand boost to the lower end of the market has now run its course unless a successor scheme is launched.",
       "sources": [
         {
           "title": "My Home II: higher income limits and extended deadlines",
           "publisher": "Parapolitika",
           "url": "https://en.parapolitika.gr/?p=98129",
           "date": "2025-11-19"
+        },
+        {
+          "title": "Spiti mou II: applications close on 31 May, loan contracts by 31 August 2026",
+          "publisher": "RE+D Magazine (ered.gr)",
+          "url": "https://ered.gr/?p=79103",
+          "date": "2026-05-27"
         }
       ]
     },

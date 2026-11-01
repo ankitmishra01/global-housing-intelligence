@@ -5,13 +5,19 @@
     {
       "topic": "macroprudential",
       "effect": "context",
-      "text": "Central Bank of Malta Directive No. 16, in force since July 2019, caps loan-to-value at 90% for first-time buyers and primary-residence movers (Category I) and at 75% after phase-in for other purchases, with stressed debt service of no more than 40% of income under a 150 basis point rate shock. Category I loans on property worth below EUR 175,000 are exempt from the LTV and DSTI limits, so the rules bind mainly on investors and higher-value homes rather than on entry-level owner-occupiers.",
+      "text": "Central Bank of Malta Directive No. 16, in force since July 2019, caps loan-to-value at 90% for first-time buyers and primary-residence movers (Category I) and at 75% after phase-in for other purchases, with stressed debt service of no more than 40% of income under a 150 basis point rate shock. Category I loans on property worth below EUR 175,000 are exempt from the LTV and DSTI limits, so the rules bind mainly on investors and higher-value homes rather than on entry-level owner-occupiers. The March 2026 notification confirms that the 40% stressed DSTI for individuals is unchanged.",
       "sources": [
         {
           "title": "ESRB notification of borrower-based measures: Malta",
           "publisher": "Central Bank of Malta via European Systemic Risk Board",
           "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification20190517_other_mt~4b2d102bce.en.pdf",
           "date": "2019-05-17"
+        },
+        {
+          "title": "Notification template for borrower-based measures: Malta",
+          "publisher": "Central Bank of Malta via European Systemic Risk Board",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification260326_Othermacroprudentialmeasures_MT~84e74e4657.en.pdf",
+          "date": "2026-03-26"
         }
       ]
     },

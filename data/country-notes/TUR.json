@@ -69,7 +69,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The Central Bank of the Republic of Türkiye compiles the residential property price index from appraisal reports prepared when housing loans are approved, not from completed transaction prices, using hedonic models across 19 regional strata. It is published monthly with separate indices for new dwellings (built in the current or previous year) and existing dwellings, so it reflects the mortgaged segment's valuations in a largely cash market.",
+      "text": "The Central Bank of the Republic of Türkiye compiles the residential property price index from appraisal reports prepared when housing loans are approved, not from completed transaction prices, using hedonic models across 19 regional strata. It is compiled from monthly data with separate indices for new dwellings (built in the current or previous year) and existing dwellings, so it reflects the mortgaged segment's valuations in a largely cash market.",
       "sources": [
         {
           "title": "House price index (HPI) national metadata: Türkiye",

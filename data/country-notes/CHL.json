@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Chilean mortgages are denominated in Unidades de Fomento (UF), an inflation-linked unit of account, so their interest rates are real rates priced off long-term UF yields rather than the overnight policy rate. The IMF expects policy-rate cuts to reach housing only gradually as they transmit to lower long-term rates, and notes that housing loan rates stayed broadly unchanged in 2024 even as commercial and consumer loan rates fell.",
+      "text": "Chilean mortgages are denominated in Unidades de Fomento (UF), an inflation-linked unit of account, so their interest rates are real rates rather than nominal rates tied to the overnight policy rate. The IMF expects past policy-rate cuts to reach housing only gradually as they transmit to lower long-term rates, and notes that housing loan rates stayed broadly unchanged in 2024 even as commercial and consumer loan rates fell.",
       "sources": [
         {
           "title": "Chile: 2024 Article IV Consultation, Staff Report",
@@ -18,7 +18,7 @@
     {
       "topic": "policy",
       "effect": "supports_prices",
-      "text": "Law 21.748 of May 2025 created a mortgage-rate subsidy of up to 60 basis points, granted alongside the state FOGAES guarantee for new homes, for up to 50,000 first sales of new dwellings worth no more than UF 4,000, with 6,000 reserved for first homes up to UF 3,000. Because it lowers financing costs only for new units, it tilts demand towards developers' stock rather than the resale market.",
+      "text": "Law 21.748 of May 2025 created a mortgage-rate subsidy of up to 60 basis points, granted alongside the state FOGAES guarantee for new homes, for up to 50,000 first sales of new dwellings worth no more than UF 4,000, with 6,000 reserved for first homes up to UF 3,000, for loans requested within 24 months of the law's publication. Because it lowers financing costs only for new units, it tilts demand towards developers' stock rather than the resale market.",
       "sources": [
         {
           "title": "Ley núm. 21.748: Establece subsidio a la tasa de interés hipotecaria para la adquisición de viviendas nuevas",
@@ -44,7 +44,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The Central Bank of Chile has compiled its House Price Index (IPV) since 2014 from anonymised Internal Revenue Service (SII) records of actual home transactions nationwide, with breakdowns for houses and apartments and by region; the data-cleaning method was updated in 2019 and reviewed in 2021, and the index is part of the bank's experimental statistics. Because it relies on tax records it captures completed sales with a lag.",
+      "text": "The Central Bank of Chile has compiled its House Price Index (IPV) since 2014 from anonymised Internal Revenue Service (SII) records of actual home transactions nationwide, with breakdowns for houses and apartments and by region; the data-cleaning method was updated in 2019 and reviewed in 2021. Because it relies on tax records it captures completed sales with a lag.",
       "sources": [
         {
           "title": "Índice de Precios de Vivienda en Chile: Metodología y Resultados (Estudios Económicos Estadísticos No. 107)",

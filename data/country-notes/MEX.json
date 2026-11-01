@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Mexican mortgage credit is dominated by the public housing funds: in the year to March 2024 Infonavit and Fovissste originated 76.2% of home-purchase loans by number and 50.2% by value, while practically all commercial bank mortgages are peso-denominated at fixed rates, averaging 10.4% with a 19-year term. Infonavit lends at rates adjusted to the worker's income rather than tracking the policy rate, so Banco de México's moves reach borrowers slowly and mainly through new bank lending.",
+      "text": "Mexican mortgage credit is dominated by the public housing funds: in the year to March 2024 Infonavit and Fovissste originated 76.2% of home-purchase loans by number and 50.2% by value, while most commercial bank mortgages are peso-denominated at fixed rates, averaging 10.4% with a 19-year term. Infonavit lends at rates adjusted to the worker's income rather than tracking the policy rate, so Banco de México's moves reach borrowers slowly and mainly through new bank lending.",
       "sources": [{ "title": "Indicadores Básicos de Créditos a la Vivienda, datos a marzo de 2024", "publisher": "Banco de México", "url": "https://www.banxico.org.mx/publicaciones-y-prensa/rib-creditos-a-la-vivienda/%7BAB077DBE-6D11-F99B-FF96-215E545D82F8%7D.pdf", "date": "2024" }]
     },
     {
@@ -17,13 +17,13 @@
     {
       "topic": "supply",
       "effect": "context",
-      "text": "As of June 2026 about 274,000 programme homes were under construction nationwide, including 191,368 contracted by Infonavit, with Conavi expecting its first 50,000 completions by end-2026. Most of this pipeline will reach the market from 2027, so its effect on prices lies ahead rather than in current data.",
+      "text": "As of June 2026 about 274,000 programme homes were under construction nationwide, including 191,368 Infonavit homes, with Conavi expecting its first 50,000 completions by end-2026. Much of this pipeline has yet to be delivered, so its effect on prices lies ahead rather than in current data.",
       "sources": [{ "title": "Vivienda para el Bienestar: Hay 274 mil en construcción en el país; el programa atiende a cerca de 7 millones de personas", "publisher": "Presidencia de la República", "url": "https://www.gob.mx/presidencia/prensa/vivienda-para-el-bienestar-hay-274-mil-en-construccion-en-el-pais-el-programa-atiende-a-cerca-de-7-millones-de-personas-presidenta", "date": "2026-06-15" }]
     },
     {
       "topic": "data",
       "effect": "context",
-      "text": "The SHF House Price Index, published quarterly by Sociedad Hipotecaria Federal, is built from appraisals of homes bought with a mortgage from banks, Infonavit or Fovissste, with breakdowns for new and existing homes, 32 states, 74 municipalities and eight metropolitan zones. Because it covers only mortgage-financed purchases it omits cash sales; in the first quarter of 2026 economic-social housing rose faster (11%) than mid-range homes (7.5%).",
+      "text": "The SHF House Price Index, published quarterly by Sociedad Hipotecaria Federal, covers homes bought with a mortgage, with breakdowns for new and existing homes, all 32 states, 74 municipalities and eight metropolitan zones. Because it covers only mortgage-financed purchases it omits cash sales; in the first quarter of 2026 economic-social housing rose faster (11%) than mid-range and residential homes (7.5%).",
       "sources": [
         { "title": "Índice SHF de Precios de la Vivienda en México, primer trimestre de 2026", "publisher": "Sociedad Hipotecaria Federal", "url": "https://www.gob.mx/shf/articulos/indice-shf-de-precios-de-la-vivienda-en-mexico-primer-trimestre-de-2026?idiom=en", "date": "2026-05-11" }
       ]

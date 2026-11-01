@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "Since 1 August 2022 new retail floating-rate loans in Malaysia, including mortgages and refinancings, have been priced off a Standardised Base Rate set equal to Bank Negara Malaysia's Overnight Policy Rate plus a lender spread. Lenders must move the SBR by the full amount of any OPR change within seven working days, and from 1 July 2026 must reflect it in instalments within 60 calendar days, tightening to 30 days from January 2028, so policy moves reach floating-rate borrowers within roughly two months.",
+      "text": "Since 1 August 2022 new retail floating-rate loans in Malaysia, including mortgages and refinancings, have been priced at a lender spread over a Standardised Base Rate linked solely to Bank Negara Malaysia's Overnight Policy Rate. Lenders must move the SBR by the full amount of any OPR change within seven working days, and from 1 July 2026 must reflect it in instalments within 60 calendar days, tightening to 30 days from January 2028, so policy moves reach floating-rate borrowers within roughly two months.",
       "sources": [
         {
           "title": "Policy Document: Reference Rate Framework",

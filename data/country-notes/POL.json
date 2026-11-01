@@ -14,7 +14,7 @@
     {
       "topic": "macroprudential",
       "effect": "restrains_prices",
-      "text": "Recommendation S caps the loan-to-value ratio at origination at 80%, or 90% where the portion above 80% is insured or otherwise secured, and asks banks to scrutinise debt-service-to-income ratios above 40% for borrowers on up to the regional average wage and above 50% for others. Creditworthiness for variable and periodically fixed loans must be tested against an interest-rate buffer, and maturities should not exceed 35 years; the main exception is the state-guaranteed family housing loan, which allows up to 100% LTV.",
+      "text": "Recommendation S caps the loan-to-value ratio at origination at 80%, or 90% where the portion above 80% is insured or otherwise secured, and asks banks to scrutinise debt-service-to-income ratios above 40% for borrowers on up to the regional average wage and above 50% for others. Creditworthiness for variable and periodically fixed loans must be tested against an interest-rate buffer, and maturities should not exceed 35 years; the main exception is housing loans guaranteed by the state development bank BGK, where LTV may reach 100%.",
       "sources": [
         { "title": "Rekomendacja S dotycząca dobrych praktyk w zakresie zarządzania ekspozycjami kredytowymi zabezpieczonymi hipotecznie (consolidated text, June 2023 amendment)", "publisher": "Komisja Nadzoru Finansowego", "url": "https://bip.knf.gov.pl/knf/pl/komponenty/img/Rekomendacja_S_nowelizacja_czerwiec_2023_82872.pdf", "date": "2023-06" }
       ]
@@ -22,7 +22,7 @@
     {
       "topic": "policy",
       "effect": "supports_prices",
-      "text": "The Safe Credit 2% (Bezpieczny Kredyt 2%) programme, launched in July 2023, subsidised the first 120 instalments of a first-home loan for borrowers under 45, on loans of up to PLN 500,000 (PLN 600,000 for families). Demand overshot the design: more than 52,000 contracts were signed by mid-December 2023 against the 50,000 envisaged for 2023 and 2024, funding was exhausted and intake halted in January 2024, leaving a concentrated burst of subsidised demand in the 2023 to 2024 price data.",
+      "text": "The Safe Credit 2% (Bezpieczny Kredyt 2%) programme, launched in July 2023, subsidised the first 120 instalments of a first-home loan for borrowers under 45, on loans of up to PLN 500,000 (PLN 600,000 for families). Demand overshot the design: more than 52,000 contracts were signed by mid-December 2023 against the 50,000 envisaged for 2023 and 2024, the funding reserved for 2023 and 2024 was exhausted and intake was set to halt in early January 2024, leaving a concentrated burst of subsidised demand in the 2023 to 2024 price data.",
       "sources": [
         { "title": "Ustawa o rodzinnym kredycie mieszkaniowym i bezpiecznym kredycie 2% (Dz.U. 2023 poz. 859, consolidated text)", "publisher": "Sejm of the Republic of Poland (ISAP / ELI)", "url": "https://eli.gov.pl/api/acts/DU/2023/859/text/U/D20230859Lj.pdf", "date": "2023" },
         { "title": "Bezpieczny kredyt 2%: liczba wniosków, finansowanie wyczerpane", "publisher": "Strefa Inwestorów", "url": "https://strefainwestorow.pl/artykuly/gospodarka/20231220/bezpieczny-kredyt-liczba-wnioskow", "date": "2023-12-20" }

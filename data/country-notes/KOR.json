@@ -14,7 +14,7 @@
     {
       "topic": "macroprudential",
       "effect": "restrains_prices",
-      "text": "Since 1 July 2025 the third-stage stressed DSR adds 1.5 percentage points to the rate used to test all household loans across financial sectors, with an upward adjustment for mixed and periodically reset mortgages to steer lending toward fixed rates. From 27 June 2025 new purchase mortgages in the Seoul metropolitan area and speculation-regulated zones were capped at KRW 600 million, owners buying an additional home there face a 0% LTV, maturities are limited to 30 years and buyers must move in within six months.",
+      "text": "Since 1 July 2025 the third-stage stressed DSR adds 1.5 percentage points to the rate used to test all household loans across financial sectors, with an upward adjustment for mixed and periodically reset mortgages to steer lending toward fixed rates. Under measures announced on 27 June 2025 and applied immediately, new purchase mortgages in the Seoul metropolitan area and speculation-regulated zones were capped at KRW 600 million, existing owners buying an additional home there face a 0% LTV, maturities are limited to 30 years and buyers must move in within six months.",
       "sources": [
         { "title": "FSC Announces Plan to Implement Third-stage Stressed DSR Rule as Scheduled from July 1", "publisher": "Financial Services Commission", "url": "https://fsc.go.kr/eng/pr010101/84620", "date": "2025-05-20" },
         { "title": "Authorities Introduce Measures to Strengthen Household Debt Management Centered on Seoul Metropolitan Area", "publisher": "Financial Services Commission", "url": "https://fsc.go.kr/eng/pr010101/84828", "date": "2025-06-27" }
@@ -48,7 +48,7 @@
     {
       "topic": "demand",
       "effect": "supports_prices",
-      "text": "Demand is concentrating in the capital: Seoul metropolitan prices rose sharply in 2025, led by Gangnam, Seocho and Songpa, while prices outside the region declined slightly. AMRO attributes the gap to lower interest rates, strong equity gains, an accelerating buyer preference for Seoul housing and expectations of further appreciation, so national averages understate pressure in core districts.",
+      "text": "Demand is concentrating in the capital: Seoul metropolitan prices rose sharply in the first half of 2025, led by Gangnam, Seocho and Songpa, while prices outside the region declined slightly. AMRO attributes the gap to lower interest rates, strong equity gains, an accelerating buyer preference for Seoul housing and expectations of further appreciation, so national averages understate pressure in core districts.",
       "sources": [
         { "title": "Korea 2025 Annual Consultation Report, Selected Issue 4: Assessing the Effectiveness of Korea's Macroprudential Measures (ACR-2026-03)", "publisher": "ASEAN+3 Macroeconomic Research Office (AMRO)", "url": "https://amro-asia.org/wp-content/uploads/2026/03/Korea-ACV-2025-SI-4.pdf", "date": "2026-03" }
       ]

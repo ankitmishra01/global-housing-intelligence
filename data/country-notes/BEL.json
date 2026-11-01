@@ -5,23 +5,53 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Almost all Belgian mortgages are fixed-rate annuities with a constant nominal payment over the life of the loan, and ECB data show only about 7% of new house-purchase lending in 2025 and August 2026 was floating or fixed for up to one year. Combined with automatic wage indexation, which lifted average nominal disposable income by 29% between early 2019 and early 2025, this sharply reduced debt-service burdens on pre-2022 loans and explains why the market saw a soft landing rather than a correction when rates rose.",
+      "text": "Almost all Belgian mortgages are fixed-rate annuities with a constant nominal payment over the life of the loan, and ECB data show only about 7% of new house-purchase lending in 2025 and August 2026 was at a floating rate or with an initial rate fixation of up to one year. Combined with automatic wage indexation, which lifted average nominal disposable income by 29% between early 2019 and early 2025, this sharply reduced debt-service burdens on pre-2022 loans and explains why the market saw a soft landing rather than a correction when rates rose.",
       "sources": [
-        { "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)", "publisher": "European Systemic Risk Board / Nationale Bank van België", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf", "date": "2025-11-01" },
-        { "title": "Share of variable rate loans in total loans for house purchase, Belgium (RAI.M.BE.SVLHPHH.EUR.MIR.Z)", "publisher": "European Central Bank Data Portal", "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.BE.SVLHPHH.EUR.MIR.Z", "date": "2026-08" }
+        {
+          "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)",
+          "publisher": "European Systemic Risk Board / Nationale Bank van België",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf",
+          "date": "2025-11-01"
+        },
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Belgium (RAI.M.BE.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.BE.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        }
       ]
     },
     {
       "topic": "macroprudential",
       "effect": "restrains_prices",
-      "text": "Since 2020 the National Bank of Belgium's supervisory expectations have limited high loan-to-value lending, differentiated for first-time buyers, other owner-occupiers and buy-to-let; for example, up to 35% of first-time buyer loans may exceed 90% LTV and only 10% of buy-to-let loans may exceed 80%, and banks have over-complied. Citing lower risk, the NBB is folding its 6% sectoral mortgage buffer into a countercyclical buffer raised from 1.0% to 1.25% from 1 July 2026.",
-      "sources": [{ "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)", "publisher": "European Systemic Risk Board / Nationale Bank van België", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf", "date": "2025-11-01" }]
+      "text": "Since 2020 the National Bank of Belgium's supervisory expectations have limited high loan-to-value lending, differentiated for first-time buyers, other owner-occupiers and buy-to-let; for example, up to 35% of first-time buyer loans may exceed 90% LTV and only 10% of buy-to-let loans may exceed 80%, and banks have over-complied. Citing lower risk, the NBB deactivated its sectoral mortgage buffer (6% since 2023) on 1 July 2026 and folded the recalibrated buffer into a countercyclical buffer raised from 1.0% to 1.25%.",
+      "sources": [
+        {
+          "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)",
+          "publisher": "European Systemic Risk Board / Nationale Bank van België",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf",
+          "date": "2025-11-01"
+        }
+      ]
     },
     {
       "topic": "policy",
       "effect": "supports_prices",
-      "text": "Flanders and Wallonia cut registration taxes on home purchases at the start of 2025, which the NBB credits with reviving nominal price growth to 1.6% in 2025 Q1 on its hedonic index after three years of broadly flat nominal prices and a real decline of more than 10% from the 2021 peak. Because the cuts were made by the regions, tax-driven price effects can differ across the country.",
-      "sources": [{ "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)", "publisher": "European Systemic Risk Board / Nationale Bank van België", "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf", "date": "2025-11-01" }]
+      "text": "Flanders and Wallonia cut registration taxes on home purchases at the start of 2025, Flanders lowering the rate on a buyer's only home from 3% to 2% for deeds from 1 January 2025. The NBB credits the cuts with reviving nominal price growth to 1.6% in 2025 Q1 on its hedonic index, after three years of broadly stable nominal prices and a real decline of more than 10% from the 2021 peak; because the cuts were made by the regions, tax-driven price effects can differ across the country.",
+      "sources": [
+        {
+          "title": "Notification by the National Bank of Belgium on Systemic Risk Buffer (SyRB)",
+          "publisher": "European Systemic Risk Board / Nationale Bank van België",
+          "url": "https://www.esrb.europa.eu/pub/pdf/other/Esrb.notification251101_SyRB_BE~91dacaf9a8.en.pdf",
+          "date": "2025-11-01"
+        },
+        {
+          "title": "Het verkooprecht bij de aankoop van de enige eigen woning: overzicht",
+          "publisher": "Vlaamse overheid (vlaanderen.be)",
+          "url": "https://www.vlaanderen.be/belastingen-en-begroting/vlaamse-belastingen/registratiebelasting/verkooprecht/tarieven-in-het-verkooprecht/het-verkooprecht-bij-de-aankoop-van-de-enige-eigen-woning-overzicht",
+          "date": "2025"
+        }
+      ]
     }
   ]
 }

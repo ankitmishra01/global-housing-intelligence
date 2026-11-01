@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Brazilian housing loans are essentially fixed-rate, since the reference rate (TR) to which many are nominally indexed carries little weight in the total rate, so the existing stock is insulated from Selic moves. The pressure falls on new lending: savings deposits, which by law fund the SBPE mortgage system, fell from 62% to 80% of mortgage funding in 2014 to 2023 to about 50% in 2025, forcing banks to fund fixed-rate loans with costlier market instruments (LCI, LIG) and raising rates on new mortgages.",
+      "text": "Brazilian housing loans are essentially fixed-rate, since the reference rate (TR) to which many are nominally indexed carries little weight in the total rate, so the existing stock is insulated from Selic moves. The pressure falls on new lending: the share of mortgage funding drawn from savings deposits, which ranged between 62% and 80% from 2014 to 2023, fell to 50% in 2025, so banks increasingly fund fixed-rate loans with LCI and LIG notes whose returns are mostly floating, raising market risk and the rates charged on new mortgages.",
       "sources": [{ "title": "Voto 64/2025-CMN: direcionamento dos recursos captados em depósitos de poupança", "publisher": "Banco Central do Brasil / Conselho Monetário Nacional", "url": "https://normativos.bcb.gov.br/Votos/CMN/202564/Voto_do_CMN_64_2025.pdf", "date": "2025-10-09" }]
     },
     {

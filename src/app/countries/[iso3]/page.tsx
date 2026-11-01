@@ -8,7 +8,7 @@ import { NarrativeProse } from "@/components/narrative-prose";
 import { buildNarrativeInput } from "@/lib/narrative-input";
 import { buildCountryNarrative, names } from "../../../../lib/engine/narrative.js";
 import { computeSignals } from "../../../../lib/engine/signals.js";
-import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity, type Context } from "@/lib/data";
+import { applyLive, citySummaries, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, nationalObservations, personaRows, projections, rebased, sensitivities, indicatorLabels, type IndexComponent, type LiveShift, type Projection, type Sensitivity, type Context } from "@/lib/data";
 import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
@@ -24,6 +24,12 @@ export async function generateMetadata({ params }: { params: Promise<{ iso3: str
   const c = await country((await params).iso3);
   return { title: c ? `${c.name} housing outlook` : "Country" };
 }
+
+// Euro area members. One without its own BIS policy series (Bulgaria, in the euro since 2026) uses the ECB rate.
+const EURO_AREA = new Set(["AUT", "BEL", "BGR", "CYP", "DEU", "ESP", "EST", "FIN", "FRA", "GRC", "HRV", "IRL", "ITA", "LTU", "LUX", "LVA", "MLT", "NLD", "PRT", "SVK", "SVN"]);
+const toPct = (logPts: number) => 100 * (Math.exp(logPts / 100) - 1);
+// Index components that follow the live-adjusted projections, as the hero figures do.
+const LIVE_COMPONENTS: Record<string, [string, number]> = { proj3Price: ["real_price", 3], proj10Price: ["real_price", 10], proj10Rent: ["real_rent", 10] };
 
 const DRIVERS = ["POP_GROWTH", "URBAN_GROWTH", "URBAN_SHARE", "GDP_PC_GROWTH", "GDP_PC_USD", "INFLATION", "LENDING_RATE", "REAL_RATE", "PRIVATE_CREDIT", "HH_CREDIT", "CREDIT_GAP", "PTI_AVG", "PTR_AVG"];
 const NATIONAL = ["AVG_PRICE", "MEDIAN_PRICE", "AVG_RENT", "AVG_RENT_2BR", "VACANCY_RATE", "HOUSING_STARTS", "NEW_HOUSING_PRICE", "MORTGAGE_RATE", "RENT_CPI", "TYPE_PRICE_LEVEL", "SALES_COUNT", "MEDIAN_PSF", "DLD_PRICE_INDEX", "GROSS_YIELD", "CITY_PRICE", "MEDIAN_HH_INCOME"];
@@ -56,22 +62,38 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   const iso3 = (await params).iso3.toUpperCase();
   const c = await country(iso3);
   if (!c) notFound();
-  const [run, proj, sens, allFlags, personas, ctxs, { panel, observations }, labels, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels(), liveState(iso3), liveShifts(iso3)]);
+  const [run, proj, sens, allFlags, personas, ctxs, { panel, monthly, observations }, labels, live, shiftsAll] = await Promise.all([latestRun(), projections(iso3), sensitivities(), flags(), personaRows(), contexts(), countryPanel(iso3), indicatorLabels(), liveState(iso3), liveShifts(iso3)]);
   const shifts = shiftsAll[iso3];
   const [record, regionList, cities] = await Promise.all([countryTrackRecord(iso3), regionsFor(iso3), citySummaries(iso3)]);
   const ctx = ctxs.find((x) => x.country === iso3);
   const myFlags = allFlags.filter((f) => f.country === iso3);
+  // A euro member with no policy series of its own takes the ECB rate (and its monthly history) from Germany.
+  const euroProxy = ctx && ctx.policy_rate == null && EURO_AREA.has(iso3) ? ctxs.find((x) => x.country === "DEU") : undefined;
+  const [proxyLive, proxyObs] = euroProxy ? await Promise.all([liveState("DEU"), nationalObservations("DEU")]) : [null, []];
+  const rateCtx = euroProxy && ctx ? { ...ctx, policy_rate: euroProxy.policy_rate, policy_rate_as_of: euroProxy.policy_rate_as_of } : ctx;
+  const rateLive = proxyLive && live ? { ...live, policy_rate_now: proxyLive.policy_rate_now, policy_rate_date: proxyLive.policy_rate_date } : live;
   // Today's policy rate: the daily live reading when it is newer than the monthly series in the run.
-  const liveRateNewer = !!(ctx && live?.policy_rate_now != null && live.policy_rate_date && (!ctx.policy_rate_as_of || live.policy_rate_date.slice(0, 7) > ctx.policy_rate_as_of));
-  const rateNow = ctx ? {
-    policy: liveRateNewer ? live!.policy_rate_now! : ctx.policy_rate,
-    asOf: liveRateNewer ? live!.policy_rate_date! : ctx.policy_rate_as_of,
-    mortgage: liveRateNewer && ctx.mortgage_rate_source?.startsWith("policy") ? Math.max(0.1, live!.policy_rate_now! + (run?.summary.mortgageSpread ?? 2)) : ctx.mortgage_rate,
+  const liveRateNewer = !!(rateCtx && rateLive?.policy_rate_now != null && rateLive.policy_rate_date && (!rateCtx.policy_rate_as_of || rateLive.policy_rate_date.slice(0, 7) > rateCtx.policy_rate_as_of));
+  const rateNow = rateCtx ? {
+    policy: liveRateNewer ? rateLive!.policy_rate_now! : rateCtx.policy_rate,
+    asOf: liveRateNewer ? rateLive!.policy_rate_date! : rateCtx.policy_rate_as_of,
+    mortgage: liveRateNewer && rateCtx.mortgage_rate_source?.startsWith("policy") ? Math.max(0.1, rateLive!.policy_rate_now! + (run?.summary.mortgageSpread ?? 2)) : rateCtx.mortgage_rate,
   } : null;
   // Signal reasons are rebuilt from the stored components so wording fixes apply without a retrain.
+  // Projection components carry today's live shifts (as the hero figures do); momentum is a quarterly
+  // year-on-year percent change, except where no quarterly index exists and it is annual log growth.
   if (ctx) {
     const mine = personas.filter((r) => r.country === iso3);
-    if (mine.length) ctx.details = { ...ctx.details, signals: (computeSignals as (a: unknown) => NonNullable<Context["details"]["signals"]>)({ scores: Object.fromEntries(mine.map((r) => [r.persona, r.score])), components: Object.fromEntries(mine.map((r) => [r.persona, r.components])), flags: myFlags.map((f) => f.flag), stress: ctx.details.stress ?? null }) };
+    const momentumIsLog = !monthly.REAL_PRICE_Q;
+    const adjust = (list: IndexComponent[]) => list.map((x) => {
+      // From the unrounded projection (stored components carry two decimals), plus the live shift.
+      const [target, horizon] = LIVE_COMPONENTS[x.key] ?? [];
+      const p = target ? proj.find((r) => r.target === target && r.horizon === horizon) : undefined;
+      if (p && typeof x.value === "number") return { ...x, value: 100 * Math.log(p.median / 100) + (shifts?.[target]?.[horizon]?.shift ?? 0) };
+      if (x.key === "momentum" && momentumIsLog && typeof x.value === "number") return { ...x, value: toPct(x.value) };
+      return x;
+    });
+    if (mine.length) ctx.details = { ...ctx.details, signals: (computeSignals as (a: unknown) => NonNullable<Context["details"]["signals"]>)({ scores: Object.fromEntries(mine.map((r) => [r.persona, r.score])), components: Object.fromEntries(mine.map((r) => [r.persona, adjust(r.components)])), flags: myFlags.map((f) => f.flag), stress: ctx.details.stress ?? null }) };
   }
 
   const latest = (indicator: string, opts: { region?: string; type?: string; freq?: string } = {}) =>
@@ -126,7 +148,8 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
   }
 
   // Written analysis beside each chart, generated from the stored figures only.
-  const narrativeInput = await buildNarrativeInput({ c, ctx, run, live, panel, observations, explorer, allCountries: await allCountries(),
+  const narrativeInput = await buildNarrativeInput({ c, ctx: rateCtx, run, live: rateLive, panel, explorer,
+    observations: euroProxy ? [...observations, ...proxyObs.filter((o) => o.indicator === "POLICY_RATE" && o.frequency === "M")] : observations, allCountries: await allCountries(),
     flagLabels: myFlags.map((f) => run?.summary.flagRules[f.flag]?.label ?? f.flag), flagIds: myFlags.map((f) => f.flag) });
   const narrative = buildCountryNarrative(narrativeInput) as { headline: string; kpis: { label: string; value: string; period: string }[]; sections: { id: string; title: string; paragraphs: string[]; chart: string | null; sources?: { title: string; publisher?: string; url: string; date?: string }[] }[] };
   const dataYear = ctx?.origin_year ?? (observations.filter((o) => o.frequency === "A" && o.status === "actual").map((o) => o.period).sort().at(-1) ?? "");
@@ -337,7 +360,7 @@ function HeroStats({ explorer, ctx, live, latest, rateNow }: { rateNow: { policy
     ? [
         { label: "Real price, 10y", value: chg(at(explorer.bands.real_price, 10)), note: `3y ${chg(at(explorer.bands.real_price, 3))}` },
         { label: "Real rent, 10y", value: explorer.bands.real_rent.length ? chg(at(explorer.bands.real_rent, 10)) : "–", note: explorer.bands.real_rent.length ? "after inflation" : "no rent index" },
-        { label: "Policy rate", value: rateNow?.policy != null ? `${rateNow.policy.toFixed(2)}%` : "–", note: live?.rate_delta != null ? `${live.rate_delta > 0 ? "▲" : "▼"} ${Math.abs(live.rate_delta).toFixed(2)} since ${ctx?.origin_year}` : ctx?.policy_rate_as_of ?? undefined, tone: live?.rate_delta != null && live.rate_delta > 0 ? "warn" : "pos" },
+        { label: "Policy rate", value: rateNow?.policy != null ? `${rateNow.policy.toFixed(2)}%` : "–", note: live?.rate_delta != null ? (Math.abs(live.rate_delta) < 0.005 ? `unchanged since ${ctx?.origin_year}` : `${live.rate_delta > 0 ? "▲" : "▼"} ${Math.abs(live.rate_delta).toFixed(2)} since ${ctx?.origin_year}`) : rateNow?.asOf ?? undefined, tone: live?.rate_delta != null && live.rate_delta > 0 ? "warn" : "pos" },
         { label: "Mortgage rate", value: rateNow?.mortgage != null ? `${rateNow.mortgage.toFixed(2)}%` : "–", note: ctx?.mortgage_rate_source?.startsWith("policy") ? "policy + 2.0pp proxy" : "national series" },
         { label: "Unemployment", value: typeof a.unemployment === "number" ? `${a.unemployment.toFixed(1)}%` : "–", note: typeof a.unemploymentChange12m === "number" ? `${a.unemploymentChange12m > 0 ? "+" : ""}${a.unemploymentChange12m.toFixed(1)}pp in 12m` : undefined, tone: a.unemploymentRising ? "neg" : "pos" },
         { label: "Mortgage stress", value: ctx?.details.stress ? `${ctx.details.stress.score.toFixed(0)}/100` : "–", note: ctx?.details.stress ? `rank ${ctx.details.stress.rank}` : "not enough data", tone: (ctx?.details.stress?.score ?? 0) >= 75 ? "neg" : (ctx?.details.stress?.score ?? 0) >= 60 ? "warn" : "pos" },

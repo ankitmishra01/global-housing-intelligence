@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "Serbian housing loans are commonly euro-indexed, and variable-rate loans are priced as a margin over EURIBOR (the National Bank of Serbia's own 2023 illustration was 6M EURIBOR plus 3%), so ECB rate moves pass directly to borrowers. When EURIBOR rose, the NBS capped rates on first-home variable loans up to EUR 200,000 at 4.08% for loans approved by July 2022, limited new variable-loan margins to 1.1% and fixed rates to 5.03%, from 13 September 2023 to 31 December 2024; those caps have since lapsed.",
+      "text": "Serbian housing loans are commonly euro-indexed, and variable-rate loans are priced as a margin over EURIBOR (a typical example cited with the 2023 central bank measures was 6M EURIBOR plus 3%), so ECB rate moves pass directly to borrowers. When EURIBOR rose, the NBS capped rates on first-home variable loans up to EUR 200,000 at 4.08% for loans approved by July 2022, limited new variable-loan margins to 1.1% and fixed rates to 5.03%, for an effective period running from 13 September 2023 to 31 December 2024.",
       "sources": [
         {
           "title": "Limitations on housing loans interest rates",
@@ -37,7 +37,7 @@
     {
       "topic": "supply",
       "effect": "context",
-      "text": "Serbia completed 36,390 dwellings in 2025, according to the Statistical Office, and the average price of new dwellings sold in urban settlements ranged in the first half of 2024 from RSD 61,013 per square metre in Bujanovac to RSD 520,616 in Belgrade's Savski venac, against a national average of RSD 215,481. The spread shows that new supply and price pressure are concentrated in central Belgrade rather than spread across the country.",
+      "text": "Serbia completed 36,390 dwellings in 2025, according to the Statistical Office, and the average price of new dwellings sold in urban settlements ranged in the first half of 2024 from RSD 61,013 per square metre in Bujanovac to RSD 520,616 in Belgrade's Savski venac, against a national average of RSD 215,481. The spread shows that price pressure on new dwellings is concentrated in central Belgrade rather than spread across the country.",
       "sources": [
         {
           "title": "Construction",
@@ -56,7 +56,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "Since 2019 the Statistical Office has computed the average price of newly built dwellings from Republic Geodetic Authority administrative data covering all new dwellings sold in urban settlements, published by half-year as an average price per square metre rather than a quality-adjusted index. The Republic Geodetic Authority separately publishes market reports and its own real estate price index from the national register of property prices, so headline figures depend on which source is used.",
+      "text": "Since 2019 the Statistical Office has computed the average price of newly built dwellings from Republic Geodetic Authority administrative data covering all new dwellings sold in urban settlements, reported for half-year periods as an average price per square metre rather than a quality-adjusted index. The Republic Geodetic Authority separately publishes market reports, its own RGZ real estate price index and data from its register of property prices, so headline figures depend on which source is used.",
       "sources": [
         {
           "title": "Dwellings",

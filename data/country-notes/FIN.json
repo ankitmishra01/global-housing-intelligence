@@ -49,7 +49,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "Statistics Finland's headline index covers old (existing) dwellings in housing companies, that is flats and terraced units, using the Tax Administration's asset transfer tax data; it is published monthly, with new and old dwellings combined quarterly and annually. Houses owned directly as real estate rather than through housing company shares fall outside the series, so it mainly reflects the flat and terraced-house market.",
+      "text": "Statistics Finland's headline index covers old (existing) dwellings owned through housing company shares, using the Tax Administration's asset transfer tax data; it is published monthly, with new and old dwellings combined quarterly and annually. Houses owned directly as real estate rather than through housing company shares fall outside the series, so it mainly reflects the market for flats.",
       "sources": [
         { "title": "Prices of dwellings in housing companies", "publisher": "Statistics Finland", "url": "https://stat.fi/en/statistics/ashi", "date": "2026-10-28" }
       ]

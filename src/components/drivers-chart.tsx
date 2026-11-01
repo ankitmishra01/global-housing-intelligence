@@ -28,7 +28,7 @@ export function DriversChart({ d, name }: { d: DriverBreakdown; name: string }) 
   const other = d.totalPct - d.base - d.anchor - shown.reduce((s, f) => s + f.contribution, 0);
   const rows = [
     { label: "Typical market, pooled history", v: d.base, kind: "base" },
-    ...(Math.abs(d.anchor) >= 0.1 ? [{ label: `${name}'s long-run trend (${Math.round((1 - d.weight) * 100)}% weight)`, v: d.anchor, kind: "base" }] : []),
+    ...(Math.abs(d.anchor) >= 0.1 ? [{ label: `${name}${name.endsWith("s") ? "'" : "'s"} long-run trend (${Math.round((1 - d.weight) * 100)}% weight)`, v: d.anchor, kind: "base" }] : []),
     ...shown.map((f) => ({ label: SHORT[f.name] ?? f.name, v: f.contribution, kind: f.contribution >= 0 ? "pos" : "neg" })),
     ...(Math.abs(other) >= 0.05 ? [{ label: "Other drivers", v: other, kind: other >= 0 ? "pos" : "neg" }] : []),
   ];

@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Irish new lending has shifted decisively towards fixed rates: ECB data show the share of new house-purchase loans that are floating or fixed for up to one year fell from 31% in January 2025 to 6% in August 2026. New borrowers are therefore shielded from ECB moves for the length of their fixation, which slows pass-through to monthly repayments in both directions.",
+      "text": "Irish new lending has shifted decisively towards fixed rates: ECB data show the share of new house-purchase loans at a floating rate or with an initial rate fixation of up to one year fell from 31% in January 2025 to 6% in August 2026. New borrowers are therefore shielded from ECB moves for the length of their fixation, which slows pass-through to monthly repayments in both directions.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Ireland (RAI.M.IE.SVLHPHH.EUR.MIR.Z)",
@@ -44,7 +44,7 @@
     {
       "topic": "policy",
       "effect": "restrains_rents",
-      "text": "Rent Pressure Zone rules were extended to every private tenancy in the State on 20 June 2025, capping annual increases at the lower of 2% or inflation. From 1 March 2026 a national system keeps that cap but lets landlords reset to market rent at the start of a new tenancy and at the end of a six-year tenancy cycle, while apartments commenced from 10 June 2025 may rise with CPI without the 2% ceiling to encourage rental supply.",
+      "text": "Rent Pressure Zone rules were extended to every private tenancy in the State on 20 June 2025, capping annual increases at the lower of 2% or HICP inflation. From 1 March 2026 a national system keeps that cap but lets landlords reset to market rent at a new tenancy in specified cases, such as a first letting or a voluntary tenant departure, and at the end of a six-year tenancy cycle, while apartments commenced from 10 June 2025 may rise with CPI without the 2% ceiling to encourage rental supply.",
       "sources": [
         {
           "title": "New legislation extends Rent Pressure Zones nationwide",

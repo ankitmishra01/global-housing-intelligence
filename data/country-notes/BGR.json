@@ -35,6 +35,19 @@
       ]
     },
     {
+      "topic": "mortgage_market",
+      "effect": "raises_rate_sensitivity",
+      "text": "ECB data show that in every month from January to August 2026 more than 99% of new euro-denominated house-purchase loans in Bulgaria were floating or fixed for an initial period of up to one year, the ECB definition of variable rate, at 99.7% in August 2026. With almost no long fixation, the cost of new mortgage borrowing resets quickly with ECB policy now that Bulgaria is in the euro area.",
+      "sources": [
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Bulgaria (RAI.M.BG.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.BG.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
+        }
+      ]
+    },
+    {
       "topic": "demand",
       "effect": "supports_prices",
       "text": "An IMF mission in September 2025 linked rapid mortgage growth to residential price increases of about 15%, noting that some mortgage credit financed unoccupied investment properties and reduced affordability in some areas. It also warned that lower reserve requirements after euro adoption could release bank liquidity into lending, adding to housing pressure, although household debt remained low at about 26% of GDP.",
@@ -50,12 +63,18 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The National Statistical Institute publishes quarterly house price indices for new and existing dwellings, compiled since 2015 under the EU harmonised framework, at national and regional level and for the six cities above 120,000 inhabitants, now on a 2025 = 100 base. Its related owner-occupied housing index switched in 2022 from a survey to Property Register and cadastral data with hedonic models by district, creating a series break in Q1 2022 that readers should note when comparing long runs.",
+      "text": "The National Statistical Institute publishes quarterly house price indices for new and existing dwellings, nationally from 2005 and, from 2015, for NUTS 2 regions and the six cities above 120,000 inhabitants, now on a 2025 = 100 base. In 2022 it replaced a sampled survey with Property Register transaction prices supplemented by cadastral data, so the series has a break in Q1 2022 that readers should note when comparing long runs.",
       "sources": [
         {
           "title": "Housing price statistics",
           "publisher": "National Statistical Institute of Bulgaria",
           "url": "https://www.nsi.bg/en/content/13025/housing-price-statistics",
+          "date": "2026"
+        },
+        {
+          "title": "House price index (HPI) national metadata: Bulgaria",
+          "publisher": "Eurostat",
+          "url": "https://ec.europa.eu/eurostat/cache/metadata/EN/prc_hpi_inx_esmshpi_bg.htm",
           "date": "2026"
         },
         {

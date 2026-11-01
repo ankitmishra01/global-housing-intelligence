@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "German home loans are predominantly long-term fixed rate: ECB data show that loans floating or fixed for up to one year made up about 12% of new house-purchase lending in 2025 and 13% in August 2026. ECB rate changes therefore pass slowly into the debt service of existing owners and act mainly on new buyers, so the 2022 rate shock showed up mainly in a slump in new lending, which BaFin reports recovered from 2024 while loss rates stayed low.",
+      "text": "German home loans are predominantly long-term fixed rate: ECB data show that loans at a floating rate or with an initial rate fixation of up to one year made up about 12% of new house-purchase lending in 2025 and 13% in August 2026. ECB rate changes therefore pass slowly into the debt service of existing owners and act mainly on new buyers, so the 2022 rate shock showed up mainly in a slump in new lending, which BaFin reported in April 2025 had recovered noticeably while losses stayed very moderate.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Germany (RAI.M.DE.SVLHPHH.EUR.MIR.Z)",
@@ -56,7 +56,7 @@
     {
       "topic": "supply",
       "effect": "supports_prices",
-      "text": "Dwelling completions fell from about 294,000 to 295,000 a year in 2021 to 2023 to 251,937 in 2024 and 206,586 in 2025, following the 2022 rise in interest rates. Permits rose year on year in July and August 2026, but the completion shortfall is likely to feed through to tighter rental markets and firmer prices in the large cities for several years.",
+      "text": "Dwelling completions fell from about 293,000 to 295,000 a year in 2021 to 2023 to 251,937 in 2024 and 206,586 in 2025, following the 2022 rise in interest rates. Permits rose year on year in July and August 2026, but the completion shortfall is likely to feed through to tighter rental markets and firmer prices in the large cities for several years.",
       "sources": [
         {
           "title": "Baufertigstellungen: Wohnungen insgesamt",

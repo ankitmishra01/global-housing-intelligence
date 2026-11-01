@@ -23,8 +23,8 @@
     {
       "topic": "policy",
       "effect": "restrains_prices",
-      "text": "Foreign commercial enterprises and people who are not Canadian citizens or permanent residents are barred from buying residential property; in February 2024 the ban, then due to lapse on January 1, 2025, was extended to January 1, 2027. Whether it is renewed beyond that date should be checked, as the official extension notice runs only to 2027.",
-      "sources": [{ "title": "Government announces two-year extension to ban on foreign ownership of Canadian housing", "publisher": "Department of Finance Canada", "url": "https://www.canada.ca/en/department-finance/news/2024/02/government-announces-two-year-extension-to-ban-on-foreign-ownership-of-canadian-housing.html", "date": "2024-02-04" }]
+      "text": "Foreign commercial enterprises and people who are not Canadian citizens or permanent residents are barred from buying residential property; in February 2024 the ban, then due to lapse on January 1, 2025, was extended to January 1, 2027. As of November 2026 no further extension had been published, so the ban is due to lapse on that date unless it is renewed.",
+      "sources": [{ "title": "Government announces two-year extension to ban on foreign ownership of Canadian housing", "publisher": "Department of Finance Canada", "url": "https://www.canada.ca/en/department-finance/news/2024/02/government-announces-two-year-extension-to-ban-on-foreign-ownership-of-canadian-housing.html", "date": "2024-02-04" }, { "title": "Prohibition on the Purchase of Residential Property by Non-Canadians Act (S.C. 2022, c. 10, s. 235), consolidation current to 2026-09-30", "publisher": "Justice Laws Website, Department of Justice Canada", "url": "https://laws-lois.justice.gc.ca/eng/acts/P-25.2/FullText.html", "date": "2026-09-30" }]
     },
     {
       "topic": "demand",

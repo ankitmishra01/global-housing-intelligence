@@ -5,7 +5,7 @@
     {
       "topic": "macroprudential",
       "effect": "restrains_prices",
-      "text": "Since 1 July 2025 the Croatian National Bank has capped debt service at 45% of income for housing loans and 40% for other consumer loans, with a 90% loan-to-value limit and a 30-year maximum maturity for property-secured loans. Banks could exceed the DSTI limit for up to 20% of housing loans and the LTV limit for up to 20% of loans; in August 2026 the CNB consulted on halving these quotas from 1 October 2026, a change that would further slow credit-fuelled demand.",
+      "text": "Since 1 July 2025 the Croatian National Bank has capped debt service at 45% of income for housing loans and 40% for other consumer loans, with a 90% loan-to-value limit and a 30-year maximum maturity for property-secured loans. Banks could exceed the DSTI limit for up to 20% of housing loans and the LTV limit for up to 20% of loans; in August 2026 the CNB put out for consultation a draft halving these quotas from 1 October 2026, but as of November 2026 its consumer lending criteria page still showed the 2025 quotas and no adopted amendment had been published. If adopted, the change would further slow credit-fuelled demand.",
       "sources": [
         {
           "title": "Consumer lending criteria",
@@ -30,7 +30,7 @@
           "title": "Croatia central bank warns of interest rate and property market risks",
           "publisher": "Croatia Week",
           "url": "https://www.croatiaweek.com/croatia-central-bank-warns-interest-rate-property-market-risks/",
-          "date": "2026-07"
+          "date": "2026-07-20"
         }
       ]
     },
@@ -69,7 +69,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The Croatian Bureau of Statistics house price index uses Tax Administration transaction data on all dwelling purchases by households, splits new (up to five years old) and existing dwellings, and reports the City of Zagreb, the Adriatic coast and the rest of the country separately using hedonic regressions. From Q1 2026 the index moved to quarterly publication on a 2025 = 100 base, with the series back to 2002 revised, so older vintages are not directly comparable.",
+      "text": "The Croatian Bureau of Statistics house price index uses Tax Administration data on all available dwelling transactions, splits new (up to five years old) and existing dwellings, and reports the City of Zagreb, the Adriatic coast and the rest of the country separately using hedonic regressions. From Q1 2026 the index moved to quarterly publication on a 2025 = 100 base, with the series back to 2002 revised, so older vintages are not directly comparable.",
       "sources": [
         {
           "title": "House price indices, first quarter of 2026 (First Release)",

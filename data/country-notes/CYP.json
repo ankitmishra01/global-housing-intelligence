@@ -5,26 +5,38 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "Cypriot mortgage lending has shifted from almost entirely variable-rate at the start of 2022 to only 12.0% of new house purchase loans at variable rates in August 2026, below the euro area median, according to Central Bank of Cyprus data. Many of these loans are fixed for an initial three to five years before switching to floating, so new borrowers are insulated from ECB moves in the near term while the older variable-rate stock still reprices quickly.",
+      "text": "Cypriot mortgage lending has shifted from almost entirely variable-rate at the start of 2022 to only 12.0% of new house-purchase loans being floating or fixed for an initial period of up to one year in August 2026, below the euro area median, according to Central Bank of Cyprus and ECB data. Many of these loans are fixed for an initial three to five years before switching to floating, so new borrowers are insulated from ECB moves in the near term while the older variable-rate stock still reprices quickly.",
       "sources": [
         {
           "title": "Low deposit yields and rising mortgage costs squeeze Cyprus households",
           "publisher": "Cyprus Mail, reporting Central Bank of Cyprus data",
           "url": "https://cyprus-mail.com/2026/10/05/low-deposit-yields-and-rising-mortgage-costs-squeeze-cyprus-households",
           "date": "2026-10-05"
+        },
+        {
+          "title": "Share of variable rate loans in total loans for house purchase, Cyprus (RAI.M.CY.SVLHPHH.EUR.MIR.Z)",
+          "publisher": "European Central Bank Data Portal",
+          "url": "https://data.ecb.europa.eu/data/datasets/RAI/RAI.M.CY.SVLHPHH.EUR.MIR.Z",
+          "date": "2026-08"
         }
       ]
     },
     {
       "topic": "macroprudential",
       "effect": "restrains_prices",
-      "text": "Central Bank of Cyprus rules cap loan-to-value at 80% for a borrower's primary residence and 70% for all other property, and since 2021 a stricter 50% LTV applies to bank credit to developers for building or buying luxury properties. As of the 2021 notification, these limits mean that investment and second-home purchases require at least 30% equity, raising the equity hurdle for buy-to-let and holiday-home buyers who rely on Cypriot bank credit.",
+      "text": "Central Bank of Cyprus rules cap loan-to-value at 80% for a borrower's primary residence and 70% for all other property, and since 2021 a stricter 50% LTV applies to bank credit to developers for building or buying luxury properties. The 80% and 70% caps were still described as in force in August 2026, so that investment and second-home purchases require at least 30% equity, raising the equity hurdle for buy-to-let and holiday-home buyers who rely on Cypriot bank credit.",
       "sources": [
         {
           "title": "Notification by Central Bank of Cyprus on LTV",
           "publisher": "Central Bank of Cyprus via European Systemic Risk Board",
           "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb~9744882606.notification20210607_LTV_CY_EN.pdf",
           "date": "2021-06-07"
+        },
+        {
+          "title": "Cyprus mortgage for foreigners 2026",
+          "publisher": "Zeno Legal",
+          "url": "https://www.zenolegal.com/resources/cyprus-mortgage-for-foreigners-2026",
+          "date": "2026-08"
         }
       ]
     },
@@ -44,7 +56,7 @@
     {
       "topic": "policy",
       "effect": "supports_prices",
-      "text": "Since 2 May 2023 the permanent residence by investment route requires at least EUR 300,000 plus VAT invested in a newly built home bought for the first time from a developer, with resales excluded, and secure annual income of at least EUR 50,000 sourced from abroad. Restricting the route to new-build stock channels non-EU investor demand towards developers rather than the resale market.",
+      "text": "Since 2 May 2023 the property option of the permanent residence by investment route requires at least EUR 300,000 plus VAT invested in a newly built home bought on its first sale from a developer, with resales excluded, and secure annual income of at least EUR 50,000 sourced from abroad; other options cover non-residential property, company capital or Cypriot investment funds. As of the 2023 rules, restricting the residential option to new-build stock channels non-EU investor demand towards developers rather than the resale market.",
       "sources": [
         {
           "title": "Revised permanent residency by investment scheme in Cyprus",
@@ -57,7 +69,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The Cystat house price index is quarterly, covers new and existing dwellings including land, draws its prices and weights from Department of Lands and Surveys records, and covers only areas under the control of the Republic of Cyprus government. In December 2025 Cystat revised the series from 2016 with improved quality adjustment and richer microdata, which shifted index levels materially, so only figures from the same vintage should be compared.",
+      "text": "The Cystat house price index is quarterly, covers new and existing dwellings including land, draws its prices and weights from Department of Lands and Surveys records, and covers only areas under the control of the Republic of Cyprus government. In December 2025 Cystat revised the series from 2016 to Q2 2025 with improved quality adjustment, added variables and richer microdata, so only figures from the same vintage should be compared.",
       "sources": [
         {
           "title": "Cyprus revises house price index to better reflect market trends",

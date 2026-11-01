@@ -17,7 +17,7 @@
     },
     {
       "topic": "mortgage_market",
-      "effect": "raises_rate_sensitivity",
+      "effect": "context",
       "text": "Romania differentiated LTV limits by currency from 2011 and, since 2019, caps debt service on unhedged foreign-currency loans at 20% of income against 40% for lei loans, policies the National Bank designed to steer new mortgage credit into domestic currency. As a result, mortgage costs depend chiefly on domestic lei rates set by National Bank of Romania policy more than on euro area rates.",
       "sources": [
         {

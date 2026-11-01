@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "Latvian loans are mostly variable-rate and linked to Euribor, with nearly 90 percent of household and corporate loans on variable terms at the end of 2024, so changes in ECB policy pass quickly into payments. Even so, outstanding housing loans were just under 13 percent of GDP in 2025, against 17 percent in Lithuania and 31 percent in Estonia, and mortgage rates have run 1 to 2 percentage points above the euro area average since 2014, which Latvijas Banka links to high bank markups and few alternative lenders.",
+      "text": "Latvian loans are mostly variable-rate and linked to Euribor, with nearly 90 percent of household and corporate loans on variable terms at the end of 2024, so changes in ECB policy pass quickly into payments. Even so, outstanding mortgage loans were only 13 percent of GDP at the start of 2025, against 17 percent in Lithuania and 31 percent in Estonia, and mortgage rates have run 1 to 2 percentage points above the euro area average since 2014, and Latvijas Banka attributes the low level of mortgage lending partly to high bank markups and a limited range of financial intermediaries.",
       "sources": [
         {
           "title": "Financial Stability Report 2025",
@@ -56,7 +56,7 @@
     {
       "topic": "supply",
       "effect": "supports_rents",
-      "text": "New housing supply has long been insufficient: the number of new apartments added to the Riga market fell by 35 percent in 2024, and high construction costs and administrative hurdles continue to deter projects. Latvijas Banka warns this may push prices up and notes that rents for new-project apartments in Riga rose 12 to 13 percent in 2024.",
+      "text": "New housing supply has long been insufficient: the number of new apartments added to the Riga market fell by 35 percent in 2024, and administrative obstacles in the construction process continue to slow projects. Latvijas Banka warns this may push prices up and notes that rents for new-project apartments in Riga rose 12 to 13 percent in 2024.",
       "sources": [
         {
           "title": "Financial Stability Report 2025",
@@ -69,7 +69,7 @@
     {
       "topic": "demand",
       "effect": "context",
-      "text": "Around 40 percent of Latvians live in overcrowded housing, the second-highest rate in the EU, and roughly 80 percent of dwellings on district heating were built before 2000, most still unrenovated. The Soviet-era stock of small, energy-inefficient flats creates latent demand for larger and newer homes that is held back mainly by financing costs.",
+      "text": "Around 40 percent of Latvians live in overcrowded housing, the second-highest rate in the EU, and roughly 80 percent of dwellings on district heating were built before 2000, most still unrenovated. The Soviet-era stock of small, energy-inefficient flats creates latent demand for larger and newer homes that has been held back in part by mortgage rates running above the euro area average.",
       "sources": [
         {
           "title": "Financing of the Economy 2025",

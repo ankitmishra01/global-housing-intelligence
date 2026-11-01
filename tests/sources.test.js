@@ -165,3 +165,12 @@ test('parseAbs keeps mean price rows, scales by unit multiplier and names states
 test('parseZillowNational reads the country row only and skips blanks', () => {
   assert.deepEqual(parseZillowNational(fixture('zillow.csv')), [{ period: '2025-10', value: 350000.5 }, { period: '2025-11', value: 351000 }]);
 });
+
+test('Canada national starts accept the quarterly table (four quarters make a year)', async () => {
+  const { parseCanadaStarts } = await import('../lib/sources/national/canada.js');
+  const head = '"REF_DATE","GEO","Housing estimates","Type of unit","Seasonal adjustment","VALUE"';
+  const q = (p, v) => `"${p}","Canada","Housing starts","Total units","Unadjusted","${v}"`;
+  const csv = [head, q('2025-01', 47309), q('2025-04', 74657), q('2025-07', 70446), q('2025-10', 66616), q('2026-01', 51211)].join('\n');
+  const rows = parseCanadaStarts(csv);
+  assert.deepEqual(rows.map(r => [r.period, r.value]), [['2025', 259028]]);
+});

@@ -76,3 +76,106 @@ test('accuracy checks flag title-fragment region names and raw unit codes', asyn
   assert.equal(by['accuracy.unit_labels'].severity, 'warn');
   assert.equal(by['accuracy.source_sample'].severity, 'info');
 });
+
+// ── Second audit (projection drivers, phases, nominal outlook, rates, cities, signals) ──
+import { pricePhases, driverShares, latestRateMove, nominalOutlook, placesOnly } from '../lib/engine/narrative.js';
+import { computeSignals, describe } from '../lib/engine/signals.js';
+
+const allText = out => out.sections.flatMap(s => s.paragraphs).map(plain).join(' ');
+
+test('price phases: legs and changes recomputed on a boom, bust and recovery', () => {
+  // 100 → 150 (2010) → 120 (2014) → 132 (2020): +50%, -20%, then +10%.
+  const real = { 2000: 100, 2004: 120, 2008: 140, 2010: 150, 2012: 130, 2014: 120, 2016: 125, 2018: 128, 2020: 132 };
+  const nominal = { 2000: 100, 2010: 180, 2014: 175, 2020: 210 };
+  const legs = pricePhases(real, nominal, 2020);
+  assert.deepEqual(legs.map(l => [l.from, l.to]), [[2000, 2010], [2010, 2014], [2014, 2020]]);
+  assert.deepEqual(legs.map(l => Math.round(l.real * 10) / 10), [50, -20, 10]);
+  assert.equal(Math.round(legs[1].nominal * 100) / 100, -2.78);
+});
+
+test('price phases: a last leg shorter than the threshold runs to the origin', () => {
+  const legs = pricePhases({ 2015: 100, 2016: 110, 2017: 120, 2018: 118, 2019: 115, 2020: 116 }, null, 2020);
+  assert.deepEqual(legs.map(l => [l.from, l.to]), [[2015, 2017], [2017, 2020]]);
+  assert.ok(Math.abs(legs[1].real - (100 * (116 / 120 - 1))) < 1e-9);
+});
+
+test('price phases: years with gaps and years after the origin are ignored', () => {
+  const legs = pricePhases({ 2000: 100, 2003: 115, 2006: 130, 2009: 110, 2012: 112, 2030: 999 }, null, 2012);
+  assert.deepEqual(legs.map(l => [l.from, l.to]), [[2000, 2006], [2006, 2009], [2009, 2012]]);
+});
+
+test('phase prose: "because consumer prices rose faster" only where nominal rose and real fell; doubling words', () => {
+  const n = (phases) => allText(buildCountryNarrative(input({ history: { price: {}, phases } })));
+  const t = n([{ from: 2007, to: 2012, real: -12, nominal: 4 }, { from: 2012, to: 2020, real: -5, nominal: -2 }]);
+  assert.equal((t.match(/because consumer prices rose faster/g) || []).length, 1);
+  assert.match(t, /fell 12\.0% between 2007 and 2012 even though nominal prices rose 4\.0%/);
+  assert.doesNotMatch(n([{ from: 2000, to: 2025, real: 106.7, nominal: 138 }]), /nearly doubled/);
+  assert.match(n([{ from: 2000, to: 2025, real: 95, nominal: 120 }]), /nearly doubled/);
+});
+
+test('nominal outlook is the real path compounded with every year of inflation', () => {
+  const infl = { 1: 3, 2: 2.5, 3: 2, 4: 2, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2 };
+  const out = nominalOutlook(20, infl);
+  const expected = 100 * (1.2 * [3, 2.5, 2, 2, 2, 2, 2, 2, 2, 2].reduce((a, v) => a * (1 + v / 100), 1) - 1);
+  assert.ok(Math.abs(out.price10 - expected) < 1e-9);
+  assert.ok(Math.abs(out.inflAvg - 2.15) < 1e-9);
+  assert.match(allText(buildCountryNarrative(input({ nominal: out }))), new RegExp(`inflation averaging ${out.inflAvg.toFixed(1)}% a year .*about ${expected.toFixed(1)}% higher by 2035`));
+});
+
+test('driver shares add up to the model projection and the prose quotes them', () => {
+  const stored = { method: 'ridge', weight: 1, base: 17.6, anchor: 0, total: 32.26, features: [
+    { name: 'household credit change (3y)', value: -6.975, typical: 3.899, contribution: 13.279 },
+    { name: 'own 1y real growth', value: 14.3, typical: 1.656, contribution: -1.235 },
+    { name: 'household debt-service gap', value: -0.317, typical: 0.794, contribution: -2.578 },
+    { name: 'real GDP growth', value: 2.3, typical: 2.9, contribution: 5.194 },
+  ] };
+  const d = driverShares(stored);
+  assert.ok(Math.abs(d.totalPct - 100 * (Math.exp(0.3226) - 1)) < 1e-9);
+  assert.ok(Math.abs(d.base + d.anchor + d.features.reduce((a, f) => a + f.contribution, 0) - d.totalPct) < 1e-6);
+  const t = allText(buildCountryNarrative(input({ drivers: { h10: d, h3: null, rent10: null, modelPrice10: d.totalPct, liveGap10: 0 } })));
+  assert.match(t, new RegExp(`real prices up ${d.totalPct.toFixed(1)}% over ten years`));
+  assert.match(t, new RegExp(`gained ${d.base.toFixed(1)}% in real terms over a decade`));
+  assert.match(t, new RegExp(`own conditions add ${(d.totalPct - d.base).toFixed(1)} points`));
+  const credit = d.features.find(f => f.name.startsWith('household credit'));
+  assert.match(t, new RegExp(`household credit down 7\\.0 points of GDP over the three years to 2025, against up 3\\.9 points in the typical market, which adds about ${credit.contribution.toFixed(1)} points`));
+  // Momentum is stored in log points: 14.3 log points is a 15.4% rise, quoted for the origin year.
+  assert.match(t, /real price growth of 15\.4% in 2025/i);
+});
+
+test('latest rate move: live reading newer than the monthly series, and the month it took effect', () => {
+  const monthly = [{ period: '2026-07', value: 12 }, { period: '2026-08', value: 12 }, { period: '2026-09', value: 12 }];
+  assert.deepEqual(latestRateMove({ liveNewer: true, liveRate: 12.25, liveDate: '2026-10-23', monthlyRate: 12, monthlyAsOf: '2026-09', monthly }), { size: 0.25, from: 12, since: '2026-10' });
+  // More than a month after the monthly series the move month is unknown.
+  assert.equal(latestRateMove({ liveNewer: true, liveRate: 12.25, liveDate: '2026-11-23', monthlyRate: 12, monthlyAsOf: '2026-09', monthly }).since, '');
+  // No live change: the last monthly step, dated by the month the new level first appears.
+  const steps = [{ period: '2026-08', value: 2.25 }, { period: '2026-09', value: 2.5 }, { period: '2026-10', value: 2.5 }];
+  assert.deepEqual(latestRateMove({ liveNewer: true, liveRate: 2.5, liveDate: '2026-10-27', monthlyRate: 2.5, monthlyAsOf: '2026-09', monthly: steps }), { size: 0.25, from: 2.25, since: '2026-09' });
+  assert.equal(latestRateMove({ liveNewer: false, liveRate: null, liveDate: null, monthlyRate: 6.5, monthlyAsOf: '2026-09', monthly: [{ period: '2026-09', value: 6.5 }] }), null);
+});
+
+test('rate prose: central bank names, the UAE proxy and "even after" only against the net move', () => {
+  const rates = (iso3, lastMove, delta) => buildCountryNarrative(input({ iso3, rates: { ...input().rates, lastMove, delta } })).sections.find(s => s.id === 'rates').paragraphs[0];
+  assert.match(plain(rates('IDN', { size: 0.25, from: 5.5, since: '2026-06' }, 0.48)), /^Bank Indonesia raised/);
+  assert.match(plain(rates('ARE', { size: 0.25, from: 3.625, since: '2026-09' }, -1.23)), /^The Federal Reserve, whose rate the dirham peg follows, raised.*Even after that increase, the rate sits 1\.23 points below/);
+  assert.doesNotMatch(plain(rates('DEU', { size: 0.25, from: 2.25, since: '2026-09' }, 0.27)), /Even after/);
+});
+
+test('city comparisons leave out aggregates, remainders and duplicate spellings', () => {
+  const names = placesOnly(['Berlin', '127-city aggregate', '10-city aggregate (discontinued)', 'Province : agglomérations de moins de 10 000 habitants', 'Île-de-France, hors Paris', 'Trøndelag exluding Trondheim', 'Oslo including Baerum', 'Oslo including Bærum', 'Castilla - La Mancha'].map(name => ({ name }))).map(x => x.name);
+  assert.deepEqual(names, ['Berlin', 'Oslo including Baerum', 'Castilla-La Mancha']);
+});
+
+test('signals: momentum is already a percent, qualifiers follow the raw ranking for every persona', () => {
+  assert.equal(describe('momentum', 12.78), 'Real prices rose 12.8% in the latest year');
+  assert.equal(describe('proj3Price', 18.82), 'Real prices projected up 20.7% over 3 years');
+  const comps = pct => ({ seller: [{ key: 'proj3Price', value: 18.82, percentile: pct }], buyer: [{ key: 'proj3Price', value: 18.82, percentile: 100 - pct }] });
+  // Strong projected growth: low (oriented) percentile for sellers, high for buyers. Never "less than in most markets".
+  const strong = computeSignals({ scores: { seller: 50, buyer: 50 }, components: comps(2) });
+  assert.doesNotMatch([...strong.seller.support, ...strong.seller.oppose, ...strong.buyer.support, ...strong.buyer.oppose].join(' '), /less than in most markets/);
+  const weak = computeSignals({ scores: { seller: 50, buyer: 50 }, components: comps(98) });
+  assert.match([...weak.seller.support, ...weak.seller.oppose].join(' '), /less than in most markets/);
+  assert.match([...weak.buyer.support, ...weak.buyer.oppose].join(' '), /less than in most markets/);
+  // Exactly at the median there is no "most markets" comparison.
+  const mid = computeSignals({ scores: { buyer: 50 }, components: { buyer: [{ key: 'burden3y', value: 30, percentile: 50 }] } });
+  assert.doesNotMatch(mid.buyer.support.concat(mid.buyer.oppose).join(' '), /most markets/);
+});

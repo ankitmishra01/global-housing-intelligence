@@ -2,6 +2,7 @@ import "server-only";
 import { applyLive, backtests, citySummaries, contexts, countryNotes, liveShifts, projections, regionsFor, type Context, type Country, type LiveState, type Observation, type Run } from "@/lib/data";
 import driversFallback from "../../data/derived/country-drivers.json";
 import { EVENT_LABELS, TYPE_LABELS } from "@/lib/labels";
+import { driverShares, latestRateMove, nominalOutlook, placesOnly, pricePhases } from "../../lib/engine/narrative.js";
 import type { Band, SensMap } from "@/lib/toggle";
 
 // Everything the narrative generator may cite, assembled from Turso. The generator never
@@ -30,42 +31,7 @@ function history(series: Record<string, number> | undefined, origin: number | nu
   return { change10: ch(10), change5: ch(5), peakYear: peak?.[0] ?? null, belowPeak: peak ? 100 * (1 - v(origin) / peak[1]) : null, atPeak: peak?.[0] === origin };
 }
 
-// Turning points of a real price index: a zigzag that only registers a reversal of at least
-// `threshold` percent, so the prose describes the booms and corrections, not annual noise.
-// Returns up to the last three legs, each with its real and (where available) nominal change.
-export function pricePhases(real: Record<string, number> | undefined, nominal: Record<string, number> | undefined, origin: number | null, threshold = 8, window = 25) {
-  if (!real || origin == null) return [];
-  const pts = Object.entries(real).map(([y, v]) => [Number(y), v] as const).filter(([y, v]) => y >= origin - window && y <= origin && Number.isFinite(v)).sort((a, b) => a[0] - b[0]);
-  if (pts.length < 4) return [];
-  const pivots: (readonly [number, number])[] = [pts[0]];
-  let trend = 0, ext = pts[0];
-  for (const p of pts.slice(1)) {
-    if (trend >= 0 && p[1] >= ext[1]) { ext = p; if (trend === 0 && p[1] > pts[0][1] * (1 + threshold / 100)) trend = 1; continue; }
-    if (trend <= 0 && p[1] <= ext[1]) { ext = p; if (trend === 0 && p[1] < pts[0][1] * (1 - threshold / 100)) trend = -1; continue; }
-    if (trend >= 0 && p[1] < ext[1] * (1 - threshold / 100)) { if (ext !== pivots.at(-1)) pivots.push(ext); trend = -1; ext = p; continue; }
-    if (trend <= 0 && p[1] > ext[1] * (1 + threshold / 100)) { if (ext !== pivots.at(-1)) pivots.push(ext); trend = 1; ext = p; }
-  }
-  if (ext !== pivots.at(-1)) pivots.push(ext);
-  if (pivots.at(-1)![0] !== origin) pivots.push(pts.at(-1)!);
-  const legs = pivots.slice(1).map((p, i) => {
-    const a = pivots[i];
-    const n0 = nominal?.[a[0]], n1 = nominal?.[p[0]];
-    return { from: a[0], to: p[0], real: 100 * (p[1] / a[1] - 1), nominal: n0 && n1 ? 100 * (n1 / n0 - 1) : null };
-  }).filter((l) => l.to > l.from);
-  return legs.slice(-3);
-}
-
-// Converts a stored driver breakdown (log points) into percentage-point shares of the projected
-// percentage change, scaled so the parts add up to the headline figure.
-type DriverRow = { name: string; value: number; typical: number; contribution: number };
-type Drivers = { method: string; weight?: number; base?: number; anchor?: number; features?: DriverRow[]; total: number | null };
-function driverShares(d: Drivers | undefined | null) {
-  if (!d || d.total == null || !d.features) return null;
-  const pct = toPct(d.total);
-  const k = Math.abs(d.total) > 0.5 ? pct / d.total : 1;
-  return { method: d.method, weight: d.weight ?? 1, totalPct: pct, base: (d.base ?? 0) * k, anchor: (d.anchor ?? 0) * k,
-    features: d.features.map((f) => ({ name: f.name, value: f.value, typical: f.typical, contribution: f.contribution * k })).sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution)) };
-}
+type Drivers = { method: string; weight?: number; base?: number; anchor?: number; features?: { name: string; value: number; typical: number; contribution: number }[]; total: number | null };
 
 export async function buildNarrativeInput(args: {
   c: Country; ctx: Context | undefined; run: Run | null; live: LiveState | null;
@@ -146,31 +112,29 @@ export async function buildNarrativeInput(args: {
   const obsA = (indicator: string, status = "actual") => observations.filter((o) => o.indicator === indicator && !o.region && !o.dwelling_type && o.frequency === "A" && o.status === status);
   const latestA = (indicator: string) => obsA(indicator).at(-1);
   const valueIn = (indicator: string, year: number) => obsA(indicator).find((o) => Number(o.period) === year);
-  const gdpAhead = observations.filter((o) => o.indicator === "GDP_GROWTH" && !o.region && o.frequency === "A" && Number(o.period) > ctx.origin_year && Number(o.period) <= ctx.origin_year + 5).map((o) => Number(o.value));
   const credit = latestA("HH_CREDIT"), credit5 = credit ? valueIn("HH_CREDIT", Number(credit.period) - 5) : undefined;
   const gdp = latestA("GDP_GROWTH"), pop = latestA("POP_GROWTH"), urban = latestA("URBAN_SHARE");
-  const inflPath = Object.values(ctx.details.inflation ?? {}).map(Number).filter(Number.isFinite);
-  const inflAvg = inflPath.length ? inflPath.reduce((a, b) => a + b, 0) / inflPath.length : null;
-  const cumInfl = inflPath.length ? 100 * (inflPath.reduce((acc, v) => acc * (1 + v / 100), 1) - 1) : null;
+  // "The next five years" start after the latest actual year, not the (possibly older) origin.
+  const aheadFrom = gdp ? Number(gdp.period) : ctx.origin_year;
+  const gdpAhead = observations.filter((o) => o.indicator === "GDP_GROWTH" && !o.region && o.frequency === "A" && Number(o.period) > aheadFrom && Number(o.period) <= aheadFrom + 5).map((o) => Number(o.value));
 
   // Policy rate: the daily live reading when it is newer than the monthly series in the run.
   const monthlyPolicy = observations.filter((o) => o.indicator === "POLICY_RATE" && !o.region && o.frequency === "M").sort((a, b) => a.period.localeCompare(b.period));
   const liveNewer = live?.policy_rate_now != null && live.policy_rate_date && (!ctx.policy_rate_as_of || live.policy_rate_date.slice(0, 7) > ctx.policy_rate_as_of);
   const policyNow = liveNewer ? live!.policy_rate_now! : ctx.policy_rate;
   const policyAsOf = liveNewer ? live!.policy_rate_date! : ctx.policy_rate_as_of;
-  // Last change: the live reading against the latest monthly value, else the last monthly step.
-  let lastMove: { size: number; from: number; since: string } | null = null;
-  if (liveNewer && ctx.policy_rate != null && Math.abs(live!.policy_rate_now! - ctx.policy_rate) >= 0.05) lastMove = { size: live!.policy_rate_now! - ctx.policy_rate, from: ctx.policy_rate, since: ctx.policy_rate_as_of ?? "" };
-  else for (let i = monthlyPolicy.length - 1; i > 0; i--) {
-    const d = Number(monthlyPolicy[i].value) - Number(monthlyPolicy[i - 1].value);
-    if (Math.abs(d) >= 0.05) { lastMove = { size: d, from: Number(monthlyPolicy[i - 1].value), since: monthlyPolicy[i].period }; break; }
-  }
+  const lastMove = latestRateMove({ liveNewer: !!liveNewer, liveRate: live?.policy_rate_now ?? null, liveDate: live?.policy_rate_date ?? null, monthlyRate: ctx.policy_rate, monthlyAsOf: ctx.policy_rate_as_of, monthly: monthlyPolicy.map((o) => ({ period: o.period, value: Number(o.value) })) });
   const mortgageIsProxy = !!ctx.mortgage_rate_source?.startsWith("policy");
   const mortgageNow = mortgageIsProxy && policyNow != null ? Math.max(0.1, policyNow + (run.summary.mortgageSpread ?? 2)) : ctx.mortgage_rate;
 
   // Cities: price changes (nominal, as published) and the national nominal change to compare.
-  const cityPrices = cityList.filter((x) => x.price && x.price.change5y != null).map((x) => ({ name: x.name, change5y: x.price!.change5y!, change1y: x.price!.change1y, period: x.price!.period, kind: x.price!.kind }));
-  const nat5 = (() => { const n = panel.NPRICE; if (!n) return null; const y = lastYear(n); return y && n[y - 5] ? 100 * (n[y] / n[y - 5] - 1) : null; })();
+  // Aggregates, size classes, remainders and duplicate spellings are not places, so they are left out
+  // of the counts and names; region names keep hyphens but lose spaced dashes.
+  const cityPrices = placesOnly(cityList.filter((x) => x.price && x.price.change5y != null))
+    .map((x) => ({ name: x.name, change5y: x.price!.change5y!, change1y: x.price!.change1y, period: x.price!.period, kind: x.price!.kind }));
+  // The national change over the same five years as the city figures (their latest common year).
+  const cityYear = cityPrices.length ? Math.max(...cityPrices.map((x) => Number(x.period))) : null;
+  const nat5 = (() => { const n = panel.NPRICE; if (!n || cityYear == null) return null; return n[cityYear] && n[cityYear - 5] ? 100 * (n[cityYear] / n[cityYear - 5] - 1) : null; })();
 
   const ptiYear = lastYear(panel.PTI_AVG);
   const ptrYear = lastYear(panel.PTR_AVG);
@@ -207,7 +171,7 @@ export async function buildNarrativeInput(args: {
     nowcast: (ctx.details as { nowcast?: { quarter: string; changePct: number } | null }).nowcast ?? null,
     types,
     drivers: { h10: driverShares(drv?.["10"]), h3: driverShares(drv?.["3"]), rent10: myRent ? driverShares(rentDrv?.["10"]) : null, modelPrice10, liveGap10: modelPrice10 != null ? myPrice.h10!.median - modelPrice10 : null },
-    nominal: inflAvg != null && cumInfl != null ? { inflAvg, cumInfl, price10: 100 * ((1 + myPrice.h10!.median / 100) * (1 + cumInfl / 100) - 1) } : null,
+    nominal: nominalOutlook(myPrice.h10!.median, ctx.details.inflation),
     macro: {
       gdp: gdp ? { value: Number(gdp.value), period: gdp.period } : null,
       gdpAhead: gdpAhead.length ? gdpAhead.reduce((a, b) => a + b, 0) / gdpAhead.length : null,
@@ -218,7 +182,7 @@ export async function buildNarrativeInput(args: {
     cityPrices: cityPrices.length ? { list: cityPrices, national5: nat5 } : null,
     notes,
     cities: cityList.length ? {
-      count: cityList.length,
+      count: placesOnly(cityList).length,
       rent: latestRents.length >= 2 ? { min: Math.round(latestRents[0].value), minCity: latestRents[0].region, max: Math.round(latestRents.at(-1)!.value), maxCity: latestRents.at(-1)!.region, year: rentYear } : null,
       vacancy: vacancy ? { value: Number(vacancy.value), period: vacancy.period } : null,
     } : null,

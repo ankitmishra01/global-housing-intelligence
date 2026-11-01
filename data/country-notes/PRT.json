@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "Portuguese mortgage lending was overwhelmingly variable rate, priced off Euribor, until recently: ECB data show loans floating or fixed for up to one year made up 88% of new house-purchase lending in June 2022. After the rate shock borrowers moved heavily into fixed and mixed-rate products, cutting that share to about 26% in 2025 and 13% in August 2026, so ECB moves now reach new borrowers far more slowly, while loans written before the shift remain exposed to Euribor.",
+      "text": "Portuguese mortgage lending was overwhelmingly variable rate, priced off Euribor, until recently: ECB data show loans that are floating or carry an initial rate fixation of up to one year made up 88% of new house-purchase lending in June 2022. After the rate shock borrowers moved heavily into fixed and mixed-rate products, cutting that share to about 26% in 2025 and 13% in August 2026, so ECB moves now reach new borrowers far more slowly, while loans written before the shift remain exposed to Euribor.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Portugal (RAI.M.PT.SVLHPHH.EUR.MIR.Z)",
@@ -37,7 +37,7 @@
     {
       "topic": "policy",
       "effect": "supports_prices",
-      "text": "A State guarantee scheme for young buyers has pulled first-time purchasers into the market: their share of new housing loans rose from about 55% between 2018 and July 2024 to about 62% between August 2024 and March 2026. Loans under the scheme carried an average maturity of nearly 38 years, close to the maximum allowed, which stretches affordability rather than improving it and adds to demand at the lower end of the market.",
+      "text": "A State guarantee scheme for young buyers, in place since January 2025 and allowing financing above 90% of the transaction value, has helped pull first-time purchasers into the market: their share of new housing loans rose from about 55% between 2018 and July 2024 to about 62% between August 2024 and March 2026. Loans to borrowers aged up to 35, particularly under the scheme, carried an average maturity of nearly 38 years, close to the maximum allowed, which stretches affordability rather than improving it and adds to demand at the lower end of the market.",
       "sources": [
         {
           "title": "Notification by Banco de Portugal on the revision of the Macroprudential Recommendation",

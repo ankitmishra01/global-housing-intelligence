@@ -20,7 +20,7 @@
     {
       "topic": "supply",
       "effect": "restrains_rents",
-      "text": "The rental market has loosened as completions caught up with demand: the national rental vacancy rate rose from 5.6% in the second quarter of 2022 to 7.6% in the third quarter of 2026, above its year-earlier level of 7.1%. Higher vacancy reduces landlords' pricing power and restrains rent growth.",
+      "text": "The rental market has loosened: the national rental vacancy rate rose from 5.6% in the second quarter of 2022 to 7.6% in the third quarter of 2026, above its year-earlier level of 7.1%. Higher vacancy reduces landlords' pricing power and restrains rent growth.",
       "sources": [{ "title": "Quarterly Residential Vacancies and Homeownership, Third Quarter 2026", "publisher": "U.S. Census Bureau", "url": "https://www.census.gov/housing/hvs/files/currenthvspress.pdf", "date": "2026-10-28" }]
     },
     {

@@ -134,7 +134,7 @@ test('headline reflects conditions', () => {
 
 test('slump with a clear historical effect says the adjustment is included', () => {
   const live = buildCountryNarrative(slump).sections.find(s => s.id === 'live');
-  assert.match(plain(live.paragraphs[0]), /8 past episodes/);
+  assert.match(plain(live.paragraphs[0]), /eight past episodes/);
   assert.match(plain(live.paragraphs[0]), /included above/);
 });
 

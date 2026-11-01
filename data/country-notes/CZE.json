@@ -46,7 +46,7 @@
     {
       "topic": "data",
       "effect": "context",
-      "text": "The Czech Statistical Office publishes an EU-harmonised House Price Index alongside separate indices of realised prices for new and older flats and a Czech-only series of asking prices. New-flat prices come from an annual developer report, second-hand prices from a price-collector survey supplemented by internet listings and cadastre data, and indices are revised in the following release, so the latest quarter should be read as provisional.",
+      "text": "The Czech Statistical Office publishes an EU-harmonised House Price Index alongside separate indices of realised prices for new and older flats and a Czech-only series of asking prices. It also publishes a Czech-only index based on cadastre data. New-flat prices come from an annual statistical report and second-hand prices from a direct survey by price collectors, and indices are revised in the following release, so the latest quarter should be read as provisional.",
       "sources": [
         { "title": "Statistical definitions of Real estate statistics", "publisher": "Czech Statistical Office", "url": "https://csu.gov.cz/statistical-definitions-of-real-estate-statistics", "date": "2026" }
       ]

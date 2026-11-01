@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "Luxembourg has the most rate-sensitive mortgage flow of the larger euro area markets covered here: ECB data show that loans floating or fixed for up to one year averaged about 44% of new house-purchase lending in 2025 and reached 52% in June 2026, against roughly 17% for the euro area. ECB cuts and hikes therefore pass quickly into borrowing costs, making the market unusually responsive to the policy cycle.",
+      "text": "Luxembourg has one of the most rate-sensitive mortgage flows in the euro area: ECB data show that loans at a floating rate or with an initial rate fixation of up to one year made up between about 36% and 51% of new house-purchase lending in the months reported for 2025 and 52% in June 2026, against about 17% for the euro area in August 2026. ECB cuts and hikes therefore pass quickly into borrowing costs, making the market unusually responsive to the policy cycle.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Luxembourg (RAI.M.LU.SVLHPHH.EUR.MIR.Z)",
@@ -31,6 +31,25 @@
           "publisher": "European Systemic Risk Board / Commission de Surveillance du Secteur Financier",
           "url": "https://www.esrb.europa.eu/pub/pdf/other/esrb.notification20201218_LTV_LU~71b58fd4c4.EN.pdf",
           "date": "2020-12-18"
+        }
+      ]
+    },
+    {
+      "topic": "policy",
+      "effect": "supports_prices",
+      "text": "Buyers of a home they will occupy as their main residence can offset the 7% registration and transcription duties with the Bëllegen Akt tax credit, which the 2024 housing package raised from EUR 30,000 to EUR 40,000 per buyer for deeds signed between 1 January 2024 and 30 June 2025; bill 8540 proposed keeping the higher cap permanently for deeds from 1 July 2025. At 7%, a EUR 40,000 credit covers the duties on roughly EUR 570,000 of price per buyer, lowering entry costs for owner-occupiers, and part of that support is likely to be capitalised into prices.",
+      "sources": [
+        {
+          "title": "Crédit d'impôt sur les actes notariés (\"Bëllegen Akt\")",
+          "publisher": "Guichet.lu (Gouvernement du Grand-Duché de Luxembourg)",
+          "url": "https://guichet.public.lu/fr/citoyens/logement/aides/aides-indirectes-avantages-fiscaux/credit-impot-actes-notaries.html",
+          "date": "2025-07-07"
+        },
+        {
+          "title": "Projet de loi 8540: avis de la Chambre des salariés",
+          "publisher": "Chambre des Députés du Grand-Duché de Luxembourg",
+          "url": "https://wdocs-pub.chd.lu/docs/Dossiers_parlementaires/8540/20250819_Avis.pdf",
+          "date": "2025-08-19"
         }
       ]
     }

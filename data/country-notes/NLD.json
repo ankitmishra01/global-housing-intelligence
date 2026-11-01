@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "raises_rate_sensitivity",
-      "text": "ECB data show the share of new house-purchase loans that are floating or fixed for up to one year rising from 7% in January 2025 to 23% in August 2026, so a growing slice of new borrowing reprices quickly with ECB policy. Household debt was 94% of GDP in 2023, mostly mortgages, and DNB notes that borrowers took on high loan-to-income levels and interest-only loan parts in the low-rate period, which amplifies the effect of rate changes on house prices.",
+      "text": "ECB data show the share of new house-purchase loans at a floating rate or with an initial rate fixation of up to one year rising from 7% in January 2025 to 23% in August 2026, so a growing slice of new borrowing reprices quickly with ECB policy. Household debt was 94% of GDP in 2023, mostly mortgages, and DNB notes that borrowers took on high loan-to-income levels and interest-only loan parts in the low-rate period, which amplifies the effect of rate changes on house prices.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Netherlands (RAI.M.NL.SVLHPHH.EUR.MIR.Z)",
@@ -24,8 +24,14 @@
     {
       "topic": "macroprudential",
       "effect": "context",
-      "text": "Since January 2022 DNB has imposed a minimum average risk weight on banks' mortgage books, rising from 12% for loans up to 55% loan to value to 26.85% at 100%; as of the October 2024 notification it was extended to 30 November 2026. DNB justified the extension by signs of overvaluation, including a price-to-income index of 125 against a euro area average of 107 at end-2023 and an ESRB model estimate of about 20% overvaluation, which leaves prices exposed to a correction if incomes or credit conditions weaken.",
+      "text": "From January 2022 DNB imposed a minimum average risk weight on IRB banks' mortgage books, applying 12% to the part of each loan up to 55% loan to value and 45% to the remainder, or 26.85% for a loan at 100%. In April 2026 DNB decided not to extend it, so it expires on 30 November 2026, judging that housing market risks had gradually declined and that banks are less vulnerable to a price correction, with the 2% countercyclical buffer as its main resilience tool. When last extending it in 2024, DNB had cited a price-to-income index of 125 against a euro area average of 107 and an ESRB estimate of about 20% overvaluation.",
       "sources": [
+        {
+          "title": "Risk weight measure on bank mortgage loans expires",
+          "publisher": "De Nederlandsche Bank",
+          "url": "https://www.dnb.nl/en/sector-news/supervision-2026/q2/risk-weight-measure-on-bank-mortgage-loans-expires/",
+          "date": "2026-04-24"
+        },
         {
           "title": "Notification by De Nederlandsche Bank on the extension of the Article 458 CRR measure",
           "publisher": "European Systemic Risk Board / De Nederlandsche Bank",
@@ -63,7 +69,7 @@
     {
       "topic": "supply",
       "effect": "supports_prices",
-      "text": "Nitrogen deposition rules continue to hold back permits for construction and infrastructure: in June 2026 the cabinet presented a package explicitly aimed at lifting the country off the 'nitrogen lock' (stikstofslot), and permitting in the Port of Rotterdam area is only set to resume in early 2027. DNB also cites sluggish supply as a driver of price increases, which keeps the market tight.",
+      "text": "Nitrogen deposition rules continue to hold back permitting: in June 2026 the cabinet presented a package explicitly aimed at lifting the country off the 'nitrogen lock' (stikstofslot), and permitting in the Port of Rotterdam area is only set to resume in early 2027. DNB also cites sluggish supply as a driver of price increases, which keeps the market tight.",
       "sources": [
         {
           "title": "Stikstof",

@@ -5,7 +5,7 @@
     {
       "topic": "mortgage_market",
       "effect": "lowers_rate_sensitivity",
-      "text": "New Spanish mortgage lending has shifted away from short reset periods: ECB data show loans floating or fixed for up to one year fell from 19% of new house-purchase lending in June 2022 to about 8% in 2025 and August 2026. New borrowers are therefore increasingly insulated from ECB moves during their initial fixed period, which dampens the immediate pass-through of rate changes to housing demand compared with the pre-2022 market.",
+      "text": "New Spanish mortgage lending has shifted away from short reset periods: ECB data show loans that are floating or carry an initial rate fixation of up to one year fell from 19% of new house-purchase lending in June 2022 to about 8% in 2025 and in August 2026. New borrowers are therefore increasingly insulated from ECB moves during their initial fixed period, which dampens the immediate pass-through of rate changes to housing demand compared with the pre-2022 market.",
       "sources": [
         {
           "title": "Share of variable rate loans in total loans for house purchase, Spain (RAI.M.ES.SVLHPHH.EUR.MIR.Z)",
@@ -18,7 +18,7 @@
     {
       "topic": "policy",
       "effect": "restrains_rents",
-      "text": "The Right to Housing Law (Ley 12/2023) lets regional authorities declare stressed residential market zones, where rents on new contracts are tied to the previous contract and, for large landlords owning more than ten urban properties or for homes not let in the previous five years, capped by a state reference price index. Zones must be declared by the competent regional administration, so the controls apply only where a region chooses to act and their effect on rents varies across the country.",
+      "text": "The Right to Housing Law (Ley 12/2023) lets regional authorities declare stressed residential market zones for three years, where rents on new contracts may not exceed the previous contract's rent after indexation, and where large landlords (more than ten urban residential properties, or five or more if the declaration says so) are capped by a state reference price index, as are homes not let in the previous five years when the declaration justifies it. Zones must be declared by the competent regional administration, so the controls apply only where a region chooses to act and their effect on rents varies across the country.",
       "sources": [
         {
           "title": "Ley 12/2023, de 24 de mayo, por el derecho a la vivienda",
