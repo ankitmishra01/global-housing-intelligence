@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/countries", label: "Countries", key: "C" },
   { href: "/indexes", label: "Indexes", key: "I" },
   { href: "/compare", label: "Compare", key: "V" },
+  { href: "/scenario", label: "Scenarios", key: "S" },
   { href: "/ask", label: "Ask AI", key: "A" },
   { href: "/methodology", label: "Methodology", key: "M" },
   { href: "/api-docs", label: "API and MCP", key: "P" },

@@ -221,3 +221,14 @@ tbody tr:hover { background: color-mix(in oklab, var(--accent) 5%, var(--sheet))
 .flag-card { padding: 14px 16px; border-left: 5px solid var(--neg); border-radius: 0 var(--r-md) var(--r-md) 0; background: var(--neg-tint); }
 .flag-card__label { margin: 0; font-weight: 700; color: var(--ink); }
 .flag-card__meta { margin: 4px 0 0; font-size: 12.5px; color: var(--neg); font-weight: 600; }
+
+/* scenario builder (layout only; colours and fonts come from the shared tokens and .toggle) */
+.scenario-sliders { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 22px; }
+.scenario-slider { display: grid; gap: 6px; min-width: 0; }
+.scenario-slider__head { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 650; }
+.scenario-slider__head strong { font-size: 15px; white-space: nowrap; }
+.scenario-slider input[type="range"] { width: 100%; height: 26px; }
+.scenario-slider__hint { font-size: 12px; opacity: .72; }
+.scenario-country select { background: transparent; color: inherit; border-color: currentColor; }
+@media (max-width: 960px) { .scenario-sliders { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .scenario-sliders { grid-template-columns: minmax(0, 1fr); } }
