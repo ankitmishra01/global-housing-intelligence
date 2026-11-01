@@ -16,7 +16,7 @@ import { affordabilityMetrics, stressAll, STRESS_COMPONENTS } from '../lib/engin
 import { computeSignals, SIGNAL_LABELS, SIGNAL_DISCLAIMER } from '../lib/engine/signals.js';
 import { runQuality, BLOCKING } from './quality.js';
 import { finite, mean } from '../lib/engine/stats.js';
-import { estimateEventLibrary, EVENT_CLASSES } from '../lib/engine/events.js';
+import { estimateEventLibrary, estimateSlumpLibrary, EVENT_CLASSES } from '../lib/engine/events.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 // Projection origin: trailing 12 months to each country's latest BIS quarter when true, last
@@ -95,7 +95,7 @@ const MORTGAGE_LABELS = { CAN: 'Bank of Canada 5-year conventional mortgage', US
 const ECB_MIR = new Set(['AUT', 'BEL', 'BGR', 'CYP', 'DEU', 'ESP', 'EST', 'FIN', 'FRA', 'GRC', 'HRV', 'IRL', 'ITA', 'LTU', 'LUX', 'LVA', 'MLT', 'NLD', 'PRT', 'SVK', 'SVN']);
 export const mortgageLabel = iso3 => MORTGAGE_LABELS[iso3] ?? (ECB_MIR.has(iso3) ? 'ECB new housing loans rate' : 'national series');
 
-export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIGIN } = {}) {
+export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIGIN, salesRows = [] } = {}) {
   const built = buildPanel(rows, { ttm });
   const engine = trainEngine(built);
   validateEngineOutput(engine);
@@ -133,11 +133,15 @@ export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIG
     ctx.details = JSON.stringify({ ...JSON.parse(ctx.details), signals });
   }
   const eventLibrary = estimateEventLibrary({ records: engine.backtestRecords });
+  // Sales slumps are calibrated from land-registry sales counts, not the curated episode list.
+  const slump = estimateSlumpLibrary({ records: engine.backtestRecords, salesRows });
+  eventLibrary.push(...slump.rows);
+  const slumpEpisodes = slump.episodes.map(e => ({ ...e, plainRealChange: Object.fromEntries([1, 2, 3].map(h => [h, logGrowth(built.panel[e.country]?.PRICE, e.year - 1, e.year - 1 + h)])) }));
   const id = `run_${now.toISOString().slice(0, 16).replace(/[-:T]/g, '')}`;
   const dataVintage = rows.reduce((m, r) => (r.frequency === 'A' && r.status !== 'forecast' && r.period > m ? r.period : m), '');
   const summary = {
     modelVersion: MODEL_VERSION, latestYear: engine.latestYear, units: engine.units, features: FEATURES, flagRules: FLAG_RULES,
-    personas: PERSONAS, distributions, mortgageSpread: MORTGAGE_SPREAD, eventClasses: EVENT_CLASSES,
+    personas: PERSONAS, distributions, mortgageSpread: MORTGAGE_SPREAD, eventClasses: EVENT_CLASSES, slumpEpisodes,
     featureSensitivities: engine.featureSensitivities, originMode: ttm ? 'trailing 12 months to latest quarter' : 'calendar year',
     stressComponents: STRESS_COMPONENTS, stressDistributions: stress.distributions, signalLabels: SIGNAL_LABELS, signalDisclaimer: SIGNAL_DISCLAIMER,
     uncertainty: 'Empirical rolling-origin residual quantiles per horizon, held non-decreasing with distance. p25-p75 is the 50% band, p10-p90 the 80% band.',
@@ -260,8 +264,9 @@ async function main() {
   await migrate(db);
   const rows = await loadRows(db);
   const national = await loadNationalExtras(db);
+  const { rows: salesRows } = await db.execute("SELECT country, region, period, frequency, value FROM observations WHERE indicator = 'SALES_COUNT' AND frequency IN ('M', 'Q')");
   console.log(`Loaded ${rows.length} observations`);
-  const run = buildRun(rows, new Date(), { national });
+  const run = buildRun(rows, new Date(), { national, salesRows: salesRows.map(r => ({ ...r })) });
   let causalRows = [];
   try {
     const causal = estimateCausal(rows, await fetchShocks());

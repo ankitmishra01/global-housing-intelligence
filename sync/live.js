@@ -12,6 +12,7 @@ import { fetchGdeltDay } from '../lib/live/gdelt.js';
 import { fetchGdacs } from '../lib/live/gdacs.js';
 import { fetchFx } from '../lib/live/fx.js';
 import { detectEvents, detectSalesSlumps } from '../lib/live/detect.js';
+import { salesSeries, slumpIsClear } from '../lib/engine/events.js';
 import { countryShifts, HORIZONS, isSignificant } from '../lib/live/shifts.js';
 import { runQuality } from './quality.js';
 import { scoreAll, shiftComponents } from '../lib/engine/indexes.js';
@@ -89,10 +90,11 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
   const previous = (await all(db, 'SELECT * FROM events')).map(e => ({ ...e, evidence: JSON.parse(e.evidence) }));
   const events = detectEvents({ today, histories: historyArrays, regions, disasters: disasters.filter(d => valid.has(d.iso3)), fxMoves: Object.fromEntries(Object.entries(fx.moves).filter(([c]) => valid.has(c))), previous: previous.filter(e => e.class !== 'transaction_slump') });
   // Land-registry sales counts (monthly) → market-cooling signal; recomputed from scratch each day.
-  const salesRows = await all(db, "SELECT country, region, period, value FROM observations WHERE indicator = 'SALES_COUNT' AND frequency = 'M'");
-  const sales = {};
-  for (const r of salesRows) ((sales[r.country] ||= { region: r.region || '', monthly: {} }).monthly)[r.period] = Number(r.value);
-  const slumps = detectSalesSlumps({ today, sales });
+  const salesRows = await all(db, "SELECT country, region, period, frequency, value FROM observations WHERE indicator = 'SALES_COUNT' AND frequency IN ('M', 'Q')");
+  const sales = salesSeries(salesRows);
+  // Slumps move projections only when the calibrated class is statistically clear for prices.
+  const slumpLibrary = (await all(db, "SELECT class, target, horizon, effect, se FROM event_library WHERE class = 'transaction_slump' AND run_id = (SELECT id FROM projection_runs ORDER BY created_at DESC LIMIT 1)")).map(r => ({ ...r, effect: Number(r.effect), se: Number(r.se) }));
+  const slumps = detectSalesSlumps({ today, sales, applies: slumpIsClear(slumpLibrary) });
   for (const e of previous.filter(p => p.class === 'transaction_slump' && p.status === 'active' && !slumps.some(s => s.id === p.id))) slumps.push({ ...e, status: 'expired', evidence: typeof e.evidence === 'string' ? JSON.parse(e.evidence) : e.evidence });
   events.push(...slumps);
   await upsertRows(db, 'events', ['id', 'country', 'class', 'status', 'onset', 'last_seen', 'intensity', 'metric', 'evidence', 'source', 'updated_at'],
@@ -143,7 +145,7 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
       const lib = library.find(l => l.class === e.class && l.target === 'real_price' && l.horizon === 3);
       const effect3 = lib ? pctFromLog(lib.effect) : null;
       const label = CLASS_LABELS[e.class] || e.class;
-      const evidenceText = e.class === 'transaction_slump' ? `${e.evidence.region || 'national'} registered sales ${signed(e.evidence.yoyPct)}% vs a year earlier, 3 months to ${e.evidence.months?.at(-1)}`
+      const evidenceText = e.class === 'transaction_slump' ? `${e.evidence.region || 'national'} registered sales ${signed(e.evidence.yoyPct)}% vs a year earlier, ${e.evidence.months?.length > 1 ? '3 months' : 'quarter'} to ${e.evidence.months?.at(-1)}`
         : e.class === 'natural_disaster' ? `${e.evidence.alert} GDACS alert: ${e.evidence.name}`
         : e.class === 'currency_crisis' ? `${e.evidence.currency} ${signed(e.evidence.changePct)}% vs USD over 90 days`
         : e.class === 'regional_conflict' ? `conflict news share z=${e.evidence.z} while ${e.evidence.conflictCountries.join(', ')} ${e.evidence.conflictCountries.length > 1 ? 'are' : 'is'} in armed conflict`
@@ -151,7 +153,7 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
       const clear = isSignificant(library, e.class, 'real_price') || isSignificant(library, e.class, 'real_rent');
       explanation.push(!e.evidence?.applies
         ? { kind: 'event', text: e.class === 'transaction_slump'
-          ? `${label} (${evidenceText}): a market-cooling signal shown for context; there is no calibrated history for it yet, so projections are not adjusted`
+          ? `${label} (${evidenceText}): past slumps in the UK, Netherlands and Ireland show no clear effect beyond what the model expects${lib ? ` (${signed(pctFromLog(lib.effect))}% ± ${lib.se.toFixed(1)} over 3 years, ${lib.n_episodes} episodes)` : ''}, so projections are not adjusted`
           : e.class === 'natural_disaster'
           ? `${label} (${evidenceText}): only Red alerts move national paths, so no adjustment`
           : `${label}, ongoing (${evidenceText}): already reflected in the data the model trained on, so no extra adjustment` }
