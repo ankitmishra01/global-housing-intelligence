@@ -4,6 +4,9 @@
 // Run: node sync/train.js            (writes)
 //      node sync/train.js --dry-run  (prints the backtest table only)
 import { connect, upsertRows } from '../lib/db.js';
+import { fetchShocks } from '../lib/sources/shocks.js';
+import { causalRateEffect, monthlyToQuarterly, quarterIndex } from '../lib/engine/causal.js';
+import { EURO_AREA } from '../lib/registry.js';
 import { migrate } from '../db/migrate.js';
 import { buildPanel, lastYear, latestMonthly, logGrowth } from '../lib/engine/panel.js';
 import { trainEngine, validateEngineOutput, FEATURES, MODEL_VERSION } from '../lib/engine/projections.js';
@@ -180,6 +183,73 @@ export function scoreVintages({ projections, contexts, panel, scoredAt }) {
   return out;
 }
 
+// ── Causal rate effect (Jarociński–Karadi shocks, local projections) ──
+// Stored next to the ridge association as method 'causal_lp'. It replaces the ridge effect for
+// real prices only where it is statistically clear (|coef| >= 1.64 se, negative) and the policy
+// rate itself responds clearly to the shock (so the per-point scaling is identified).
+export const CAUSAL_TARGETS = { US: 'real_price_causal_us', EA: 'real_price_causal_ea' };
+
+export function causalInputs(rows) {
+  const prices = {}, monthly = {};
+  for (const r of rows) {
+    if (r.region || r.dwelling_type) continue;
+    if (r.indicator === 'REAL_PRICE' && r.frequency === 'Q') (prices[r.country] ||= {})[r.period] = Number(r.value);
+    if (r.indicator === 'POLICY_RATE' && r.frequency === 'M') (monthly[r.country] ||= {})[r.period] = Number(r.value);
+  }
+  return { prices, rates: Object.fromEntries(Object.entries(monthly).map(([c, m]) => [c, monthlyToQuarterly(m)])) };
+}
+
+export function estimateCausal(rows, shocks) {
+  const { prices, rates } = causalInputs(rows);
+  const out = {};
+  if (shocks.US && prices.USA) out.US = { ...causalRateEffect({ prices: { USA: prices.USA }, rates: { USA: rates.USA || {} }, shocks: shocks.US.quarterly }), countries: ['USA'], source: shocks.US.source };
+  const members = Object.keys(EURO_AREA).filter(c => prices[c]);
+  if (shocks.EA && members.length) {
+    const windows = Object.fromEntries(members.map(c => [c, [quarterIndex(`${Math.max(1999, EURO_AREA[c])}-Q1`), Infinity]]));
+    out.EA = { ...causalRateEffect({ prices: Object.fromEntries(members.map(c => [c, prices[c]])), rates: Object.fromEntries(members.map(c => [c, rates[c] || {}])), shocks: shocks.EA.quarterly, windows }), countries: members, source: shocks.EA.source };
+  }
+  return out;
+}
+
+const clearNeg = v => v && v.se > 0 && v.coef <= 0 && Math.abs(v.coef) >= 1.64 * v.se;
+
+// Rows for rate_sensitivity plus the per-country decision. Mutates run.contexts details.
+export function applyCausal(run, causal) {
+  const sensRows = [];
+  const usable = {};
+  for (const [area, est] of Object.entries(causal)) {
+    const rateIdentified = est.ratePeak && est.ratePeak.coef > 0 && est.ratePeak.coef >= 1.64 * est.ratePeak.se;
+    const plan = {};
+    let src = null;
+    for (let h = 1; h <= 10; h++) { const v = est.perPp[h]; if (rateIdentified && v && !v.held && clearNeg(v)) src = h; plan[h] = src; }
+    const anyClear = Object.values(plan).some(v => v != null);
+    usable[area] = anyClear ? plan : null;
+    for (let h = 1; h <= 10; h++) {
+      const v = est.perPp[h] ?? est.years[h];
+      if (!v) continue;
+      const shock = est.years[h];
+      sensRows.push({ target: CAUSAL_TARGETS[area], horizon: h, coef: +(est.perPp[h]?.coef ?? NaN).toFixed(4), se: +(est.perPp[h]?.se ?? NaN).toFixed(4), valid: anyClear ? 1 : 0, method: 'causal_lp',
+        note: `${est.source}; local projection, ${area === 'US' ? 'United States' : `${est.countries.length} euro-area members pooled`}; response to one shock unit ${shock.coef.toFixed(2)} ± ${shock.se.toFixed(2)}${shock.held ? ` (held from year ${shock.heldFrom})` : ''}; policy rate peak ${est.ratePeak ? `${est.ratePeak.coef.toFixed(2)} ± ${est.ratePeak.se.toFixed(2)} at quarter ${est.ratePeak.quarter}` : 'n/a'}; ${anyClear ? 'clear: used by the toggle for these countries' : rateIdentified ? 'not statistically clear: the ridge association is used instead' : 'policy-rate response not clearly identified, so the per-point scaling is not reliable: the ridge association is used instead'}` });
+    }
+  }
+  const perArea = area => usable[area] && Object.fromEntries(Object.entries(usable[area]).filter(([, src]) => src != null).map(([h, src]) => [h, causal[area].perPp[src]]));
+  for (const ctx of run.contexts) {
+    const details = JSON.parse(ctx.details);
+    const area = ctx.country === 'USA' ? 'US' : EURO_AREA[ctx.country] ? 'EA' : null;
+    const pts = area ? perArea(area) : null;
+    if (details.rateSens && pts && Object.keys(pts).length) {
+      details.rateSens.real_price = Object.fromEntries(Array.from({ length: 10 }, (_, i) => i + 1).map(h => {
+        const known = Object.keys(pts).map(Number).filter(k => k <= h);
+        const v = known.length ? pts[Math.max(...known)] : { coef: 0, se: pts[Math.min(...Object.keys(pts).map(Number))].se };
+        return [h, { coef: +Math.min(0, v.coef).toFixed(4), se: +v.se.toFixed(4), valid: 1 }];
+      }));
+      details.rateSens.priceMethod = 'causal_lp';
+    } else if (details.rateSens) details.rateSens.priceMethod = 'ridge';
+    ctx.details = JSON.stringify(details);
+  }
+  return sensRows;
+}
+
 async function main() {
   const db = connect();
   await migrate(db);
@@ -187,6 +257,16 @@ async function main() {
   const national = await loadNationalExtras(db);
   console.log(`Loaded ${rows.length} observations`);
   const run = buildRun(rows, new Date(), { national });
+  let causalRows = [];
+  try {
+    const causal = estimateCausal(rows, await fetchShocks());
+    causalRows = applyCausal(run, causal);
+    console.log('\nCausal rate effect per +1pp (local projections on Jarociński–Karadi shocks):');
+    for (const r of causalRows.filter(r => [1, 3, 5, 10].includes(r.horizon))) console.log(`  ${r.target.padEnd(22)} h${String(r.horizon).padEnd(2)} ${String(r.coef).padStart(8)} ± ${r.se}  ${r.valid ? 'USED' : 'not used'}`);
+    console.log(`  countries using causal: ${run.contexts.filter(c => JSON.parse(c.details).rateSens?.priceMethod === 'causal_lp').map(c => c.country).join(', ') || 'none'}`);
+  } catch (error) {
+    console.log(`Causal rate effect skipped: ${error.message}`);
+  }
   console.log('\nTarget        H  Method                          MAE   Zero MAE  Skill   80% cov  Origins');
   for (const b of run.engine.backtests) console.log(`${b.target.padEnd(12)} ${String(b.horizon).padStart(2)}  ${b.method.padEnd(30)} ${String(b.mae).padStart(6)}  ${String(b.baseline_mae).padStart(8)}  ${String(b.skill_pct).padStart(5)}%  ${String(b.coverage80).padStart(6)}%  ${b.n_origins}`);
   console.log('\nRate sensitivity per +1pp (log points x100):');
@@ -206,7 +286,7 @@ async function main() {
       return { ...p, year: origin + p.horizon };
     })));
   await upsertRows(db, 'backtests', ['run_id', 'target', 'horizon', 'method', 'status', 'mae', 'rmse', 'baseline_mae', 'baseline_rmse', 'skill_pct', 'coverage80', 'n_origins', 'n_records', 'basis'], withRun(run.engine.backtests));
-  await upsertRows(db, 'rate_sensitivity', ['run_id', 'target', 'horizon', 'coef', 'se', 'valid', 'note'], withRun(run.engine.sensitivities));
+  await upsertRows(db, 'rate_sensitivity', ['run_id', 'target', 'horizon', 'coef', 'se', 'valid', 'note', 'method'], withRun([...run.engine.sensitivities.map(r => ({ ...r, method: 'ridge' })), ...causalRows.filter(r => Number.isFinite(r.coef))]));
   await upsertRows(db, 'risk_flags', ['run_id', 'country', 'flag', 'value', 'threshold', 'as_of'], withRun(run.flags));
   await upsertRows(db, 'persona_indexes', ['run_id', 'country', 'persona', 'score', 'rank', 'components'], withRun(run.indexRows.map(r => ({ ...r, components: JSON.stringify(r.components) }))));
   await upsertRows(db, 'country_context', ['run_id', 'country', 'origin_year', 'rent_origin_year', 'policy_rate', 'policy_rate_as_of', 'mortgage_rate', 'mortgage_rate_source', 'details'], withRun(run.contexts));

@@ -100,21 +100,45 @@ export default async function Methodology() {
       </section>
 
       <section className="section">
-        <div className="section-title"><div><p className="eyebrow">Rate toggle</p><h2>Interest-rate sensitivity</h2></div><p>Change in cumulative real growth (log points × 100) for a sustained +1 percentage point move in the policy rate, read off the pooled ridge fit. The ± figure is a cluster-bootstrap standard error over countries.</p></div>
-        {sens.length ? (
-          <div className="table-wrap">
-            <table>
-              <thead><tr><th>Target</th><th className="r">Horizon</th><th className="r">Effect per +1pp</th><th>Toggle</th><th>Note</th></tr></thead>
-              <tbody>{sens.filter((s) => [1, 3, 5, 10].includes(s.horizon)).map((s) => (
-                <tr key={`${s.target}${s.horizon}`}>
-                  <td>{TARGET_NAMES[s.target] ?? s.target}</td><td className="r">{s.horizon}y</td><td className="r">{fmt(s.coef, 2)} ± {fmt(s.se, 2)}</td>
-                  <td>{s.valid ? <span className="badge badge--t1">on</span> : <span className="badge badge--warn">off</span>}</td><td className="note">{s.note}</td>
-                </tr>
-              ))}</tbody>
-            </table>
-          </div>
-        ) : <p className="note">No sensitivities stored yet.</p>}
-        <p className="note">Prices must fall when rates rise. A wrong-signed price estimate switches the toggle off for that run rather than showing an implausible effect. Rents are estimated freely: higher rates can push households into renting.</p>
+        <div className="section-title"><div><p className="eyebrow">Rate toggle</p><h2>Interest-rate sensitivity</h2></div><p>Change in cumulative real growth (log points × 100) for a sustained +1 percentage point move in the policy rate. Two estimates are kept side by side: an association from the pooled ridge model, and a causal estimate from identified monetary-policy shocks.</p></div>
+        {(() => {
+          const ridge = sens.filter((s) => !s.target.includes("causal"));
+          const causal = sens.filter((s) => s.target.includes("causal"));
+          return (
+            <>
+              <h3 style={{ margin: "8px 0" }}>Association (pooled ridge model)</h3>
+              {ridge.length ? (
+                <div className="table-wrap">
+                  <table>
+                    <thead><tr><th>Target</th><th className="r">Horizon</th><th className="r">Effect per +1pp</th><th>Toggle</th><th>Note</th></tr></thead>
+                    <tbody>{ridge.filter((s) => [1, 3, 5, 10].includes(s.horizon)).map((s) => (
+                      <tr key={`${s.target}${s.horizon}`}>
+                        <td>{TARGET_NAMES[s.target] ?? s.target}</td><td className="r">{s.horizon}y</td><td className="r">{fmt(s.coef, 2)} ± {fmt(s.se, 2)}</td>
+                        <td>{s.valid ? <span className="badge badge--t1">on</span> : <span className="badge badge--warn">off</span>}</td><td className="note">{s.note}</td>
+                      </tr>
+                    ))}</tbody>
+                  </table>
+                </div>
+              ) : <p className="note">No sensitivities stored yet.</p>}
+              <h3 style={{ margin: "20px 0 8px" }}>Causal estimate (monetary-policy shocks)</h3>
+              <p className="note" style={{ marginTop: 0 }}>Local projections of quarterly real house prices on the Jarociński–Karadi (2020) monetary-policy shocks, which strip out the information a central bank reveals about the economy. United States with Fed shocks; euro-area members pooled with ECB shocks and country fixed effects. Four lags of price growth and of the shock as controls; Newey–West / Driscoll–Kraay standard errors. The response is scaled to a +1 percentage point policy-rate move by the policy rate&apos;s own peak response to the same shock. The toggle switches to this estimate only where it is statistically clear and the rate response is clearly identified; otherwise the association above is used.</p>
+              {causal.length ? (
+                <div className="table-wrap">
+                  <table>
+                    <thead><tr><th>Area</th><th className="r">Horizon</th><th className="r">Effect per +1pp</th><th>Used</th><th>Note</th></tr></thead>
+                    <tbody>{causal.filter((s) => [1, 2, 3, 5, 10].includes(s.horizon)).map((s) => (
+                      <tr key={`${s.target}${s.horizon}`}>
+                        <td>{s.target.endsWith("_us") ? "United States" : "Euro area"}</td><td className="r">{s.horizon}y</td><td className="r">{fmt(s.coef, 2)} ± {fmt(s.se, 2)}</td>
+                        <td>{s.valid ? <span className="badge badge--t1">yes</span> : <span className="badge badge--warn">no</span>}</td><td className="note">{s.note}</td>
+                      </tr>
+                    ))}</tbody>
+                  </table>
+                </div>
+              ) : <p className="note">The causal estimate has not been computed for this run.</p>}
+            </>
+          );
+        })()}
+        <p className="note">Prices must fall when rates rise; an estimate counts only when it is statistically clear and correctly signed, and the last reliable effect is held forward as a level shift. Rents keep the association, estimated freely: higher rates can push households into renting.</p>
       </section>
 
       <section className="section" id="flags">
