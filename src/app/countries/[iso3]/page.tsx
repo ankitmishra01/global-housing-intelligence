@@ -80,7 +80,13 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
       },
       methods: { price10: proj.find((p) => p.target === "real_price" && p.horizon === 10)?.method ?? "–", rent10: proj.find((p) => p.target === "real_rent" && p.horizon === 10)?.method ?? "–" },
       sens: countrySens(ctx.details.rateSens) ?? { real_price: sensMap(sens, "real_price"), real_rent: sensMap(sens, "real_rent"), type_price: sensMap(sens, "type_price") },
-      sensScope: ctx.details.rateSens ? `Rate effects scale with household credit of ${Math.round((ctx.details.rateSens.householdCreditShare ?? 0) * 100)}% of GDP${ctx.details.rateSens.imputed ? " (median used: no BIS household credit series)" : ""}.` : "Pooled rate effects.",
+      sensScope: (() => {
+        const note = (t: string) => sens.find((x) => x.target === t)?.note ?? "";
+        const share = ctx.details.rateSens?.householdCreditShare;
+        const scaled = (t: string) => note(t).startsWith("quoted at the median");
+        const debt = share != null ? `household credit of ${Math.round(share * 100)}% of GDP${ctx.details.rateSens?.imputed ? " (median used: no BIS series)" : ""}` : "household credit";
+        return `Price effects ${scaled("real_price") ? `scale with this country's ${debt}` : "are pooled across countries, because household debt did not clearly change them"}; rent effects ${scaled("real_rent") ? `scale with its ${debt}` : "are pooled"}.`;
+      })(),
       sensNotes: { price: priceSens[0]?.note ?? "", rent: rentSens?.note ? "Higher rates can push would-be buyers into renting, so the rent effect's sign is estimated, not assumed." : "", priceValid: priceSens.length > 0 && !!priceSens[0].valid },
       rates: { policy: ctx.policy_rate, policyAsOf: ctx.policy_rate_as_of, mortgage: ctx.mortgage_rate, mortgageSource: ctx.mortgage_rate_source },
       personas: {
