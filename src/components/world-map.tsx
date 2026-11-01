@@ -5,8 +5,8 @@ import countries from "i18n-iso-countries";
 import world from "world-atlas/countries-110m.json";
 import Link from "next/link";
 
-// Server-rendered choropleth. Values are % changes; color runs blue (falls) through
-// neutral to terracotta (rises), clamped at ±maxAbs. Countries without data stay grey.
+// Server-rendered choropleth. Values are % changes: rises shade toward deep cobalt, falls
+// toward crimson, clamped at ±maxAbs. Countries without data stay grey.
 export function WorldMap({ values, names, maxAbs = 40, label }: { values: Record<string, number>; names: Record<string, string>; maxAbs?: number; label: string }) {
   const topo = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
   const fc = feature(topo, topo.objects.countries);
@@ -33,7 +33,7 @@ export function WorldMap({ values, names, maxAbs = 40, label }: { values: Record
           );
         })}
       </svg>
-      <figcaption className="map-scale"><span>−{maxAbs}%</span><i /><span>+{maxAbs}%</span><span style={{ marginLeft: 12 }}>grey: no official price index</span></figcaption>
+      <figcaption className="map-scale"><span>{-maxAbs}% or lower</span><i /><span>+{maxAbs}% or higher</span><span style={{ marginLeft: 12 }}>Grey: no official price index</span></figcaption>
     </figure>
   );
 }

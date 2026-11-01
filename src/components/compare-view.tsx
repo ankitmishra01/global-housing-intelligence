@@ -39,7 +39,7 @@ export function CompareView({ options, selected, data, sens, personaLabels }: {
     return (
       <div className="panel">
         <p className="eyebrow">{key === "price" ? "Buy" : "Rent"}</p>
-        <h3 style={{ margin: "4px 0 8px", font: "400 22px var(--font-display)" }}>{title}</h3>
+        <h3 className="display" style={{ margin: "4px 0 8px", fontSize: 22 }}>{title}</h3>
         {withData.length ? (
           <div className="chart">
             <ResponsiveContainer>

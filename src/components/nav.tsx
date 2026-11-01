@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/compare", label: "Compare", key: "V" },
   { href: "/ask", label: "Ask AI", key: "A" },
   { href: "/methodology", label: "Methodology", key: "M" },
+  { href: "/api-docs", label: "API and MCP", key: "P" },
   { href: "/quality", label: "Data quality", key: "Q" },
 ] as const;
 

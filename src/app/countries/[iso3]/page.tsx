@@ -127,7 +127,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
             <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live adjustments · {live.as_of}</p>
             <Link className="link" href="/live">What changed today →</Link>
           </div>
-          <ul>{live.explanation.map((e, i) => <li key={i}><span className={`badge ${e.kind === "event" ? "badge--flag" : ""}`}>{e.kind === "event" ? "Event" : e.kind === "rate" ? "Rates" : e.kind}</span> {e.text}</li>)}</ul>
+          <ul>{live.explanation.map((e, i) => <li key={i}><span className={`badge ${e.kind === "event" ? "badge--flag" : ""}`}>{e.kind === "event" ? "Event" : e.kind === "rate" ? "Rates" : e.kind.charAt(0).toUpperCase() + e.kind.slice(1)}</span> {e.text}</li>)}</ul>
           {live.events.length ? <p className="note">Active: {live.events.map((ev) => `${EVENT_LABELS[ev.class] ?? ev.class} since ${ev.onset}`).join(" · ")}. Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>
             : <p className="note">Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>}
         </section>
@@ -137,10 +137,9 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         <section className="section">
           <div className="grid-3">
             {myFlags.map((f) => (
-              <div key={f.flag} className="panel" style={{ borderColor: "var(--neg)" }}>
-                <p className="eyebrow" style={{ color: "var(--neg)" }}>Risk flag · {f.as_of}</p>
-                <p style={{ margin: "6px 0 0" }}>{run?.summary.flagRules[f.flag]?.label}</p>
-                <p className="note">Reading: {fmt(f.value)} (threshold {f.threshold})</p>
+              <div key={f.flag} className="flag-card">
+                <p className="flag-card__label">{run?.summary.flagRules[f.flag]?.label}</p>
+                <p className="flag-card__meta">Reading {fmt(f.value)} against a threshold of {f.threshold} · {f.as_of}</p>
               </div>
             ))}
           </div>
@@ -230,7 +229,7 @@ function AffordabilitySection({ ctx, disclaimer }: { ctx: Ctx; disclaimer?: stri
       {stress ? (
         <div className="panel" style={{ marginTop: 16 }}>
           <p className="eyebrow">Mortgage stress index</p>
-          <p style={{ margin: "4px 0" }}><strong className="num" style={{ font: "400 34px var(--font-display)" }}>{stress.score.toFixed(0)}</strong><span className="note"> / 100 · rank {stress.rank} of the economies with enough data (higher is more stress)</span></p>
+          <p style={{ margin: "4px 0" }}><strong className="num display" style={{ fontSize: 36 }}>{stress.score.toFixed(0)}</strong><span className="note"> / 100 · rank {stress.rank} of the economies with enough data (higher is more stress)</span></p>
           <div className="meter"><i style={{ width: `${stress.score}%`, background: stress.score >= 75 ? "var(--neg)" : "var(--accent)" }} /></div>
           <p className="note">{stress.components.filter((c) => c.percentile != null).map((c) => `${STRESS_NAMES[c.basis] ?? c.basis}: ${c.value} (${Math.round(c.percentile!)}th percentile)`).join(" · ")}</p>
         </div>

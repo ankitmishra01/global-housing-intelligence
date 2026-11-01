@@ -5,6 +5,13 @@ import { EVENT_LABELS, flagEmoji, pct, PERSONA_ORDER } from "@/lib/labels";
 
 export const revalidate = 86400;
 
+// Scale the map to the data: the 90th percentile of absolute changes, rounded up to 10.
+function mapScale(values: number[]) {
+  const a = values.map(Math.abs).sort((x, y) => x - y);
+  const p90 = a.length ? a[Math.floor(a.length * 0.9)] : 40;
+  return Math.max(10, Math.ceil(p90 / 10) * 10);
+}
+
 export default async function Overview() {
   const [run, list, rawProj, allFlags, personas, shifts, events, states] = await Promise.all([latestRun(), countries(), projections(), flags(), personaRows(), liveShifts(), activeEvents(), liveStates()]);
   // Every number on this page includes today's live adjustments (rates and detected events).
@@ -31,11 +38,19 @@ export default async function Overview() {
           <p className="lede">Official house price and rent data for {list.length} economies, 10-year projections tested against history, an interest-rate toggle, and indexes for investors, buyers, renters and sellers.</p>
         </div>
       </header>
-      <div className="stats">
+
+
+      <section className="section" style={{ marginTop: 8 }}>
+        <div className="section-title"><div><p className="eyebrow">10-year outlook</p><h2>Projected real house price change</h2></div><p>Median projection after inflation. Select a country for its fan chart, rents, dwelling types and the rate toggle.</p></div>
+        <div className="panel"><WorldMap values={mapValues} names={names} maxAbs={mapScale(Object.values(mapValues))} label="Map of projected 10-year real house price change by country" /></div>
+      </section>
+      <div style={{ marginTop: 14 }}>
+        <div className="stats">
         <div><span>Economies covered</span><strong className="num">{list.length}</strong><small>{tier1} with official price indexes</small></div>
         <div><span>Median 10-year real price change</span><strong className="num">{pct(medianOf(Object.values(price10).map((p) => p.median - 100)))}</strong><small>across Tier 1 economies</small></div>
         <div><span>Median 10-year real rent change</span><strong className="num">{pct(medianOf(Object.values(rent10).map((p) => p.median - 100)))}</strong><small>{Object.keys(rent10).length} economies with rent indexes</small></div>
         <div><span>Active risk flags</span><strong className="num">{allFlags.length}</strong><small>across {new Set(allFlags.map((f) => f.country)).size} economies</small></div>
+        </div>
       </div>
 
       {asOf ? (
@@ -50,11 +65,6 @@ export default async function Overview() {
           </ul>
         </section>
       ) : null}
-
-      <section className="section">
-        <div className="section-title"><div><p className="eyebrow">10-year outlook</p><h2>Projected real house price change</h2></div><p>Median projection after inflation. Select a country for its fan chart, rents, dwelling types and the rate toggle.</p></div>
-        <div className="panel"><WorldMap values={mapValues} names={names} label="Map of projected 10-year real house price change by country" /></div>
-      </section>
 
       <section className="section grid-2">
         {[{ title: "Strongest 10-year outlook", rows: ranked.slice(0, 10) }, { title: "Weakest 10-year outlook", rows: ranked.slice(-10).reverse() }].map((block) => (

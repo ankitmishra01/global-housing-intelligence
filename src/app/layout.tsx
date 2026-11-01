@@ -1,31 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Archivo } from "next/font/google";
 import Link from "next/link";
 import { Nav } from "@/components/nav";
 import "./globals.css";
 
-const display = Fraunces({ subsets: ["latin"], variable: "--font-display", display: "swap" });
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
+// One family in two widths: expanded and heavy for headings and figures, normal for reading.
+const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Global Housing Intelligence", template: "%s · Global Housing Intelligence" },
   description: "House prices and rents for every economy, with honestly backtested 10-year projections, an interest-rate toggle and indexes for investors, buyers, renters and sellers.",
+  alternates: { types: { "application/rss+xml": [{ url: "/feed.xml", title: "Global Housing Intelligence: live changes" }] } },
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={archivo.variable} style={{ ["--font-display" as string]: "var(--font-sans)" }}>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="masthead">
           <Link href="/" className="brand">
             <span className="brand__mark">GHI</span>
-            <span><strong>Global Housing Intelligence</strong><small>prices · rents · 10-year outlook</small></span>
+            <span><strong>Global Housing Intelligence</strong><small>House prices and rents, 10 years out</small></span>
           </Link>
-          <span className="masthead__live"><i aria-hidden="true" />Live layer updates daily</span>
+          <span className="masthead__live"><i aria-hidden="true" />Live adjustments update daily</span>
         </header>
         <div className="shell">
           <aside className="rail">
