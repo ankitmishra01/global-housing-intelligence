@@ -4,8 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CountryExplorer, type ExplorerProps } from "@/components/country-explorer";
 import { PredictedActualLine } from "@/components/track-record-chart";
+import { NarrativeProse } from "@/components/narrative-prose";
+import { buildNarrativeInput } from "@/lib/narrative-input";
+import { buildCountryNarrative } from "../../../../lib/engine/narrative.js";
 import { applyLive, countryTrackRecord, regionsFor, country, countryPanel, contexts, flags, latestRun, liveShifts, liveState, personaRows, projections, rebased, sensitivities, indicatorLabels, type LiveShift, type Projection, type Sensitivity } from "@/lib/data";
-import { EVENT_LABELS, flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
+import { flagEmoji, fmt, money, TYPE_LABELS } from "@/lib/labels";
 import type { Band, SensMap } from "@/lib/toggle";
 
 export const revalidate = 86400;
@@ -109,6 +112,27 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
     };
   }
 
+  // Written analysis beside each chart, generated from the stored figures only.
+  const narrativeInput = await buildNarrativeInput({ c, ctx, run, live, panel, observations, explorer, allCountries: await allCountries(),
+    flagLabels: myFlags.map((f) => run?.summary.flagRules[f.flag]?.label ?? f.flag), flagIds: myFlags.map((f) => f.flag) });
+  const narrative = buildCountryNarrative(narrativeInput) as { headline: string; kpis: { label: string; value: string; period: string }[]; sections: { id: string; title: string; paragraphs: string[]; chart: string | null }[] };
+  const dataYear = ctx?.origin_year ?? (observations.filter((o) => o.frequency === "A" && o.status === "actual").map((o) => o.period).sort().at(-1) ?? "");
+  const series = (indicator: string, freq = "A") => observations.filter((o) => o.indicator === indicator && !o.region && !o.dwelling_type && o.frequency === freq && o.status === "actual" && Number(o.period.slice(0, 4)) >= Number(dataYear) - 24).map((o) => ({ period: o.period.slice(0, 4), value: Number(o.value) }));
+  const labourSeries = [
+    { name: "Unemployment %", color: "var(--line)", points: series("UNEMPLOYMENT") },
+    { name: "Household debt service, % of income", color: "var(--gold)", points: series("DSR_HH") },
+  ].filter((x) => x.points.length >= 3);
+  if (explorer) {
+    explorer.narrative = { sections: narrative.sections };
+    explorer.rateInput = { name: c.name, rates: { policy: ctx?.policy_rate ?? null, mortgage: ctx?.mortgage_rate ?? null } };
+    explorer.labourSeries = labourSeries;
+    explorer.live = live && live.explanation.length ? { asOf: live.as_of, items: live.explanation } : null;
+    explorer.signals = ctx?.details.signals;
+    explorer.signalDisclaimer = (run?.summary as unknown as { signalDisclaimer?: string })?.signalDisclaimer;
+    explorer.regions = regionList;
+    explorer.iso3 = iso3;
+  }
+
   return (
     <div className="page">
       <header className="page-head">
@@ -138,17 +162,13 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         {regionList.length ? <a className="chip" href="#regions">{regionList.length} {regionList.length === 1 ? "region" : "cities and regions"}</a> : null}
       </nav>
 
-      {live && live.explanation.length ? (
-        <section className="section live-banner" aria-label="Live adjustments">
-          <div className="live-banner__head">
-            <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Live adjustments · {live.as_of}</p>
-            <Link className="link" href="/live">What changed today →</Link>
-          </div>
-          <ul>{live.explanation.map((e, i) => <li key={i}><span className={`badge ${e.kind === "event" ? "badge--flag" : ""}`}>{e.kind === "event" ? "Event" : e.kind === "rate" ? "Rates" : e.kind.charAt(0).toUpperCase() + e.kind.slice(1)}</span> {e.text}</li>)}</ul>
-          {live.events.length ? <p className="note">Active: {live.events.map((ev) => `${EVENT_LABELS[ev.class] ?? ev.class} since ${ev.onset}`).join(" · ")}. Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>
-            : <p className="note">Charts, the buy-vs-rent table and index scores below include these adjustments; the rate toggle moves on top of them.</p>}
-        </section>
-      ) : null}
+      <section className="brief-card" aria-label="Country brief">
+        <h2 className="brief-card__headline">{narrative.headline}</h2>
+        <p className="brief-card__meta">Data {dataYear}{ctx?.policy_rate_as_of ? `, rates as of ${ctx.policy_rate_as_of}` : ""}{live?.as_of ? `, live adjustments ${live.as_of}` : ""}</p>
+        <div className="brief-kpis">
+          {narrative.kpis.map((k) => <div key={k.label}><span>{k.label}</span><strong className="num">{k.value}</strong><small>{k.period}</small></div>)}
+        </div>
+      </section>
 
       {myFlags.length ? (
         <section className="section">
@@ -163,7 +183,19 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
         </section>
       ) : null}
 
-      {explorer ? <CountryExplorer {...explorer} /> : null}
+      {explorer ? <CountryExplorer {...explorer} /> : narrative.sections.map((sec) => (
+        <section key={sec.id} className={`section brief-section${sec.chart === "drivers" && drivers.length ? "" : " brief-section--full"}`}>
+          <NarrativeProse title={sec.title} paragraphs={sec.paragraphs} />
+          {sec.chart === "drivers" && drivers.length ? (
+            <div className="brief-section__chart table-wrap">
+              <table>
+                <thead><tr><th>Driver</th><th className="r">Latest</th><th>Year</th></tr></thead>
+                <tbody>{drivers.map(({ k, o }) => <tr key={k}><td>{labels[k]?.label ?? k}</td><td className="r">{o!.value > 1000 ? money(o!.value) : fmt(o!.value, 2)}</td><td className="mono">{o!.period}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ) : null}
+        </section>
+      ))}
 
       {record ? (
         <section className="section">
@@ -237,10 +269,9 @@ type Ctx = NonNullable<Awaited<ReturnType<typeof contexts>>[number]>;
 const STRESS_NAMES: Record<string, string> = { mortgageToIncome: "Mortgage / income", ptiVsHistory: "Price-to-income vs history", debtServiceGap: "Debt service vs average", unemploymentChange12m: "Unemployment change, 12m", realWageGrowth3y: "Real wage growth, 3y", hhDebt: "Household debt % GDP" };
 const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
-function AffordabilitySection({ ctx, disclaimer }: { ctx: Ctx; disclaimer?: string }) {
+function AffordabilitySection({ ctx }: { ctx: Ctx; disclaimer?: string }) {
   const a = (ctx.details.affordability ?? {}) as Record<string, number | string | boolean | null>;
   const stress = ctx.details.stress;
-  const signals = ctx.details.signals ?? {};
   const tiles: { label: string; value: string; note?: string | null; warn?: boolean }[] = [
     { label: "House price to income", value: num(a.priceToIncome) != null ? `${num(a.priceToIncome)!.toFixed(1)}×` : "–", note: (a.priceToIncomeBasis as string) ?? "No national price level to compare with income" },
     { label: "Price-to-income vs history", value: num(a.ptiVsHistory) != null ? `${num(a.ptiVsHistory)! > 0 ? "+" : ""}${num(a.ptiVsHistory)!.toFixed(0)}%` : "–", note: "OECD ratio vs its long-run average", warn: (num(a.ptiVsHistory) ?? 0) > 20 },
@@ -272,28 +303,6 @@ function AffordabilitySection({ ctx, disclaimer }: { ctx: Ctx; disclaimer?: stri
           <p style={{ margin: "4px 0" }}><strong className="num display" style={{ fontSize: 36 }}>{stress.score.toFixed(0)}</strong><span className="note"> / 100 · rank {stress.rank} of the economies with enough data (higher is more stress)</span></p>
           <div className="meter"><i style={{ width: `${stress.score}%`, background: stress.score >= 75 ? "var(--neg)" : "var(--accent)" }} /></div>
           <p className="note">{stress.components.filter((c) => c.percentile != null).map((c) => `${STRESS_NAMES[c.basis] ?? c.basis}: ${c.value} (${Math.round(c.percentile!)}th percentile)`).join(" · ")}</p>
-        </div>
-      ) : null}
-      {Object.keys(signals).length ? (
-        <div style={{ marginTop: 16 }}>
-          <div className="grid-4">
-            {(["buyer", "seller", "investor", "renter"] as const).map((k) => {
-              const sg = signals[k];
-              if (!sg) return null;
-              return (
-                <article key={k} className="persona-card">
-                  <h3>{k[0].toUpperCase() + k.slice(1)} signal</h3>
-                  <div className={`score ${sg.level > 0 ? "pos" : sg.level < 0 ? "neg" : ""}`} style={{ fontSize: 26 }}>{sg.label}</div>
-                  {sg.adjusted ? <p className="delta" style={{ color: "var(--gold)" }}>Adjusted for labour-market and mortgage stress</p> : null}
-                  <ul style={{ margin: "8px 0 0", paddingLeft: 16, fontSize: 12.5 }}>
-                    {sg.support.map((r) => <li key={r}>{r}</li>)}
-                    {sg.oppose.map((r) => <li key={r} style={{ color: "var(--muted)" }}>But: {r}</li>)}
-                  </ul>
-                </article>
-              );
-            })}
-          </div>
-          <p className="note">{disclaimer ?? "Market-level signal from public data and statistical projections. Not personal financial advice."}</p>
         </div>
       ) : null}
     </section>
