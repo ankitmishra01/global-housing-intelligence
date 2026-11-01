@@ -207,3 +207,14 @@ CREATE TABLE IF NOT EXISTS live_log (
   delta10 REAL
 );
 CREATE INDEX IF NOT EXISTS live_log_date ON live_log (date);
+
+-- Data quality checks: one row per check per run of sync/quality.js (last 30 runs kept).
+CREATE TABLE IF NOT EXISTS data_quality (
+  run_at   TEXT NOT NULL,
+  check_id TEXT NOT NULL,
+  category TEXT NOT NULL,
+  severity TEXT NOT NULL,              -- pass, warn, fail
+  summary  TEXT NOT NULL,
+  details  TEXT NOT NULL,              -- JSON
+  PRIMARY KEY (run_at, check_id)
+);

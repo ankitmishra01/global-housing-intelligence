@@ -145,3 +145,16 @@ export function applyLive<T extends { horizon: number; p10: number; p25: number;
     return { ...r, p10: ix(lg(r.p10) + s.shift - z80 * s.extra), p25: ix(lg(r.p25) + s.shift - z50 * s.extra), median: ix(lg(r.median) + s.shift), p75: ix(lg(r.p75) + s.shift + z50 * s.extra), p90: ix(lg(r.p90) + s.shift + z80 * s.extra) };
   });
 }
+
+// ── Data quality ──
+export type QualityCheck = { run_at: string; check_id: string; category: string; severity: "pass" | "warn" | "fail"; summary: string; details: Record<string, unknown> };
+export const qualityChecks = cache(async () => {
+  const [latest] = await rows<{ run_at: string }>("SELECT run_at FROM data_quality WHERE check_id = 'coverage.tiers' ORDER BY run_at DESC LIMIT 1");
+  if (!latest?.run_at) return { runAt: null as string | null, checks: [] as QualityCheck[], liveRunAt: null as string | null };
+  const full = await rows<Omit<QualityCheck, "details"> & { details: string }>("SELECT * FROM data_quality WHERE run_at = ? ORDER BY category, check_id", [latest.run_at]);
+  // Live checks also run daily on their own; show whichever is newer per check.
+  const [liveLatest] = await rows<{ run_at: string }>("SELECT MAX(run_at) AS run_at FROM data_quality WHERE check_id LIKE 'live.%'");
+  const live = liveLatest?.run_at && liveLatest.run_at > latest.run_at ? await rows<Omit<QualityCheck, "details"> & { details: string }>("SELECT * FROM data_quality WHERE run_at = ? AND check_id LIKE 'live.%'", [liveLatest.run_at]) : [];
+  const merged = [...full.filter((c) => !(live.length && c.check_id.startsWith("live."))), ...live];
+  return { runAt: latest.run_at, liveRunAt: live.length ? liveLatest!.run_at : null, checks: merged.map((c) => ({ ...c, details: JSON.parse(c.details) })) as QualityCheck[] };
+});

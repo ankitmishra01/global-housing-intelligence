@@ -82,6 +82,7 @@ Where a source publishes prices by dwelling type, each type gets its own history
 | `/indexes` | League tables for each persona, with every component's percentile |
 | `/compare?c=CAN,AUS,GBR` | Two to four countries side by side under one rate scenario |
 | `/methodology` | Sources, the **live** backtest table, rate sensitivities, flag thresholds, index weights, limits |
+| `/quality` | Automated data quality checks (coverage, freshness, validity, cross-source consistency, projection integrity) — see [docs/DATA_QUALITY.md](docs/DATA_QUALITY.md) |
 | `/ask` | Ask AI, grounded in the database, with a numeric guardrail |
 | `/api/v1/*` | Cached public JSON |
 

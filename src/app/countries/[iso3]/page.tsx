@@ -100,7 +100,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
           <h1>{flagEmoji(c.iso2)} {c.name}</h1>
           <p className="lede">
             {c.tier === 1
-              ? `Official house price index from ${panel.PRICE_SOURCE ?? "BIS/OECD"}${c.has_rent ? " and an OECD rent index" : ""}. Projections start in ${ctx?.origin_year ?? "the latest full year"}.`
+              ? `Official house price index from ${panel.PRICE_SOURCE ?? "BIS/OECD"}${c.has_rent ? " and an OECD rent index" : ""}. Projections start in ${ctx?.origin_year ?? "the latest full year"}${ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? `, the latest year the official source covers; newer national data is not yet in the public datasets` : ""}.`
               : "No official house price index is published for this economy in the BIS or OECD datasets, so prices and rents are not projected. The housing drivers below are what the data supports."}
           </p>
         </div>
@@ -108,6 +108,8 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
           <span className={`badge ${c.tier === 1 ? "badge--t1" : ""}`}>Tier {c.tier}</span>
           {c.has_national ? <span className="badge">National agency data</span> : null}
           {myFlags.length ? <span className="badge badge--flag">{myFlags.length} risk flag{myFlags.length > 1 ? "s" : ""}</span> : null}
+          {ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Price data to {ctx.origin_year}</span> : null}
+          {ctx && run && ctx.rent_origin_year != null && ctx.rent_origin_year <= run.summary.latestYear - 2 ? <span className="badge badge--warn">Rent data to {ctx.rent_origin_year}</span> : null}
         </div>
       </header>
 

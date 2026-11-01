@@ -11,6 +11,7 @@ import { computeFlags, quarterlyYoY, FLAG_RULES } from '../lib/engine/flags.js';
 import { scoreAll, annuityFactor, PERSONAS } from '../lib/engine/indexes.js';
 import { affordabilityMetrics, stressAll, STRESS_COMPONENTS } from '../lib/engine/affordability.js';
 import { computeSignals, SIGNAL_LABELS, SIGNAL_DISCLAIMER } from '../lib/engine/signals.js';
+import { runQuality, BLOCKING } from './quality.js';
 import { finite, mean } from '../lib/engine/stats.js';
 import { estimateEventLibrary, EVENT_CLASSES } from '../lib/engine/events.js';
 
@@ -155,6 +156,13 @@ async function main() {
   await upsertRows(db, 'country_context', ['run_id', 'country', 'origin_year', 'rent_origin_year', 'policy_rate', 'policy_rate_as_of', 'mortgage_rate', 'mortgage_rate_source', 'details'], withRun(run.contexts));
   await upsertRows(db, 'event_library', ['run_id', 'class', 'target', 'horizon', 'effect', 'se', 'n_episodes', 'episodes'], withRun(run.eventLibrary));
   console.log(`Wrote ${run.id}`);
+  // Full data quality pass on the new run. Only integrity failures stop the pipeline.
+  const quality = await runQuality({ db });
+  const counts = Object.fromEntries(['pass', 'warn', 'fail'].map(k => [k, quality.checks.filter(c => c.severity === k).length]));
+  console.log(`Data quality: ${counts.pass} pass, ${counts.warn} warn, ${counts.fail} fail`);
+  for (const c of quality.checks.filter(c => c.severity !== 'pass')) console.log(`  ${c.severity.toUpperCase()} ${c.id}: ${c.summary}`);
+  const blocking = quality.checks.filter(c => c.severity === 'fail' && BLOCKING.has(c.id));
+  if (blocking.length) { console.error(`Integrity checks failed: ${blocking.map(c => c.id).join(', ')}`); process.exit(1); }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main().catch(error => { console.error(error.stack || error); process.exit(1); });

@@ -13,6 +13,7 @@ import { fetchGdacs } from '../lib/live/gdacs.js';
 import { fetchFx } from '../lib/live/fx.js';
 import { detectEvents } from '../lib/live/detect.js';
 import { countryShifts, HORIZONS, isSignificant } from '../lib/live/shifts.js';
+import { runQuality } from './quality.js';
 import { scoreAll, shiftComponents } from '../lib/engine/indexes.js';
 
 const iso = d => d.toISOString().slice(0, 10);
@@ -193,6 +194,11 @@ export async function runLive({ db = connect(), now = new Date(), log = console.
     activeEvents: active.map(e => ({ country: e.country, class: e.class, intensity: e.intensity, applies: !!e.evidence?.applies, onset: e.onset })),
     biggestShifts: biggest, logEntries: logs.length, personaScores: personaRows.length, mortgageSpread: summary.mortgageSpread,
   };
+  // Cheap live-layer quality checks after every daily run (never blocks the run).
+  try {
+    const q = await runQuality({ db, live: true, now });
+    result.quality = Object.fromEntries(['pass', 'warn', 'fail'].map(k => [k, q.checks.filter(c => c.severity === k).length]));
+  } catch (e) { log(`  quality checks failed: ${e.message}`); }
   return result;
 }
 
