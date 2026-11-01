@@ -20,9 +20,11 @@
   },
   "dependencies": {
     "@libsql/client": "0.18.0",
+    "@modelcontextprotocol/server": "2.4.0",
     "ai": "7.0.159",
     "d3-geo": "3.1.1",
     "i18n-iso-countries": "7.14.0",
+    "mcp-handler": "2.3.0",
     "next": "16.4.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -30,7 +32,7 @@
     "server-only": "0.0.1",
     "topojson-client": "3.1.0",
     "world-atlas": "2.0.2",
-    "zod": "4.1.12"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@types/d3-geo": "3.1.1",

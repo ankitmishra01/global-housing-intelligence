@@ -218,3 +218,56 @@ CREATE TABLE IF NOT EXISTS data_quality (
   details  TEXT NOT NULL,              -- JSON
   PRIMARY KEY (run_at, check_id)
 );
+
+-- Public API / MCP rate limiting: fixed windows per salted IP hash and bucket (api, mcp).
+CREATE TABLE IF NOT EXISTS api_rate (
+  key          TEXT NOT NULL,
+  window_start INTEGER NOT NULL,
+  count        INTEGER NOT NULL,
+  PRIMARY KEY (key, window_start)
+);
+
+-- ── Track record and scenario sensitivities (wave 1, engine) ──
+
+-- Pseudo-out-of-sample backtest predictions of the shipped method, per country and origin.
+CREATE TABLE IF NOT EXISTS backtest_points (
+  run_id    TEXT NOT NULL,
+  country   TEXT NOT NULL,
+  target    TEXT NOT NULL,      -- real_price, real_rent
+  horizon   INTEGER NOT NULL,   -- 1, 3, 5
+  origin    INTEGER NOT NULL,
+  predicted REAL NOT NULL,      -- cumulative real growth, x100 log points
+  actual    REAL NOT NULL,
+  method    TEXT NOT NULL,
+  PRIMARY KEY (run_id, country, target, horizon, origin)
+);
+
+-- Real track record: past runs' projections scored once their target year is observed.
+CREATE TABLE IF NOT EXISTS vintage_scores (
+  vintage_run_id   TEXT NOT NULL,
+  country          TEXT NOT NULL,
+  target           TEXT NOT NULL,
+  horizon          INTEGER NOT NULL,
+  target_year      INTEGER NOT NULL,
+  projected_median REAL NOT NULL,   -- index, origin = 100
+  p10              REAL NOT NULL,
+  p90              REAL NOT NULL,
+  actual           REAL NOT NULL,   -- index, origin = 100
+  error            REAL NOT NULL,   -- actual - projected_median, index points
+  in80             INTEGER NOT NULL,
+  scored_at        TEXT NOT NULL,
+  PRIMARY KEY (vintage_run_id, country, target, horizon)
+);
+
+-- Pooled effect of +1 unit of a driver on cumulative real growth (x100 log), for the scenario builder.
+CREATE TABLE IF NOT EXISTS feature_sensitivity (
+  run_id  TEXT NOT NULL,
+  target  TEXT NOT NULL,          -- real_price, real_rent
+  feature TEXT NOT NULL,          -- unemployment_change, real_wage_growth, real_gdp_growth
+  horizon INTEGER NOT NULL,
+  coef    REAL NOT NULL,
+  se      REAL NOT NULL,
+  valid   INTEGER NOT NULL,
+  note    TEXT,
+  PRIMARY KEY (run_id, target, feature, horizon)
+);

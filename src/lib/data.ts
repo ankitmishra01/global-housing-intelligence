@@ -158,3 +158,18 @@ export const qualityChecks = cache(async () => {
   const merged = [...full.filter((c) => !(live.length && c.check_id.startsWith("live."))), ...live];
   return { runAt: latest.run_at, liveRunAt: live.length ? liveLatest!.run_at : null, checks: merged.map((c) => ({ ...c, details: JSON.parse(c.details) })) as QualityCheck[] };
 });
+
+// ── Public API / feeds helpers (read-only) ──
+export const liveLogFor = cache((iso3: string) => rows<LiveLog>("SELECT * FROM live_log WHERE country = ? ORDER BY date DESC, id DESC LIMIT 60", [iso3]));
+export const recentRuns = cache((limit = 12) => rows<{ id: string; created_at: string; model_version: string; data_vintage: string }>("SELECT id, created_at, model_version, data_vintage FROM projection_runs ORDER BY created_at DESC LIMIT ?", [limit]));
+// Latest actual value of each national / regional series for one country (annual where present, else latest).
+export const nationalLatest = cache(async (iso3: string) => {
+  const obs = (await observations(iso3)).filter((o) => o.status === "actual" && (o.region || o.dwelling_type || ["AVG_PRICE", "MEDIAN_PRICE", "AVG_RENT", "AVG_RENT_2BR", "VACANCY_RATE", "HOUSING_STARTS", "NEW_HOUSING_PRICE", "MORTGAGE_RATE", "RENT_CPI", "SALES_COUNT", "MEDIAN_PSF", "DLD_PRICE_INDEX", "GROSS_YIELD", "MEDIAN_HH_INCOME", "UNEMPLOYMENT", "UNEMPLOYMENT_M", "DSR_HH", "POLICY_RATE", "HH_CREDIT", "PTI_AVG", "PTR_AVG", "INFLATION"].includes(o.indicator)));
+  const latest = new Map<string, Observation>();
+  for (const o of obs) {
+    const key = `${o.indicator}|${o.region}|${o.dwelling_type}`;
+    const prev = latest.get(key);
+    if (!prev || o.period > prev.period) latest.set(key, o);
+  }
+  return [...latest.values()].map((o) => ({ indicator: o.indicator, region: o.region || null, dwellingType: o.dwelling_type || null, period: o.period, frequency: o.frequency, value: Number(o.value), source: o.source }));
+});
