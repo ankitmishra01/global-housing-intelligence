@@ -100,7 +100,7 @@ export default async function CountryPage({ params }: { params: Promise<{ iso3: 
           <h1>{flagEmoji(c.iso2)} {c.name}</h1>
           <p className="lede">
             {c.tier === 1
-              ? `Official house price index from ${panel.PRICE_SOURCE ?? "BIS/OECD"}${c.has_rent ? " and an OECD rent index" : ""}. Projections start in ${ctx?.origin_year ?? "the latest full year"}${ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? `, the latest year the official source covers; newer national data is not yet in the public datasets` : ""}.`
+              ? `Official house price index from ${panel.PRICE_SOURCE ?? "BIS/OECD"}${c.has_rent ? " and an OECD rent index" : ""}. Projections start in ${ctx?.origin_year ?? "the latest full year"}${ctx && run && ctx.origin_year <= run.summary.latestYear - 2 ? `, the latest year the official index covers${observations.some((o) => (o.region || c.has_national) && Number(o.period.slice(0, 4)) > ctx.origin_year + 1 && o.status === "actual" && ["SALES_COUNT", "MEDIAN_PSF", "AVG_PRICE", "AVG_RENT"].includes(o.indicator)) ? "; newer registry data appears below but is too short to model yet" : "; newer national data is not yet in the public datasets"}` : ""}.`
               : "No official house price index is published for this economy in the BIS or OECD datasets, so prices and rents are not projected. The housing drivers below are what the data supports."}
           </p>
         </div>
