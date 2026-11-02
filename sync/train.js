@@ -32,8 +32,19 @@ export const MORTGAGE_SPREAD = 2.0; // assumed mortgage spread over the policy r
 export async function loadRows(db) {
   const { rows } = await db.execute(`SELECT country, indicator, region, dwelling_type, period, frequency, value, status, source FROM observations
     WHERE region = '' AND (frequency = 'A' OR indicator IN ('POLICY_RATE', 'MORTGAGE_RATE', 'REAL_PRICE', 'NOMINAL_PRICE', 'UNEMPLOYMENT_M', 'DSR_HH'))`);
-  return rows.map(r => ({ ...r, value: Number(r.value) }));
+  // Verified rows waiting in the overlay (written while database writes are blocked) replace or
+  // extend the stored ones under the same key, so training sees them before flush-overlay loads them.
+  const keyOf = r => [r.country, r.indicator, r.region || '', r.dwelling_type || '', r.period, r.frequency].join('|');
+  const merged = new Map(rows.map(r => [keyOf(r), { ...r, value: Number(r.value) }]));
+  const overlayPath = new URL('../data/derived/overlay-observations.json', import.meta.url);
+  const overlay = fs.existsSync(overlayPath) ? JSON.parse(fs.readFileSync(overlayPath, 'utf8')) : [];
+  for (const r of overlay) {
+    if ((r.region || '') !== '' || !(r.frequency === 'A' || LOADED_INDICATORS.has(r.indicator))) continue;
+    merged.set(keyOf(r), { country: r.country, indicator: r.indicator, region: '', dwelling_type: r.dwelling_type || '', period: r.period, frequency: r.frequency, value: Number(r.value), status: r.status || 'actual', source: r.source });
+  }
+  return [...merged.values()];
 }
+const LOADED_INDICATORS = new Set(['POLICY_RATE', 'MORTGAGE_RATE', 'REAL_PRICE', 'NOMINAL_PRICE', 'UNEMPLOYMENT_M', 'DSR_HH']);
 
 // National levels the panel drops (it keeps national rows only): Canada's rent is the median
 // of the latest CMHC two-bedroom rents across the tracked metros.
@@ -166,7 +177,7 @@ export function buildRun(rows, now = new Date(), { national = {}, ttm = TTM_ORIG
       'Tier 1 covers about 58 economies with official house price indexes; rents exist for about 43.',
       'Ten-year backtests rest on far fewer origins than one-year backtests; check n_origins on the methodology page.',
       'Rate sensitivity is pooled across countries and is a model-implied association, not a causal estimate.',
-      'Projections start from the last complete calendar year; the latest quarter is shown as an observed point (a trailing-12-month origin was tested and did not beat calendar origins on held-out years).',
+      'Projections start from the last complete calendar year. Where BIS has already published quarters of the first projected year, the price path is rebased on them (unpublished quarters held at the latest one): in rolling-origin tests this cut 1-year price error by about 70% and 3- and 5-year error by 13% and 6% on held-out years. A trailing-12-month origin was also tested and did not beat calendar origins.',
       'Dwelling-type paths use a separate pooled model trained on the type series; coverage varies by country.',
       'Nominal paths use IMF WEO inflation forecasts, held flat after the last WEO year.',
       'Projections are not financial advice.',

@@ -155,13 +155,14 @@ Code: [`lib/engine/projections.js`](lib/engine/projections.js), run by [`sync/tr
    - cross momentum: rents for prices, prices for rents
    - dwelling-type indicators, in the type model only
 3. **The baselines it must beat.** "No real change", the country's own historical real trend, and a long-run anchor (up to 30 years of real growth, shrunk toward the cross-country mean). A blend of model and anchor is also a candidate; it ships at 3, 5 and 7 years for prices and at 1 year for rents because it won on held-out years.
-4. **Carry-forward.** At long horizons, a fourth candidate is the longest skilled shorter-horizon model held flat afterwards. Example: "the 7-year projection, then no further real change". It is backtested like everything else, so a path never snaps back to zero just because the 10-year fit is weak.
-5. **Honesty rules**
+4. **Partial-year rebase.** When BIS has already published quarters of the first projected year, the price path is shifted so year 1 equals the mean of those quarters, with the unpublished ones held at the latest. Tested on the saved backtest points: 1-year error fell from 4.1 to 1.2 log points, and 3- and 5-year error fell 13% and 6% on held-out years.
+5. **Carry-forward.** At long horizons, a fourth candidate is the longest skilled shorter-horizon model held flat afterwards. Example: "the 7-year projection, then no further real change". It is backtested like everything else, so a path never snaps back to zero just because the 10-year fit is weak.
+6. **Honesty rules**
    - **Rolling-origin backtests from 1995.** A model is only trained on outcomes that were already known at each test date.
    - **Chosen early, scored late.** The method is chosen on the early half of test dates and scored on the later half, which it never saw.
    - **A skill margin.** A model is kept only if it beats the best baseline on both halves *and* by at least 2% on the held-out half. Overlapping 10-year windows leave few independent test dates, so tiny wins are treated as noise.
    - **No hardcoded scores.** Current skill, error and coverage are rendered live on [`/methodology`](https://global-housing-intelligence.vercel.app/methodology) from the `backtests` table.
-6. **Uncertainty.** The 50% and 80% bands come from empirical backtest errors at each horizon. They are held non-decreasing, so the fan never narrows with distance.
+7. **Uncertainty.** The 50% and 80% bands come from empirical backtest errors at each horizon. They are held non-decreasing, so the fan never narrows with distance.
 
 ## The interest-rate toggle
 

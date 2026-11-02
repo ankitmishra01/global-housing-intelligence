@@ -125,3 +125,13 @@ test('trainEngine emits feature sensitivities and backtest points', () => {
   assert.ok(out.backtestPoints.length > 0);
   assert.ok(out.backtestPoints.every(p => [1, 3, 5].includes(p.horizon) && Number.isFinite(p.predicted)));
 });
+
+test('partial-year nowcast fills unpublished quarters with the latest one', async () => {
+  const { partialYearNowcast } = await import('../lib/engine/projections.js');
+  const q = { '2025-Q1': 100, '2025-Q2': 100, '2025-Q3': 100, '2025-Q4': 100, '2026-Q1': 102, '2026-Q2': 104 };
+  const nc = partialYearNowcast(q, 2025);
+  assert.equal(nc.quartersKnown, 2);
+  assert.ok(Math.abs(nc.cum - 100 * Math.log(103.5 / 100)) < 1e-9);
+  assert.equal(partialYearNowcast({ ...q, '2025-Q4': undefined }, 2025), null);
+  assert.equal(partialYearNowcast({ '2025-Q1': 1, '2025-Q2': 1, '2025-Q3': 1, '2025-Q4': 1 }, 2025), null);
+});
